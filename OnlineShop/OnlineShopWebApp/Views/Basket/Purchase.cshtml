@@ -1,0 +1,138 @@
+﻿@model BasketViewModel
+
+
+<form role="form" method="post">
+    <div class="row">
+        <div class="col-8">
+            <h3>Корзина:</h3>
+            <table class="col-10">
+                @foreach (var product in Model.Items)
+                {
+                    <tr>
+                        <td rowspan="4"><img src="@product.Product.Pictures.First().Path" width="150"></td>
+                        <td>
+                            <label for="productname">Название:</label>
+                            <input id="productname" class="border-0 bg-white w-75" value="@product.Product.Name" readonly="readonly" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="productflawor">Вкус:</label>
+                            <input id="productflawor" class="border-0 bg-white" value="@product.Product.Flavors.First(x=>x.Id == product.ProductInfo.FlavorId).Name" readonly="readonly" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="productamount">Количество:</label>
+                            <input id="productamount" class="border-0 bg-white" value="@product.Amount" readonly="readonly" />
+                        </td>
+                    </tr>
+                    <tr style="border-bottom:solid">
+                        <td>
+                            <label for="productcost">Цена:</label>
+                            <input id="productcost" class="border-0 bg-white" value="@product.Cost" readonly="readonly" />
+                        </td>
+                    </tr>
+                }
+            </table>
+            <div class="form-group invisible">
+                <input name="deliveryinfo.customerid" type="text" class="form-control" value="@ViewBag.Customer.Id" readonly="readonly" />
+            </div>
+            <h2>Контактные данные</h2>
+            <div class="form-group">
+                <label for="name">Имя</label>
+                <input name="deliveryinfo.name" type="text" class="form-control" id="name" value="@ViewBag.Customer.Name" placeholder="Введите ваше имя" required />
+            </div>
+            <div class="form-group">
+                <label for="sername">Фамилия</label>
+                <input name="deliveryinfo.sername" type="text" class="form-control" required id="sername" value="@ViewBag.Customer.SerName" placeholder="Введите вашу фамилию" />
+            </div>
+            <div class="form-group">
+                <label for="tel">Номер телефона</label>
+                <input name="deliveryinfo.phone" type="tel" class="form-control" id="tel" required value="@ViewBag.Customer.Phone" placeholder="Введите ваш номер" />
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input name="deliveryinfo.email" type="email" class="form-control" id="email" value="@ViewBag.Customer.Email" placeholder="Введите вашу почту" />
+            </div>
+            <div class="form-group">
+                <label for="city">Город доставки</label>
+                <input name="deliveryinfo.city" type="text" class="form-control" required id="city" placeholder="Введите название города" />
+            </div>
+            <div class="form-group">
+                <label for="postnumber">Номер отделения НП</label>
+                <input name="deliveryinfo.postnumber" type="number" required class="form-control" id="postnumber" placeholder="Введите номер отделения Новой Почты" />
+            </div>
+            <h2>Способ доставки</h2>
+
+            <div class="form-check">
+                <input class="form-check-input" checked="checked" value="Курьером по адресу в Киеве" type="radio" id="carrier" name="deliveryinfo.deliverytype" />
+                <label class="form-check-label" for="carrier">
+                    Курьером по адресу в Киеве - 75 грн
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" value="В отделение Новой Почты" type="radio" id="post" name="deliveryinfo.deliverytype" />
+                <label class="form-check-label" for="post">
+                    В отделение Новой Почты - по тарифам НП
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" value="Самовывоз из наших магазинов" type="radio" id="selfbuy" name="deliveryinfo.deliverytype" />
+                <label class="form-check-label" for="selfbuy">
+                    Самовывоз из наших магазинов - бесплатно
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" value="Курьером Новой Почты по адресу" type="radio" id="postcarrier" name="deliveryinfo.deliverytype" />
+                <label class="form-check-label" for="postcarrier">
+                    Курьером Новой Почты по адресу - по тарифам НП
+                </label>
+            </div>
+
+            <h2>Способ оплаты</h2>
+            <div class="form-check">
+                <input class="form-check-input" required value="Оплата при получении" type="radio" id="onpost" name="payinfo.paytype" />
+                <label class="form-check-label" for="onpost">
+                    Оплата при получении
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" required value="Перевод на расчетный счет" name="payinfo.paytype" type="radio" id="cardpay" />
+                <label class="form-check-label" for="cardpay">
+                    Перевод на расчетный счет
+                </label>
+            </div>
+
+        </div>
+        <div class="col-4">
+            <div class="col-12">
+                <h3>Вместе</h3><br />
+                <div class="row" style="border-bottom-style:dashed; border-bottom-color:coral">
+                    <div class="col-6 float-left">
+                        <p>Cумма:</p>
+                        <p>Cумма доставки:</p>
+                    </div>
+                    <div class="col-6 float-right">
+                        <p>@Model.Cost грн</p>
+                        <p>По тарифу Новой почты</p>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-6 float-left">
+                        <h3>К оплате:</h3>
+                    </div>
+                    <div class="col-6 float-right">
+                        <input style="background-color:white; font-size:35px; border:none; font-weight:500" name="ordersum" readonly="readonly" value="@Model.Cost грн" />
+                    </div>
+                    <div style="text-align:center;" class="col-12 pt-3">
+                        <a href="/basket/checkout?userId=@ViewBag.Customer.Id" style="font-weight:200; border-bottom-style:dotted">РЕДАКТИРОВАТЬ ЗАКАЗ</a><br />
+                        <button class="btn btn-warning btn-block" style="margin-top:10px" type="submit" asp-area="" asp-controller="Order" asp-action="Ordering">Оформить заказ</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+

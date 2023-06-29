@@ -1,0 +1,66 @@
+﻿@model List<DiscountViewModel>
+
+@{
+    DiscountViewModel discountView = @ViewBag.Discount;
+}
+<div class="row">
+    @await Html.PartialAsync("AdminMenu")
+    <div class="col-10">
+        <div class="row">
+            <div class="col-auto">
+                <a class="btn btn-outline-info btn-sm" asp-area="Admin" asp-controller="Discount" asp-action="NoDiscountProducts">Добавить скидки</a>
+            </div>
+            <div class="col-auto">
+                <div class="dropdown">
+                    <button class="btn btn-outline-success btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Отсортировать
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        @foreach (var discount in Model)
+                        {
+                            if (discountView.Id == discount.Id)
+                            {
+                                <a class="dropdown-item disabled" asp-area="Admin" asp-controller="Discount" asp-action="SortedDiscounts" asp-route-discountId="@discount.Id">@discount.DiscountPercent%</a>
+                            }
+                            else
+                            {
+                                <a class="dropdown-item" asp-area="Admin" asp-controller="Discount" asp-action="SortedDiscounts" asp-route-discountId="@discount.Id">@discount.DiscountPercent%</a>
+                            }
+                        }
+                        <a class="dropdown-item" asp-area="Admin" asp-controller="Discount" asp-action="DiscountProducts">Все скидки</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h3>Сортировка по критерию: @discountView.DiscountPercent%</h3>
+        <table class="table table-borderless text-center">
+            <thead>
+                <tr>
+                    <th>Изображение</th>
+                    <th>Название</th>
+                    <th>Описание акции</th>
+                    <th>Скидка, %</th>
+                    <th>Цена со скидкой, грн</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var product in discountView.Products)
+                {
+                    <tr>
+                        <td style="vertical-align:middle">
+                            <a asp-area="Admin" asp-controller="Discount" asp-action="ProductDiscountInfo" asp-route-productId="@product.Id" asp-route-discountId="@discountView.Id"><img class="img-fluid" width="100" src="@product.Picture.Path"></a>
+                        </td>
+                        <td style="vertical-align:middle">
+                            <a asp-area="Admin" asp-controller="Discount" asp-action="ProductDiscountInfo" asp-route-productId="@product.Id" asp-route-discountId="@discountView.Id">@product.Name</a>
+                        </td>
+                        <td style="vertical-align:middle">@product.DiscountDescription</td>
+                        <td style="vertical-align:middle">@discountView.DiscountPercent</td>
+                        <td style="vertical-align:middle">@product.DiscountCost</td>
+                    </tr>
+
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

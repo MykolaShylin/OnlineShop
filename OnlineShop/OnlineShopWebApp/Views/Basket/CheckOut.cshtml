@@ -1,0 +1,67 @@
+﻿@model BasketViewModel
+
+<table class="table table-bordered" style="border:ridge #c9ceca 10px">
+    <thead>
+        <tr style="text-align:center">
+            <th>Название</th>
+            <th>Вкус</th>
+            <th>Количество</th>
+            <th>Цена за единицу, грн</th>
+            <th>Цена за количество, грн</th>
+            @if (Model != null)
+            {
+                <th></th>
+                <th></th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            foreach (var basketItem in @Model.Items) 
+            {
+                <tr style="text-align:center">
+                    <td>@basketItem.Product.Name</td>
+                    <td>@basketItem.Product.Flavors.First(x=>x.Id == basketItem.ProductInfo.FlavorId).Name</td>
+                    <td>@basketItem.Amount</td>
+                    <td>@basketItem.Product.Cost</td>
+                    <td>@basketItem.Cost</td>
+                    <td>
+                        <a class="btn btn-sm btn-outline-success" asp-area="" asp-controller="Basket" asp-action="Buying" asp-route-prodId="@basketItem.Product.Id" asp-route-flavorId="@basketItem.ProductInfo.FlavorId" asp-route-amount="@basketItem.Amount" role="button">+</a>
+                    </td>
+                    <td>
+                        <a class="btn btn-sm btn-outline-danger" asp-area="" asp-controller="Basket" asp-action="Deleting" asp-route-prodId="@basketItem.Product.Id" asp-route-flavorId="@basketItem.ProductInfo.FlavorId" asp-route-amount="@basketItem.Amount" role="button">-</a>
+                    </td>
+                </tr>
+            }
+            <tr style="text-align:center">
+                <td colspan="4">Сумма заказа, грн</td>
+                <td>@Model.Cost</td>
+            </tr>
+        }
+        else
+        {
+            <tr>
+                <td colspan="4"><center>Корзина пуста</center></td>
+            </tr>
+        }
+    </tbody>
+</table>
+<br />
+@if (Model != null)
+{
+    <div style="float:right">
+        <a class="btn btn-success btn-lg" asp-area="" asp-controller="Basket" asp-action="Purchase" role="button">Оформить заказ</a>
+    </div>
+}
+else
+{
+    <div style="float:right">
+        <a class="btn btn-success btn-lg disabled" href="#" role="button">Оформить заказ</a>
+    </div>
+}
+<div style="float:left">
+    <a class="btn btn-dark btn-lg" asp-area="" asp-controller="Product" asp-action="CategoryProducts" asp-route-isAllListProducts="@true" role="button">Продолжить покупки </a>
+</div>
+
+

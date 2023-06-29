@@ -1,0 +1,35 @@
+﻿@model List<ProductViewModel>
+
+<div class="row">
+    @await Html.PartialAsync("AdminMenu")
+    <div class="col-10">
+        <h2>Список продуктов без скидок</h2><br />
+        <table class="table table-hover text-center">
+            <thead>
+                <tr>
+                    <th>Изображение</th>
+                    <th>Категория</th>
+                    <th>Брэнд</th>
+                    <th>Название</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var product in Model)
+                {
+                    <tr>
+                        <td style="vertical-align:middle">
+                            <img src="@product.Picture.Path" width="100">
+                        </td>
+                        <td style="vertical-align:middle">@product.Category</td>
+                        <td style="vertical-align:middle">@product.Brand </td>
+                        <td style="vertical-align:middle">@product.Name</td>
+                        <td style="vertical-align:middle">
+                            <a class="btn btn-block btn-secondary" asp-area="Admin" asp-controller="Discount" asp-action="MakeDiscount" asp-route-prodId="@product.Id">Скидки</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

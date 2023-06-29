@@ -1,0 +1,14 @@
+﻿@model User
+
+@if (Model?.Avatar == null)
+{
+    <div class="col-auto">
+        <a asp-controller="Customer" asp-action="PersonalData" asp-area="User" role="button" class="btn border-0"><img src="~/icons/user_mini_icon.png" width="30" />Кабинет</a>
+    </div>
+}
+else
+{
+    <div class="col-auto">
+        <a asp-controller="Customer" asp-action="PersonalData" asp-area="User" role="button" class="btn border-0"><img class="mr-1" src="@Model.Avatar" width="35" />Кабинет</a>
+    </div>
+}

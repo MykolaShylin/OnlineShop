@@ -1,0 +1,40 @@
+﻿@model List<OrderViewModel>
+
+<div class="row">
+    @await Html.PartialAsync("AdminMenu")
+    <div class="col-10">
+        <h2>Список заказов</h2><br />
+        <table class="table table-hover text-center">
+            <thead>
+                <tr>
+                    <th>№</th>
+                    <th>Сумма, грн</th>
+                    <th>Статус</th>
+                    <th>Пользователь</th>
+                    <th>Пользовательский номер</th>
+                    <th>Дата / Время</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    var counter = 0;
+                }
+                @foreach (var order in Model)
+                {
+                    counter++;
+                    <tr>
+                        <td>@counter</td>
+                        <td>@order.Items.Sum(x=>x.Cost)</td>
+                        <td>@EnumHelper.GetDisplayName(order.orderStatus) </td>
+                        <td>
+                            <a asp-controller="Order" asp-action="CustomerOrder" asp-area="Admin" asp-route-id="@order.Id">@order.deliveryInfo.Name @order.deliveryInfo.SerName</a>
+                        </td>
+                        <td>@order.deliveryInfo.CustomerId</td>
+                        <td>@order.OrderDateTime</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+

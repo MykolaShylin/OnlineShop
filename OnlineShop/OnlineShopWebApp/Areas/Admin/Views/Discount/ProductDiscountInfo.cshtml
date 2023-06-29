@@ -1,0 +1,39 @@
+﻿@model DiscountViewModel
+<div class="row">
+    @await Html.PartialAsync("AdminMenu")
+    <div class="col-10">
+        <div class="row">
+            <div class="col-5">
+                <img class="img-fluid" src="@ViewBag.Product.Picture.Path" />
+            </div>
+            <div class="col-7">
+                <div class="form-group">
+                    <label class="badge badge-light" style="font-size:medium" for="Categori">Категория:</label>
+                    <input id="Categori" style="width:400px" type="text" readonly="readonly" class="border-0 bg-transparent" value="@EnumHelper.GetDisplayName(ViewBag.Product.Category)" />
+                </div>
+                <div class="form-group">
+                    <label class="badge badge-light" style="font-size:medium" for="Brand">Брэнд:</label>
+                    <input id="Brand" style="width:400px" type="text" readonly="readonly" class="border-0 bg-transparent" value="@ViewBag.Product.Brand" />
+                </div>
+                <div class="form-group">
+                    <label class="badge badge-light" style="font-size:medium" for="Name">Название:</label>
+                    <input id="Name" style="width:400px" type="text" readonly="readonly" class="border-0 bg-transparent" value="@ViewBag.Product.Name" />
+                </div>
+                <div class="form-group">
+                    <label class="badge badge-light" style="font-size:medium" for="Description">Описание акции:</label>
+                    <input id="Description" style="width:400px" type="text" readonly="readonly" class="border-0 bg-transparent" value="@ViewBag.Product.DiscountDescription" />
+                </div>
+                <div class="form-group form-inline">
+                    <label class="badge badge-light" style="font-size:medium" for="Discount">Скидка:</label>
+                    <input id="Discount" type="text" readonly="readonly" class="border-0 bg-transparent ml-2" value="@Model.DiscountPercent%" />
+                </div>
+                <div class="form-group form-inline">
+                    <label class="badge badge-light" style="font-size:medium" for="Cost">Цена со скидкой, грн:</label>
+                    <input id="Cost" type="text" readonly="readonly" class="border-0 bg-transparent ml-2" value="@ViewBag.Product.DiscountCost" />
+                </div>
+                <a class="btn btn-warning mt-2 float-left" asp-area="Admin" asp-controller="Discount" asp-action="EditProductDiscount" asp-route-productId="@ViewBag.Product.Id" asp-route-discountId="@Model.Id">Изменить скидку</a>
+                <a class="btn btn-danger mt-2 float-right" asp-area="Admin" asp-controller="Discount" asp-action="RemoveProductDiscount" asp-route-prodId="@ViewBag.Product.Id" asp-route-discountId="@Model.Id">Убрать скидку</a>
+            </div>
+        </div>
+    </div>
+</div>

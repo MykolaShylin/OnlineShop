@@ -1,0 +1,138 @@
+﻿@model List<RoleViewModel>
+
+@{
+    var role = new RoleViewModel();
+}
+<div class="row">
+    @await Html.PartialAsync("AdminMenu")
+    <div class="col-10">
+        <div class="card">
+            <h3 class="card-header">Роли</h3>
+            <div class="card-body pb-0">
+                <div class="row">
+                    <table class="table mb-0">
+                        @for (int i = 0; i < Model.Count; i++)
+                        {
+                            var deleteModal = "deleteRoleModal" + (1 + i);
+                            var editModal = "editRoleModal" + (1 + i);
+                            <tr>
+                                <td data-toggle="tooltip" data-placement="top" title="@Model[i].Description">@Model[i].Name</td>
+                                <td style="text-align:end">
+                                    <a href="#" data-toggle="modal" data-target="#@deleteModal" style="display:block;">
+                                        <span class="btn btn-dark" role="button">Удалить</span>
+                                    </a>
+                                    <div id="@deleteModal" class="modal fade">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title">Подтверждение</h4>
+                                                    <button class="close" type="button" data-dismiss="modal">×</button>
+                                                </div>
+                                                <div class="modal-body text-left">Вы уверены, что хотите удалить эту роль? Пользователям, которым была присвоена данная роль, присвоится роль по умолчанию!</div>
+                                                <div class="modal-footer">
+                                                        <a asp-area="Admin" asp-controller="Role" asp-action="DeleteRole" asp-route-id="@Model[i].Id" role="button" class="btn btn-default">Удалить</a>
+                                                    <button class="btn btn-default float-right" type="button" data-dismiss="modal">Закрыть</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="text-align:end">
+                                    <a href="#" data-toggle="modal" data-target="#@editModal" style="display:block;">
+                                        <span class="btn btn-success" role="button">Изменить</span>
+                                    </a>
+                                    <div id="@editModal" class="modal fade">
+                                        <div class="modal-dialog modal-lg">
+                                            <div class="modal-content" style="border: 4px solid orange;font-size: 13px">
+                                                <div class="modal-header" style="border-bottom: 4px solid orange">
+                                                    <h4 class="modal-title" style="color:red">ИЗМЕНЕНИЯ ИНФОРМАЦИИ</h4>
+                                                    <button class="close" type="button" data-dismiss="modal">X</button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form role="form" method="post">
+                                                        <div class="row">
+                                                            <div class="form-group row text-left">
+                                                                <label for="id" class="col-3 col-form-label align-self-center pb-2">Личный код роли</label>
+                                                                <div class="col-9 pb-2">
+                                                                    <input style="font-size:12px" type="text" name="roleModel.id" readonly="readonly" class="form-control bg-transparent border-0" id="id" value="@Model[i].Id">
+                                                                </div>
+                                                                <label for="name" class="col-3 align-self-center col-form-label">Название</label>
+                                                                <div class="col-9 pb-2">
+                                                                    @if (Model[i].Name.ToLower() == "admin" || Model[i].Name.ToLower() == "user")
+                                                                    {
+                                                                        <input style="font-size:12px" type="text" name="roleModel.name" readonly="readonly" class="form-control bg-transparent border-0" id="name" value="@Model[i].Name">
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <input style="font-size:12px" type="text" name="roleModel.name" class="form-control" id="name" value="@Model[i].Name">
+                                                                    }
+                                                                </div>
+                                                                <div class="col-12 text-center">
+                                                                    <span asp-validation-for="@Model[i].Name"></span>
+                                                                </div>
+                                                                <label for="desc" class="col-3 align-self-center col-form-label">Описание</label>
+                                                                <div class="col-9 pb-2">
+                                                                    <textarea style="font-size:12px" type="text" name="roleModel.description" class="form-control" id="desc" value="@Model[i].Description">@Model[i].Description</textarea>
+                                                                </div>
+                                                                <div class="col-12 text-center">
+                                                                    <span asp-validation-for="@Model[i].Description"></span>
+                                                                </div>
+                                                            </div>
+                                                            <button class="btn btn-warning btn-block" type="submit" asp-area="Admin" asp-controller="Role" asp-action="EditRole">Изменить</button>
+                                                        </div>
+
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                }
+                            </tr>
+                        }
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="#" data-toggle="modal" data-target="#addRoleModal" style="display:block;">
+                    <span class="btn btn-warning btn" role="button">Добавить роль</span>
+                </a>
+                <div id="addRoleModal" class="modal fade">
+                    <div class="modal-dialog">
+                        <div class="modal-content" style="border: 4px solid orange;font-size: 12px">
+                            <div class="modal-header" style="border-bottom: 4px solid orange">
+                                <h4 class="modal-title" style="color:red">НОВАЯ РОЛЬ</h4>
+                                <button class="close" type="button" data-dismiss="modal">X</button>
+                            </div>
+                            <div class="modal-body">
+                                <form role="form" method="post">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div style="font-size:12px">
+                                                <div class="form-group">
+                                                    <label for="name">Название</label>
+                                                    <input asp-for="@Model.First().Name" class="form-control" id="name" placeholder="Введите название роли" />
+                                                </div>
+                                                <div class="col-12 text-center">
+                                                    <span asp-validation-for="@Model.First().Name" style="color:red"></span>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="desc">Описание</label>
+                                                    <textarea asp-for="@Model.First().Description" type="text" class="form-control" id="desc" placeholder="Введите описание роли"></textarea>
+                                                </div>
+                                                <div class="col-12 text-center">
+                                                    <span asp-validation-for="@Model.First().Description" style="color:red"></span>
+                                                </div>
+                                            </div>
+                                            <button class="btn btn-warning btn-block" style="margin-top:10px" type="submit" asp-area="Admin" asp-controller="Role" asp-action="AddRole">Добавить</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

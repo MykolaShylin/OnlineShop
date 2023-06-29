@@ -1,0 +1,80 @@
+﻿@model List<ComparingProductsViewModel>
+
+@if (Model.Count == 0)
+{
+    <h2 style="color:red">Список товаров для сравнения отсутствует</h2>
+    <a class="btn btn-outline-info btn-lg" role="button" asp-area="" asp-controller="Product" asp-action="CategoryProducts"  asp-route-isAllListProducts="@true">Вернуться на главную страницу</a>
+}
+else if (Model.Count == 1)
+{
+    <h3 style="color:coral">Нехватает продуктов для сравнения</h3>
+    <div class="row">
+        <div class="col-3 p-0 m-0" style="text-align:center">
+            <p><img style="width:300px" src="@Model.First().Product.Pictures.First().Path" /></p>
+            <p>@Model.First().Product.Name</p>
+            <a style="margin-top:10px" asp-area="" asp-controller="Product" asp-action="CategoryProducts"  asp-route-isAllListProducts="@true">Добавить продуктов</a><br>
+            <a style="margin-top:10px" asp-area="" asp-controller="Product" asp-action="Deleting" asp-route-prodId="@Model.First().Id">Удалить</a>
+        </div>
+    </div>
+}
+else
+{
+    <div class="row justify-content-start">
+        <div class="col-2">
+            <a class="btn btn-block btn-outline-primary" asp-area="" asp-controller="Product" asp-action="CategoryProducts" asp-route-isAllListProducts="@true">К продуктам</a>
+        </div>
+    </div>
+    <div class="row">
+        @for (int i = 0; i < Model.Count(); i++)
+        {
+            if (i == 0)
+            {
+                <div class="col-3 card border-0 p-0 m-0">
+                    <div class="card-header" style="border:none; background-color:white">
+                        <img class="card-img-top invisible" src="@Model.First().Product.Picture.Path" style="width:200px">
+                    </div>
+                    <div class="card-body">
+                        <h6 style="margin-top:20px">Категория</h6>
+                        <h6 style="margin-top:20px">Бренд</h6>
+                        <h6 style="margin-top:20px">Название</h6>
+                        <h6 style="margin-top:20px">Вкус</h6>
+                        <h6 style="margin-top:20px">Цена</h6>
+                    </div>
+                </div>
+                <div class="col-3 card text-center p-0 m-0">
+                    <div class="card-header" style="border:none;background-color:white">
+                        <img class="card-img-top" src="@Model[i].Product.Picture.Path" style="width:200px">
+                    </div>
+                    <div class="card-body">
+                        <h6 style="margin-top:20px;">@EnumHelper.GetDisplayName(@Model[i].Product.Category)</h6>
+                        <h6 style="margin-top:20px;">@Model[i].Product.Brand</h6>
+                        <h6 style="margin-top:20px;">@Model[i].Product.Name</h6>
+                        <h6 style="margin-top:20px;">@Model[i].Flavor.Name</h6>
+                        <h6 style="margin-top:20px;">@Model[i].Product.Cost</h6>
+                    </div>
+                    <div class="card-footer" style="border:none; background-color:white">
+                        <a style="border-bottom-style:dotted; border-bottom-color:goldenrod" asp-area="" asp-controller="Product" asp-action="Deleting" asp-route-prodId="@Model[i].Id">Убрать из сравнения</a>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="col-3 card text-center p-0 m-0">
+                    <div class="card-header" style="border:none;background-color:white">
+                        <img class="card-img-top" src="@Model[i].Product.Picture.Path" style="width:200px">
+                    </div>
+                    <div class="card-body">
+                        <h6 style="margin-top:20px;">@EnumHelper.GetDisplayName(@Model[i].Product.Category)</h6>
+                        <h6 style="margin-top:20px;">@Model[i].Product.Brand</h6>
+                        <h6 style="margin-top:20px;">@Model[i].Product.Name</h6>
+                        <h6 style="margin-top:20px;">@Model[i].Flavor.Name</h6>
+                        <h6 style="margin-top:20px;">@Model[i].Product.Cost</h6>
+                    </div>
+                    <div class="card-footer" style="border:none; background-color:white">
+                        <a style="border-bottom-style:dotted; border-bottom-color:goldenrod" asp-area="" asp-controller="Product" asp-action="Deleting" asp-route-prodId="@Model[i].Id">Убрать из сравнения</a>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+}

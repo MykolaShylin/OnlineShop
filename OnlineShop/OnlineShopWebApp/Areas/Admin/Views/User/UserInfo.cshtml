@@ -1,0 +1,81 @@
+﻿@model UserViewModel
+<div class="row">
+    @await Html.PartialAsync("AdminMenu")
+    <div class="col-10">
+        <div class="card alert-light">
+            <div class="card-header">
+                <h3>Пользователь @Model.Login</h3>
+            </div>
+            <div class="card-body pb-0 mb-0">
+                <table class="table table-hover">
+                    <tr>
+                        <td>
+                            <h5>Номер пользователя</h5>
+                        </td>
+                        <td>@Model.Id</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <h5>Логин</h5>
+                        </td>
+                        <td>@Model.Login</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <h5>Имя</h5>
+                        </td>
+                        <td>@Model.Name</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <h5>Фамилия</h5>
+                        </td>
+                        <td>@Model.SerName</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <h5>Никнейм</h5>
+                        </td>
+                        <td>@Model.NikName</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <h5>Email</h5>
+                        </td>
+                        <td>@Model.Email</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <h5>Телефон</h5>
+                        </td>
+                        <td>@Model.Phone</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <h5>Права</h5>
+                        </td>
+                        <td>
+                            @foreach(var role in ViewBag.UserRoles)
+                            {
+                                <p>@role</p>
+                            }
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="card-footer" style="text-align:right">
+                <div class="dropdown">
+                    <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Действия
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" asp-area="Admin" asp-controller="User" asp-action="EditUserInfo" asp-route-id="@Model.Id">Редактирование данных</a>
+                        <a class="dropdown-item" asp-area="Admin" asp-controller="User" asp-action="ChangeUserPassword" asp-route-id="@Model.Id">Смена пароля</a>
+                        <a class="dropdown-item" asp-area="Admin" asp-controller="User" asp-action="DeleteUser" asp-route-id="@Model.Id">Удалить</a>
+                        <a class="dropdown-item" asp-area="Admin" asp-controller="Role" asp-action="ChangeUserRole" asp-route-userId="@Model.Id">Права доступа</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

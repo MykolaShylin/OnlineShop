@@ -1,0 +1,81 @@
+﻿.telephone-contacts > .bigphone {
+    color: #000;
+    display: block;
+    line-height: 1em;
+    margin-bottom: 13px;
+    margin-top: 10px;
+}
+
+.telephone-contacts > .freephone {
+    color: #000;
+    display: block;
+    line-height: 1em;
+    margin-bottom: 13px;
+    margin-top: 10px;
+}
+
+.bigphone {
+    font-size: 50px;
+    font-weight: bold;
+}
+
+.freephone {
+    font-size: 23px;
+    font-weight:bold;
+}
+
+.grafic-contacts {
+    font-size: 17px;
+    color: #000;
+    border-left: 1px solid #e1e1e1;
+    border-right: 1px solid #e1e1e1;
+    margin-top: 10px;
+    font-weight: bold
+}
+.grafic-time {
+    font-size: 25px;
+    display:block
+}
+
+.wordb {
+    font-size: 16px;
+    display: block;
+    margin: 8px 0px;
+    font-weight: bold;
+    border-bottom: 1px solid #cccccc;
+}
+
+.email-contacts {
+    color: #000;
+    float: left;
+    margin-top: 45px;
+}
+
+.lc_big {
+    font-size: 20px;
+    line-height: 1.2;
+    padding-top: 20px;
+    font-weight: bold;
+    padding-bottom: 30px;
+    border-bottom: 1px solid #e1e1e1;
+}
+
+.lc_medium {
+    font-size: 15px;
+    line-height: 1.2;
+    padding-top: 20px;
+    font-weight: 500;
+    padding-bottom: 30px;
+    border-bottom: 1px solid #e1e1e1;
+}
+
+.home-bnrs {
+    margin: 0 0 10px;
+}
+
+.img-responsive {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+

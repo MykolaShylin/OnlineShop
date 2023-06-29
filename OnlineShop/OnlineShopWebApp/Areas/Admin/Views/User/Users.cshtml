@@ -1,0 +1,45 @@
+﻿@model List<UserViewModel>
+<div class="row">
+    @await Html.PartialAsync("AdminMenu")
+    <div class="col-10" >
+        <table class="table table-striped">            
+            <thead>
+                <tr>                   
+                    <td colspan="5">
+                        <h3>Список пользователей</h3>
+                    </td>
+                </tr>
+                <tr style="text-align:center">
+                    <th>Логин</th>
+                    <th>Никнейм</th>
+                    <th>Email</th>
+                    <th>Имя</th>
+                    <th>Фамилия</th>
+                    <th>Телефон</th>
+                </tr>
+            </thead>            
+            <tbody style="text-align:center">
+                @foreach(var user in Model)
+                {
+                    <tr>
+                        <td>
+                            <a asp-area="Admin" asp-controller="User" asp-action="UserInfo" asp-route-id="@user.Id">@user.Login</a>
+                        </td>
+                        <td>@user.NikName</td>
+                        <td>@user.Email</td>
+                        <td>@user.Name</td>
+                        <td>@user.SerName</td>
+                        <td>@user.Phone</td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr style="text-align:right">
+                    <td colspan="6">
+                        <a class="btn btn-info" role="button" asp-area="Admin" asp-controller="User" asp-action="Create" asp-route-isAdminRegistration="@true">Зарегестрировать нового пользователя</a>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>

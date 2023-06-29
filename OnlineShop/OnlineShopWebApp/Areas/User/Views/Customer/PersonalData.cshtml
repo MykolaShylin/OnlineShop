@@ -1,0 +1,81 @@
+﻿@model UserViewModel
+<div class="row">
+    @await Html.PartialAsync("CustomerInfoMenu")
+    <div class="col-9 border-left border-danger">
+        <h3 class="mb-3">Ваш профиль</h3>
+        <div class="row">
+            <div class="col-3">
+                <div class="row">
+                    <div class="col-12">
+                        @if (Model.Avatar == null)
+                        {
+                            <img class="img-fluid rounded mx-auto d-block shadow-lg" src="~/icons/anonym_avatar.png" alt="Avatar" />
+                        }
+                        else
+                        {
+                            <img class="img-fluid rounded mx-auto d-block shadow-lg" src="@Model.Avatar" alt="Avatar" />
+                        }
+                    </div>
+                    <div class="col-12 ">
+                        <a href="#" data-toggle="modal" data-target="#avatar" style="display:block;">
+                            <span class="btn btn-sm btn-light btn-block" role="button">Изменить фото</span>
+                        </a>
+                        <div id="avatar" class="modal fade">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <form role="form" method="post" enctype="multipart/form-data">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Загрузить новое фото</h4>
+                                            <button class="close" type="button" data-dismiss="modal">×</button>
+                                        </div>
+                                        <div class="modal-body text-center">
+                                            <input name="uploadedAvatar" type="file" class="form-control border-0">
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button asp-area="User" asp-controller="Customer" asp-action="ChangeAvatar" type="submit" class="btn btn-default">Изменить</button>
+                                            <button class="btn btn-default float-right" type="button" data-dismiss="modal">Закрыть</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-9">
+                <div class="row">
+                    <div class="col-3 mb-3">
+                        <span style="font-size:medium" class="badge badge-info">Фамилия и Имя</span>
+                    </div>
+                    <div class="col-9 mb-3">
+                        <span style="font-size:medium" class="badge badge-secondary">@Model.SerName @Model.Name</span>
+                    </div>
+                    <div class="col-3 mb-3">
+                        <span style="font-size:medium" class="badge badge-info">Логин</span>
+                    </div>
+                    <div class="col-9 mb-3">
+                        <span style="font-size:medium" class="badge badge-secondary">@Model.Login</span>
+                    </div>
+                    <div class="col-3 mb-3">
+                        <span style="font-size:medium" class="badge badge-info">Номер телефона</span>
+                    </div>
+                    <div class="col-9 mb-3">
+                        <span style="font-size:medium" class="badge badge-secondary">@Model.Phone</span>
+                    </div>
+                    <div class="col-3 mb-3">
+                        <span style="font-size:medium" class="badge badge-info">Email</span>
+                    </div>
+                    <div class="col-9 mb-3">
+                        <span style="font-size:medium" class="badge badge-secondary">@Model.Email</span>
+                    </div>
+                    <div class="col-3 mb-3">
+                        <span style="font-size:medium" class="badge badge-info">Никнейм</span>
+                    </div>
+                    <div class="col-9 mb-3">
+                        <span style="font-size:medium" class="badge badge-secondary">@Model.NikName</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

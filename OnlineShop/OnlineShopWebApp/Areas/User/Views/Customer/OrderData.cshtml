@@ -1,0 +1,67 @@
+﻿@using OnlineShop.DB.Models.Enumerations;
+@model OrderViewModel
+
+<div class="row">
+    @await Html.PartialAsync("CustomerInfoMenu")
+    <div class="col-9">
+        <div class="card">
+            <h3 class="card-header">
+                Заказ № @Model.Id
+            </h3>
+            <div class="card-body">
+
+                <table class="table">
+                    <tr>
+                        <td>Дата и время оформления</td>
+                        <td>@Model.OrderDateTime</td>
+                    </tr>
+                    <tr>
+                        <td>Получатель</td>
+                        <td>@Model.deliveryInfo.Name @Model.deliveryInfo.SerName</td>
+                    </tr>
+                    <tr>
+                        <td>Номер телефона</td>
+                        <td>@Model.deliveryInfo.Phone</td>
+                    </tr>
+                    <tr>
+                        <td>Email</td>
+                        <td>@Model.deliveryInfo.Email</td>
+                    </tr>
+                    <tr>
+                        <td>Адрес доставки</td>
+                        <td>г. @Model.deliveryInfo.City</td>
+                    </tr>
+                    <tr>
+                        <td>Отделение Новой Почты</td>
+                        <td>@Model.deliveryInfo.PostNumber</td>
+                    </tr>
+                    <tr>
+                        <td>Способ доставки</td>
+                        <td>@Model.deliveryInfo.DeliveryType</td>
+                    </tr>
+                    <tr>
+                        <td>Способ оплаты</td>
+                        <td>@Model.payInfo.PayType</td>
+                    </tr>
+                    <tr>
+                        <td>Товар</td>
+                        <td>
+                            @foreach (var product in Model.Items)
+                            {
+                                <p class="mb-0">@product.Product.Name - @product.Product.Flavors.First(x=>x.Id == product.ProductInfo.FlavorId).Name - @product.Amount шт.</p>
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Общая сумма заказа</td>
+                        <td>@Model.Items.Sum(x=>x.Cost)</td>
+                    </tr>
+                    <tr>
+                        <td>Статус заказа</td>
+                        <td>@EnumHelper.GetDisplayName(Model.orderStatus)</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

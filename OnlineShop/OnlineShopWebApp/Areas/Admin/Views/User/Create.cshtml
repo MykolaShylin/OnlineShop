@@ -1,0 +1,113 @@
+﻿@model UserViewModel
+<div class="row">
+    @await Html.PartialAsync("AdminMenu")
+    <div class="col-10">
+        <form method="post">
+            <div class="card alert-light">
+                <div class="card-header">
+                    <h3>Регистрация нового пользователя</h3>
+                </div>
+                <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+                <div class="card-body">
+                    <table class="table table-hover">
+                        <tr>
+                            <td style="vertical-align:middle">
+                                <h6>Имя</h6>
+                            </td>
+                            <td>
+                                <input asp-for="Name" class="form-control" placeholder="Введите имя" />
+                            </td>
+                            <td style="vertical-align:middle">
+                                <span asp-validation-for="Name" style="color:red"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="vertical-align:middle">
+                                <h6>Фамилия</h6>
+                            </td>
+                            <td>
+                                <input asp-for="SerName" class="form-control" placeholder="Введите фамилию" />
+                            </td>
+                            <td style="vertical-align:middle">
+                                <span asp-validation-for="SerName" style="color:red"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="vertical-align:middle">
+                                <h6>Никнейм</h6>
+                            </td>
+                            <td>
+                                <input asp-for="NikName" class="form-control" placeholder="Введите никнейм" />
+                            </td>
+                            <td style="vertical-align:middle">
+                                <span asp-validation-for="NikName" style="color:red"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="vertical-align:middle">
+                                <h6>Логин</h6>
+                            </td>
+                            <td>
+                                <input asp-for="Login" class="form-control" placeholder="Введите логин" />
+                            </td>
+                            <td style="vertical-align:middle">
+                                <span asp-validation-for="Login" style="color:red"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="vertical-align:middle">
+                                <h6>Email</h6>
+                            </td>
+                            <td>
+                                <input asp-for="Email" class="form-control" placeholder="Введите Email" />
+                            </td>
+                            <td style="vertical-align:middle">
+                                <span asp-validation-for="Email" style="color:red"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="vertical-align:middle">
+                                <h6>Телефон</h6>
+                            </td>
+                            <td>
+                                <input asp-for="Phone" class="form-control" placeholder="Введите телефон" />
+                            </td>
+                            <td style="vertical-align:middle">
+                                <span asp-validation-for="Phone" style="color:red"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="vertical-align:middle">
+                                <h6>Пароль</h6>
+                            </td>
+                            <td>
+                                <input asp-for="Password" class="form-control" placeholder="Введите пароль" />
+                            </td>
+                            <td style="vertical-align:middle">
+                                <span asp-validation-for="Password" style="color:red"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="vertical-align:middle">
+                                <h6>Подтвердите пароль</h6>
+                            </td>
+                            <td>
+                                <input asp-for="PasswordConfirm" class="form-control" placeholder="Подтвердите пароль" />
+                            </td>
+                            <td style="vertical-align:middle">
+                                <span asp-validation-for="PasswordConfirm" style="color:red"></span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="card-footer" style="text-align:right">
+                    <div class="row">
+                        <div class="col-6 float-left">
+                            <button class="btn btn-success btn-block" type="submit" asp-area="Admin" asp-controller="User" asp-action="Create">Сохранить</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

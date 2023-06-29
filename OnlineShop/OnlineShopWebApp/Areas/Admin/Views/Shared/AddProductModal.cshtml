@@ -1,0 +1,84 @@
+﻿
+@using OnlineShop.DB.Models.Enumerations;
+
+@{
+    var product = new ProductViewModel();
+}
+<div id="addProductModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content" style="border: 4px solid orange;font-size: 12px">
+            <div class="modal-header" style="border-bottom: 4px solid orange">
+                <h4 class="modal-title" style="color:red">НОВЫЙ ПРОДУКТ</h4>
+                <button class="close" type="button" data-dismiss="modal">X</button>
+            </div>
+            <div class="modal-body">
+                <form role="form" method="post" enctype="multipart/form-data">
+                    <div class="row">
+                        <div class="col-12">
+                            <div style="font-size:15px">
+                                <div class="form-group">
+                                    <label style="color:deepskyblue" for="category">Категория</label>
+                                    <div class="text-left">
+                                        <select class="btn btn-light" asp-for=@product.Category asp-items="@Html.GetEnumSelectList<ProductCategories>()" id="category">
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label style="color:deepskyblue" for="brand">Бренд</label>
+                                    <input asp-for=@product.Brand class="form-control" id="brand" placeholder="Введите бренд продукта" />
+                                </div>
+                                <div class="col-12 mb-2">
+                                    <span asp-validation-for="@product.Brand" style="color:red"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label style="color:deepskyblue" for="name">Название</label>
+                                    <input asp-for=@product.Name class="form-control" id="name" placeholder="Введите название продукта" />
+                                </div>
+                                <div class="col-12 mb-2">
+                                    <span asp-validation-for="@product.Name" style="color:red"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label style="color:deepskyblue" for="description">Описание</label>
+                                    <textarea asp-for=@product.Description type="text" style="height:100px" class="form-control" id="description" placeholder="Введите описание продукта"> </textarea>
+                                </div>
+                                <div class="col-12 mb-2">
+                                    <span asp-validation-for="@product.Description" style="color:red"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label style="color:deepskyblue" for="cost">Цена, грн</label>
+                                    <input asp-for=@product.Cost type="number" class="form-control" id="cost" placeholder="Введите цену продукта" />
+                                </div>
+                                <div class="col-12 mb-2">
+                                    <span asp-validation-for="@product.Cost" style="color:red"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label style="color:deepskyblue" for="count">Количество, шт</label>
+                                    <input asp-for=@product.AmountInStock type="number" class="form-control" id="count" placeholder="Введите количество продукта" />
+                                </div>
+                                <div class="col-12 mb-2">
+                                    <span asp-validation-for="@product.AmountInStock" style="color:red"></span>
+                                </div>
+                                <p style="color:deepskyblue">Выбирите вкусы</p>
+                                
+                                @foreach(var flavor in ViewBag.Flavors)
+                                {
+                                    <div class="form-check form-check-inline mb-2 text-lg-center">
+                                        <input class="form-check-input" name="Flavors" type="checkbox" id="flav">
+                                        <label class="form-check-label" for="flav">
+                                            @flavor.Name
+                                        </label>
+                                    </div>
+                                }
+                                <div class="form-group mt-2">
+                                    <label style="color:deepskyblue" class="label_text" for="picture">Изображение</label>
+                                    <input asp-for=@product.UploadedFile required multiple="multiple" type="file" class="form-control border-0" id="picture" />
+                                </div>
+                            </div>
+                            <button class="btn btn-warning btn-block" style="margin-top:10px" type="submit" asp-area="Admin" asp-controller="Product" asp-action="Add">Добавить</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,115 @@
+﻿@using OnlineShop.DB.Models.Enumerations;
+@model OrderViewModel
+
+<div class="row">
+    @await Html.PartialAsync("AdminMenu")
+    <div class="col-10">
+        <div class="card">
+            <h3 class="card-header">
+                Заказ № @Model.Id
+            </h3>
+            <div class="card-header">
+                <ul class="nav nav-tabs card-header-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#item1">Данные заказа</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#item2">Данные аккаунта</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-body tab-content">
+                <div class="tab-pane fade show active" id="item1">
+                    <form method="post">
+                        <div class="text-danger" style="font-size:small" asp-validation-summary="ModelOnly"></div>
+                        <table class="table">
+                            <tr>
+                                <td>Дата и время оформления</td>
+                                <td>@Model.OrderDateTime</td>
+                            </tr>
+                            <tr>
+                                <td>Получатель</td>
+                                <td>@Model.deliveryInfo.Name @Model.deliveryInfo.SerName</td>
+                            </tr>
+                            <tr>
+                                <td>Номер телефона</td>
+                                <td>@Model.deliveryInfo.Phone</td>
+                            </tr>
+                            <tr>
+                                <td>Email</td>
+                                <td>@Model.deliveryInfo.Email</td>
+                            </tr>
+                            <tr>
+                                <td>Адрес доставки</td>
+                                <td>г.@Model.deliveryInfo.City</td>
+                            </tr>
+                            <tr>
+                                <td>Отделение Новой Почты</td>
+                                <td>@Model.deliveryInfo.PostNumber</td>
+                            </tr>
+                            <tr>
+                                <td>Способ доставки</td>
+                                <td>@Model.deliveryInfo.DeliveryType</td>
+                            </tr>
+                            <tr>
+                                <td>Способ оплаты</td>
+                                <td>@Model.payInfo.PayType</td>
+                            </tr>
+                            <tr>
+                                <td>Товар</td>
+                                <td>
+                                    @foreach (var product in Model.Items)
+                                    {
+                                        <p>@product.Product.Name - @product.Product.Flavors.First(x=>x.Id == product.ProductInfo.FlavorId).Name - @product.Amount шт.</p>
+                                    }
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Общая сумма заказа</td>
+                                <td>@Model.Items.Sum(x=>x.Cost)</td>
+                            </tr>
+                            <tr>
+                                <td>Статус заказа</td>
+                                <td>
+                                    <select asp-for=orderStatus
+                                            asp-items="@Html.GetEnumSelectList<OrderStatuses>()"
+                                            class="btn btn-info">                                        
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+                        <button class="btn btn-success" type="submit" asp-area="Admin" asp-controller="Order" asp-action="UpdateOrderStatus" asp-route-orderId="@Model.Id">Обновить статус</button>
+                    </form>
+                </div>
+                <div class="tab-pane fade" id="item2">
+                    <table class="table">
+                        <tr>
+                            <td>Код аккаунта</td>
+                            <td>@ViewBag.CustomerInfo.Id</td>
+                        </tr>
+                        <tr>
+                            <td>Логин пользователя</td>
+                            <td>@ViewBag.CustomerInfo.Login</td>
+                        </tr>
+                        <tr>
+                            <td>Имя пользователя</td>
+                            <td>@ViewBag.CustomerInfo.Name</td>
+                        </tr>
+                        <tr>
+                            <td>Фамилия пользователя</td>
+                            <td>@ViewBag.CustomerInfo.SerName</td>
+                        </tr>
+                        <tr>
+                            <td>Email</td>
+                            <td>@ViewBag.CustomerInfo.Email</td>
+                        </tr>
+                        <tr>
+                            <td>Номер телефона</td>
+                            <td>@ViewBag.CustomerInfo.Phone</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

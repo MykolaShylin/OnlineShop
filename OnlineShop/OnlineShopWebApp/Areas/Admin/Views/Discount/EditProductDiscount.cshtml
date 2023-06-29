@@ -1,0 +1,52 @@
+﻿@model EditProductDiscountViewModel
+
+<div class="row">
+    @await Html.PartialAsync("AdminMenu")
+    <div class="col-10">
+        <form method="post">
+            <div class="row">
+                <div class="col-5">
+                    <img class="img-fluid" src="@Model.Product.Picture.Path" />
+                </div>
+                <div class="col-7">
+                    <input hidden="hidden" name="productId" value="@Model.Product.Id" />
+                    <input hidden="hidden" name="oldDiscountId" value="@Model.Discount.Id" />
+                    <div class="form-group">
+                        <label class="badge badge-light" style="font-size:medium" for="Categori">Категория</label>
+                        <input id="Categori" type="text" readonly="readonly" class="border-0 bg-transparent pl-0 form-control" value="@EnumHelper.GetDisplayName(Model.Product.Category)" />
+                    </div>
+                    <div class="form-group">
+                        <label for="Brand" style="font-size:medium" class="badge badge-light">Брэнд</label>
+                        <input id="Brand" type="text" readonly="readonly" class="border-0 bg-transparent pl-0 form-control" value="@Model.Product.Brand" />
+                    </div>
+                    <div class="form-group">
+                        <label for="Name" style="font-size:medium" class="badge badge-light">Название</label>
+                        <input id="Name" type="text" readonly="readonly" class="border-0 bg-transparent pl-0 form-control" value="@Model.Product.Name" />
+                    </div>
+                    <div class="form-group">
+                        <label for="Description" style="font-size:medium" class="badge badge-light">Описание акции</label>
+                        <input id="Description" value="@Model.Product.DiscountDescription" class="form-control pl-0" type="text" name="discountDescription" placeholder="(не обязательно)" />
+                    </div>
+                    <div class="form-group form-inline">
+                        <label for="Discounts">Скидка, %</label>
+                        <select class="btn btn-outline-secondary form-control btn-sm ml-2" name="newDiscountId" id="Discounts">
+                            @foreach (var discount in Model.Discounts)
+                            {
+                                @if (discount.Id == Model.Discount.Id)
+                                {
+                                    <option value="@discount.Id" selected="selected">@discount.DiscountPercent</option>
+                                }
+                                else
+                                {
+                                    <option value="@discount.Id">@discount.DiscountPercent</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <button class="btn btn-warning btn-block mt-2" type="submit" asp-area="Admin" asp-controller="Discount" asp-action="EditProductDiscount">Сохранить</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+

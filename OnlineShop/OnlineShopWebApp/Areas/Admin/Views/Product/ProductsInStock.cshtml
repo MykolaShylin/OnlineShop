@@ -1,0 +1,82 @@
+﻿@model List<ProductViewModel>
+
+<div class="row">
+    @await Html.PartialAsync("AdminMenu")
+    <div class="col-10">
+        <div class="row">
+            <div class="col-12 pb-3 text-center">
+                <h2>Список продуктов на складе</h2>
+                <a href="#" data-toggle="modal" data-target="#addProductModal" style="display:block;">
+                    <span style="color:blue;font-size: 20px; float:left">Добавить продукт</span>
+                </a>
+                @await Html.PartialAsync("AddProductModal")
+                <a asp-area="Admin" asp-controller="Product" asp-action="ClearOutStock">
+                    <span style="color:red;font-size: 20px;">Удалить все</span>
+                </a>
+                <a style="float:right" asp-area="Admin" asp-controller="Product" asp-action="GetDefaultProducts">
+                    <span style="color:green;font-size: 20px;">Загрузить продукты</span>
+                </a>
+            </div>
+            <div class="col-12">
+                <table class="table" style="text-align:center">
+                    <thead style="font-size:medium">
+                        <tr>
+                            <th>№</th>
+                            <th>Категория</th>
+                            <th>Бренд</th>
+                            <th>Название</th>
+                            <th>Цена, грн</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int counter = 0;
+                        }
+                        @foreach (var product in Model)
+                        {
+                            counter++;
+                            ViewBag.ModalInfo = "productInfoModal" + counter;
+                            <tr style="border-bottom-color:grey; border-bottom-style:solid; font-size:smaller;">
+                                <td>@counter</td>
+                                <td>@EnumHelper.GetDisplayName(product.Category)</td>
+                                <td>@product.Brand</td>
+                                <td>
+                                    <a href="#" data-toggle="modal" data-target="#@ViewBag.ModalInfo" style="display:block;">
+                                        <span>@product.Name</span>
+                                    </a>
+                                    @await Html.PartialAsync("ProductInfoModal", @product)
+                                </td>
+                                <td>@product.Cost</td>
+                                <td>
+                                    <a href="#" data-toggle="modal" data-target="#deleteModal" style="display:block;">
+                                        <span class="btn btn-light btn-sm p-0 m-0" role="button">Удалить</span>
+                                    </a>
+                                    <div id="deleteModal" class="modal fade">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title">Подтверждение</h4>
+                                                    <button class="close" type="button" data-dismiss="modal">×</button>
+                                                </div>
+                                                <div class="modal-body">Вы уверены, что хотите удалить этот продукт?</div>
+                                                <div class="modal-footer">
+                                                    <a asp-area="Admin" asp-controller="Product" asp-action="Delete" asp-route-prodId="@product.Id" role="button" class="btn btn-default">Удалить</a>
+                                                    <button class="btn btn-default float-right" type="button" data-dismiss="modal">Закрыть</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <a asp-area="Admin" asp-controller="Product" asp-action="EditProduct" asp-route-productId="@product.Id">Редактировать</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

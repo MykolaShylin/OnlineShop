@@ -1,0 +1,44 @@
+﻿@model List<OrderViewModel>
+
+<div class="row">
+    @await Html.PartialAsync("CustomerInfoMenu")
+    <div class="col-9 no-gutters">
+        <h2>Список заказов</h2><br />
+        @if(Model == null || Model.Count == 0)
+        {
+            <h2>Вы еще не делали ниодного заказа!</h2>
+        }
+        else
+        {
+            <table class="table table-condensed table-hover text-center">
+                <thead>
+                    <tr>
+                        <th>№</th>
+                        <th>Сумма, грн</th>
+                        <th>Статус</th>
+                        <th>Номер заказа</th>
+                        <th>Дата / Время</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        var counter = 0;
+                    }
+                    @foreach (var order in Model)
+                    {
+                        counter++;
+                        <tr>
+                            <td>@counter</td>
+                            <td>@order.Items.Sum(x=>x.Cost)</td>
+                            <td>@EnumHelper.GetDisplayName(order.orderStatus) </td>
+                            <td>
+                                <a asp-controller="Customer" asp-action="OrderData" asp-area="User" asp-route-id="@order.Id">@order.Id</a>
+                            </td>
+                            <td>@order.OrderDateTime</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>

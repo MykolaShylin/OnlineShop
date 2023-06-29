@@ -1,0 +1,10 @@
+﻿@model int
+
+@if (Model > 0)
+{
+    <a href="/product/checkcomparer" style="color:darkgrey"><img src="/icons/compare_icon.png" width="40"><span style="color:orangered">@Model</span></a>
+}
+else
+{
+    <a href="/product/checkcomparer" ><img  src="/icons/compare_icon.png" width="40"></a>
+}
