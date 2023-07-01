@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Autofac.Core;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Builder;
@@ -13,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Net.Http.Headers;
 using Microsoft.Owin.Security.Google;
 using OnlineShop.DB;
 using OnlineShop.DB.Contexts;
@@ -21,6 +23,8 @@ using OnlineShop.DB.Models;
 using OnlineShop.DB.Models.Interfaces;
 using OnlineShop.DB.Storages;
 using OnlineShopWebApp.Controllers;
+using OnlineShopWebApp.FeedbackApi;
+using OnlineShopWebApp.FeedbackApi.Models;
 using Serilog;
 
 namespace OnlineShopWebApp
@@ -57,6 +61,13 @@ namespace OnlineShopWebApp
             services.AddTransient<IProductComparer, ComparingProductsDbStorage>();
             services.AddTransient<IProductComparer, ComparingProductsDbStorage>();
             services.AddTransient<IDiscount, DiscountsDbStorage>();
+
+            services.AddHttpClient("FeedbackApi", httpClient =>
+            {
+                httpClient.BaseAddress = new Uri("https://localhost:7274");
+            });
+            services.AddTransient<FeedbackApiClient>();
+
             services.AddControllersWithViews();
 
             services.AddAuthentication(options =>

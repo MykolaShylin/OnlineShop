@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using OnlineShopWebApp.FeedbackApi;
 
 namespace OnlineShopWebApp.Controllers
 {
@@ -21,15 +22,18 @@ namespace OnlineShopWebApp.Controllers
         private readonly IProductComparer _comparingProducts;
         private readonly IFlavor _flavors;
         private readonly UserManager<User> _userManager;
-        public ProductController( IProductsStorage products, IProductComparer comparingProducts, IFlavor flavors, UserManager<User> userManager)
+        private readonly FeedbackApiClient _feedbackApiClient;
+        public ProductController(IProductsStorage products, IProductComparer comparingProducts, IFlavor flavors, UserManager<User> userManager, FeedbackApiClient feedbackApiClient)
         {
             this._products = products;
             _comparingProducts = comparingProducts;
             _flavors = flavors;
             _userManager = userManager;
+            _feedbackApiClient = feedbackApiClient;
         }
         public async Task<IActionResult> Index(int prodId)
         {
+            var feedbacks = _feedbackApiClient.GetFeedbacks(prodId);
             var product = await _products.TryGetByIdAsync(prodId);
             if (product != null)
             {
