@@ -23,7 +23,7 @@ namespace OnlineShopWebApp.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
         }
-        public async Task<ActionResult> LoginAsync(string returnUrl)
+        public async Task<ActionResult> Login(string returnUrl)
         {
             if(returnUrl == "/Basket/Buying" || returnUrl == "/Product/Comparing")
             {

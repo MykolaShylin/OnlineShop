@@ -13,6 +13,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using OnlineShopWebApp.FeedbackApi;
+using OnlineShopWebApp.FeedbackApi.Models;
 
 namespace OnlineShopWebApp.Controllers
 {
@@ -33,14 +34,29 @@ namespace OnlineShopWebApp.Controllers
         }
         public async Task<IActionResult> Index(int prodId)
         {
-            var feedbacks = _feedbackApiClient.GetFeedbacks(prodId);
+            var feedbacks = await _feedbackApiClient.GetFeedbacksAsync(prodId);
             var product = await _products.TryGetByIdAsync(prodId);
             if (product != null)
             {
                 var productView = Mapping.ConvertToProductView(product);
-                return View(productView);                
+                productView.Feedbacks = Mapping.ConvertToFeedbacksView(feedbacks);
+                return View(productView);
             }
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        [Authorize]
+        public async Task<IActionResult> AddFeedback(int productId)
+        {
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            var newFeedback = new AddFeedbackModel() { ProductId = productId, UserId = user.Id };
+            return View(newFeedback);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddFeedbackAsync(AddFeedbackModel feedbackModel)
+        {
+            return null;
         }
 
         [Authorize]
@@ -69,13 +85,13 @@ namespace OnlineShopWebApp.Controllers
             ViewBag.UserId = userId;
             return View(comparingView);
         }
-        public async Task<IActionResult> CategoryProducts(bool isAllListProducts ,ProductCategories category)
+        public async Task<IActionResult> CategoryProducts(bool isAllListProducts, ProductCategories category)
         {
-            if(!isAllListProducts)
+            if (!isAllListProducts)
             {
                 var products = await _products.TryGetByCategoryAsync(category);
                 var productsView = new List<ProductViewModel>();
-                foreach(var product in products)
+                foreach (var product in products)
                 {
                     var productViewModel = Mapping.ConvertToProductView(product);
                     productsView.Add(productViewModel);

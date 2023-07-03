@@ -1,7 +1,7 @@
 ﻿@model ProductViewModel
 
 
-<div class = "row">
+<div class = "row justify-content-center">
     <div class = "col-3 no-gutters">
         <div id="productSlides" class="carousel slide" data-ride="carousel">
             <ol class="carousel-indicators">
@@ -206,6 +206,42 @@
                 </div>
             </div>
             </div>
+        </div>
+     </div>
+            <div class="col-12 mt-2">
+        <div class="card">
+            <div class="card-header">
+                <ul class="nav nav-tabs card-header-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#nutritions">Состав</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#feedbacks">Отзывы</a>
+                    </li>
+                </ul>
             </div>
-            </div>
-            </div>
+            <div class="tab-pane fade" id="nutritions">                   
+                </div>
+            <div class="tab-pane fade" id="feedbacks">
+                    <table class="table">
+                        <a class="btn btn-outline-danger mt-2" role="button" style="float:right" asp-area="" asp-controller="Product" asp-action="AddFeedback" asp-route-productId = "@Model.Id">Оставить отзыв</a>
+                        @foreach(var feedback in Model.Feedbacks)
+                    {
+                        <tr>
+                            <td>Оценка</td>
+                            <td>@feedback.Grade</td>
+                        </tr>
+                        <tr>
+                            <td>Дата</td>
+                            <td>@feedback.CreateDate.Date</td>
+                        </tr>
+                        <tr class="mb-2">
+                            <td>Отзыв</td>
+                            <td>@feedback.Text</td>
+                        </tr>
+                    }                    
+                    </table>
+                </div>
+                </div>
+                </div>
+</div>

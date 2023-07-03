@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Hosting;
 using OnlineShop.DB.Models;
 using OnlineShop.DB.Models.Enumerations;
+using OnlineShopWebApp.FeedbackApi.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -43,5 +44,7 @@ namespace OnlineShopWebApp.Models
 
         [Timestamp]
         public byte[] Concurrency { get; set; }
+
+        public List<FeedbackViewModel> Feedbacks { get; set; }
     }
 }

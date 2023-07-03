@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.CodeAnalysis;
+using OnlineShopWebApp.FeedbackApi;
 
 namespace OnlineShopWebApp.Areas.Admin.Controllers
 {
@@ -27,12 +28,14 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
         private IFlavor _flavors;
         private readonly IWebHostEnvironment _appEnvironment;
         private readonly IPictures _pictures;
-        public ProductController(IWebHostEnvironment appEnvironment, IFlavor flavors, IProductsStorage productsInStock, IPictures pictures)
+        private readonly FeedbackApiClient _feedbackApiClient;
+        public ProductController(IWebHostEnvironment appEnvironment, IFlavor flavors, IProductsStorage productsInStock, IPictures pictures, FeedbackApiClient feedbackApiClient)
         {
             _productsInStock = productsInStock;
             _flavors = flavors;
             _appEnvironment = appEnvironment;
             _pictures = pictures;
+            _feedbackApiClient = feedbackApiClient;
         }
 
         public async Task<IActionResult> ProductsInStock()
@@ -65,7 +68,9 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
 
         public async Task<ActionResult> EditProduct(int productId)
         {
+            var feedbacks = await _feedbackApiClient.GetFeedbacksAsync(productId);
             var productView = Mapping.ConvertToProductView(await _productsInStock.TryGetByIdAsync(productId));
+            productView.Feedbacks = Mapping.ConvertToFeedbacksView(feedbacks);
             var existingFlavors = Mapping.ConvertToFlavorsView(await _flavors.GetAllAsync());
             ViewBag.Flavors = existingFlavors;
             return View(productView);
@@ -280,7 +285,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
                 Pictures = imagesDb,
                 DiscountCost = product.DiscountCost,
                 DiscountDescription = product.DiscountDescription,
-                Concurrency = product.Concurrency
+                Concurrency = product.Concurrency,
             };
         }
         private string GetProductImagePath(ProductCategories categori)

@@ -1,0 +1,50 @@
+﻿@model AddFeedbackModel
+
+<div class="row">
+    <form role="form" method="post">
+        <div class="col-7 active">
+            <div class="form-group row">
+                <label for="name" class="col-2 mb-0 control-label align-self-center">Имя</label>
+                <div class="col-5">
+                    <input asp-for="UserName" class="form-control" id="name" placeholder="Ваше имя">
+                </div>
+                <div class="col-10 offset-1">
+                    <span asp-validation-for="UserName" style="color:red"></span>
+                </div>
+                <label for="grade" class="col-2 control-label">Оценка</label>
+                @for (int i = 1; i < 6; i++)
+                {
+                    var id = "radio" + i;
+                    <div class="col-2">
+                        <div class="radio">
+                            @if (i == 5)
+                            {
+                                <label>
+                                    <input type="radio" asp-for="Grade" id="@id" value="@i" checked>
+                                    @i
+                                </label>
+                            }
+                            else
+                            {
+                                <label>
+                                    <input type="radio" asp-for="Grade" id="@id" value="@i">
+                                    @i
+                                </label>
+                            }
+                        </div>
+                    </div>
+                }
+                <label for="feedback" class="col-2 mb-0 control-label align-self-center">Отзыв</label>
+                <div class="col-10">
+                    <textarea asp-for="Text" class="form-control h-100 w-100" id="feedback" placeholder="Оставьте отзыв"></textarea>
+                </div>
+                <div class="col-10 offset-1">
+                    <span asp-validation-for="Text" style="color:red"></span>
+                </div>
+            </div>
+        </div>
+        <input hidden="hidden" asp-for="UserId" value="@Model.UserId" />
+        <input hidden="hidden" asp-for="ProductId" value="@Model.ProductId" />
+        <button class="btn btn btn-success" type="submit" asp-area="" asp-controller="Product" asp-action="AddFeedback">Отправить</button>
+    </form>
+</div>

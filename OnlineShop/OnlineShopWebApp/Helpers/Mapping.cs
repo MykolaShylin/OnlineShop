@@ -1,5 +1,6 @@
 ﻿using OnlineShop.DB.Models;
 using OnlineShop.DB.Models.Interfaces;
+using OnlineShopWebApp.FeedbackApi.Models;
 using OnlineShopWebApp.Models;
 using System;
 using System.Collections.Generic;
@@ -243,7 +244,7 @@ namespace OnlineShopWebApp.Helpers
             };
         }
 
-        public static  EditProductDiscountViewModel ConvertToEditDiscountView(Product product, Discount discount, List<Discount> discounts)
+        public static EditProductDiscountViewModel ConvertToEditDiscountView(Product product, Discount discount, List<Discount> discounts)
         {
             return new EditProductDiscountViewModel
             {
@@ -266,8 +267,29 @@ namespace OnlineShopWebApp.Helpers
                 AmountInStock = product.AmountInStock,
                 Pictures = product.Pictures,
                 DiscountDescription = product.DiscountDescription ?? string.Empty,
-                DiscountCost= product.DiscountCost,
-                Concurrency= product.Concurrency,
+                DiscountCost = product.DiscountCost,
+                Concurrency = product.Concurrency,
+            };
+        }
+
+        public static List<FeedbackViewModel> ConvertToFeedbacksView(List<Feedback> feedbacks)
+        {
+            var feedbacksViewModel = new List<FeedbackViewModel>();
+            foreach (var feedback in feedbacks)
+            {
+                feedbacksViewModel.Add(ConvertFeedbackViewModel(feedback));
+            }
+            return feedbacksViewModel;
+        }
+        public static FeedbackViewModel ConvertFeedbackViewModel(Feedback feedback)
+        {
+            return new FeedbackViewModel
+            {
+                Id = feedback.Id,
+                UserId = feedback.UserId,
+                Text = feedback.Text,
+                Grade = feedback.Grade,
+                CreateDate = feedback.CreateDate,
             };
         }
 
@@ -403,7 +425,7 @@ namespace OnlineShopWebApp.Helpers
                 Pictures = product.Pictures,
                 DiscountDescription = product.DiscountDescription ?? string.Empty,
                 DiscountCost = product.DiscountCost,
-                Concurrency= product.Concurrency
+                Concurrency = product.Concurrency
             };
         }
 

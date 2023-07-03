@@ -70,10 +70,7 @@ namespace OnlineShopWebApp
 
             services.AddControllersWithViews();
 
-            services.AddAuthentication(options =>
-                {
-                    options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
-                })
+            services.AddAuthentication()
                 .AddCookie(options =>
                 {
                     options.ExpireTimeSpan = TimeSpan.FromHours(8);

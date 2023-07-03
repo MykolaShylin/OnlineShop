@@ -6,11 +6,13 @@ namespace OnlineShopWebApp.FeedbackApi.Models
     {
         public int ProductId { get; set; }
 
+        public string UserId { get; set; }
 
-        public int UserId { get; set; }
+        [Required(ErrorMessage = "Имя не указано")]
+        public string UserName { get; set; }
 
-
-        public string? Text { get; set; }
+        [Required(ErrorMessage = "Отзыв не написан")]
+        public string Text { get; set; }
         
         public int Grade { get; set; }
     }
