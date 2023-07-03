@@ -68,10 +68,7 @@ namespace OnlineShopWebApp
             });
             services.AddTransient<FeedbackApiClient>();
 
-            services.AddControllersWithViews();
-
-            services.AddAuthentication()
-                .AddCookie(options =>
+            services.ConfigureApplicationCookie(options =>
                 {
                     options.ExpireTimeSpan = TimeSpan.FromHours(8);
                     options.LoginPath = new PathString("/UserEntering/Login");
@@ -81,6 +78,7 @@ namespace OnlineShopWebApp
                         IsEssential = true
                     };
                 })
+                .AddAuthentication()
                 .AddGitHub(options =>
                 {
                     options.ClientId = "8676a7efd9a7510e6b31";
@@ -91,6 +89,8 @@ namespace OnlineShopWebApp
                     options.ClientId = Configuration["Authentication:Google:ClientId"];
                     options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
                 });
+
+            services.AddControllersWithViews();
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
