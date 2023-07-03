@@ -74,8 +74,8 @@ namespace OnlineShopWebApp
                 .AddCookie(options =>
                 {
                     options.ExpireTimeSpan = TimeSpan.FromHours(8);
-                    options.LoginPath = "/UserEntering/Login";
-                    options.LogoutPath = "/UserEntering/Logout";
+                    options.LoginPath = new PathString("/UserEntering/Login");
+                    options.LogoutPath = new PathString("/ UserEntering/Logout");
                     options.Cookie = new CookieBuilder
                     {
                         IsEssential = true
