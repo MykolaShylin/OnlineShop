@@ -223,23 +223,27 @@
             <div class="tab-pane fade" id="nutritions">                   
                 </div>
             <div class="tab-pane fade" id="feedbacks">
-                    <table class="table">
+                    <table class="table table-borderless">
                         <a class="btn btn-outline-danger mt-2" role="button" style="float:right" asp-area="" asp-controller="Product" asp-action="AddFeedback" asp-route-productId = "@Model.Id">Оставить отзыв</a>
                         @foreach(var feedback in Model.Feedbacks)
-                    {
-                        <tr>
-                            <td>Оценка</td>
-                            <td>@feedback.Grade</td>
-                        </tr>
-                        <tr>
-                            <td>Дата</td>
-                            <td>@feedback.CreateDate.Date</td>
-                        </tr>
-                        <tr class="mb-2">
-                            <td>Отзыв</td>
-                            <td>@feedback.Text</td>
-                        </tr>
-                    }                    
+                        {
+                            <tr>
+                                <td>Имя</td>
+                                <td>@feedback.UserName</td>
+                            </tr>                            
+                            <tr>
+                                <td>Дата</td>
+                                <td>@feedback.CreateDate.Date</td>
+                            </tr>
+                            <tr>
+                                <td>Оценка</td>
+                                <td>@feedback.Grade</td>
+                            </tr>
+                            <tr class="mb-2 border-bottom border-warning">
+                                <td>Отзыв</td>
+                                <td>@feedback.Text</td>
+                            </tr>
+                        }                    
                     </table>
                 </div>
                 </div>

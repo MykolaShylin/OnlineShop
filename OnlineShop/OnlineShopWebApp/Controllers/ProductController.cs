@@ -56,7 +56,8 @@ namespace OnlineShopWebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> AddFeedbackAsync(AddFeedbackModel feedbackModel)
         {
-            return null;
+            await _feedbackApiClient.AddAsync(feedbackModel);
+            return RedirectToAction("Index", new { prodId = feedbackModel.ProductId });
         }
 
         [Authorize]

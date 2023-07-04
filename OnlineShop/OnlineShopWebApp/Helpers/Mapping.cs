@@ -1,5 +1,7 @@
-﻿using OnlineShop.DB.Models;
+﻿using Microsoft.AspNetCore.Identity;
+using OnlineShop.DB.Models;
 using OnlineShop.DB.Models.Interfaces;
+using OnlineShopWebApp.FeedbackApi;
 using OnlineShopWebApp.FeedbackApi.Models;
 using OnlineShopWebApp.Models;
 using System;
@@ -287,6 +289,7 @@ namespace OnlineShopWebApp.Helpers
             {
                 Id = feedback.Id,
                 UserId = feedback.UserId,
+                UserName= feedback.UserName,
                 Text = feedback.Text,
                 Grade = feedback.Grade,
                 CreateDate = feedback.CreateDate,
