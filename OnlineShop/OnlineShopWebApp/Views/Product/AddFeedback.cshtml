@@ -45,6 +45,7 @@
             </div>
         </div>
         <input hidden="hidden" asp-for="UserId" value="@Model.UserId" />
+        <input hidden="hidden" asp-for="Login" value="@User.Identity.Name" />
         <input hidden="hidden" asp-for="ProductId" value="@Model.ProductId" />
         <button class="btn btn btn-success" type="submit" asp-area="" asp-controller="Product" asp-action="AddFeedback">Отправить</button>
     </form>

@@ -223,13 +223,19 @@
             <div class="tab-pane fade" id="nutritions">                   
                 </div>
             <div class="tab-pane fade" id="feedbacks">
-                    <table class="table table-borderless">
+                    <table class="table table-borderless table-responsive table-sm overflow-auto">
                         <a class="btn btn-outline-danger mt-2" role="button" style="float:right" asp-area="" asp-controller="Product" asp-action="AddFeedback" asp-route-productId = "@Model.Id">Оставить отзыв</a>
                         @foreach(var feedback in Model.Feedbacks)
                         {
                             <tr>
                                 <td>Имя</td>
                                 <td>@feedback.UserName</td>
+                                @if(User.Identity.IsAuthenticated && @feedback.Login == User.Identity.Name)
+                                {
+                                    <td rowspan="4" class="text-center" style="vertical-align:middle">
+                                        <a class="text-primary"  asp-area="" asp-controller="Product" asp-action="DeleteFeedback" asp-route-feedbackId="@feedback.Id" asp-route-productId="@Model.Id">Удалить отзыв</a>
+                                    </td>
+                                }
                             </tr>                            
                             <tr>
                                 <td>Дата</td>
@@ -241,7 +247,9 @@
                             </tr>
                             <tr class="mb-2 border-bottom border-warning">
                                 <td>Отзыв</td>
-                                <td>@feedback.Text</td>
+                                <td>
+                                    <p style="width:900px">@feedback.Text</p>
+                                </td>
                             </tr>
                         }                    
                     </table>

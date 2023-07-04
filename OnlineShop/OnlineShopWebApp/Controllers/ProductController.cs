@@ -53,9 +53,17 @@ namespace OnlineShopWebApp.Controllers
             return View(newFeedback);
         }
 
+        
+        public async Task<IActionResult> DeleteFeedbackAsync(int feedbackId, int productId)
+        {
+            await _feedbackApiClient.DeleteAsync(feedbackId);
+            return RedirectToAction("Index", new { prodId = productId });
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddFeedbackAsync(AddFeedbackModel feedbackModel)
         {
+
             await _feedbackApiClient.AddAsync(feedbackModel);
             return RedirectToAction("Index", new { prodId = feedbackModel.ProductId });
         }

@@ -1,4 +1,6 @@
-﻿using OnlineShopWebApp.FeedbackApi.Models;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
+using OnlineShopWebApp.FeedbackApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -27,6 +29,10 @@ namespace OnlineShopWebApp.FeedbackApi
         public async Task AddAsync(AddFeedbackModel newFeedback)
         {
             await _httpClient.PostAsJsonAsync("/Feedback/AddFeedback", newFeedback);
+        }
+        public async Task DeleteAsync(int feedbackId)
+        {
+            await _httpClient.DeleteAsync($"/Feedback/Delete?feedbackId={feedbackId}");
         }
     }
 }

@@ -290,6 +290,7 @@ namespace OnlineShopWebApp.Helpers
                 Id = feedback.Id,
                 UserId = feedback.UserId,
                 UserName= feedback.UserName,
+                Login = feedback.Login,
                 Text = feedback.Text,
                 Grade = feedback.Grade,
                 CreateDate = feedback.CreateDate,

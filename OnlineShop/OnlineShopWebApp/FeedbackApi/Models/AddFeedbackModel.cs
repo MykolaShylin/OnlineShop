@@ -6,6 +6,8 @@ namespace OnlineShopWebApp.FeedbackApi.Models
     {
         public int ProductId { get; set; }
 
+        public string Login { get; set; }
+
         public string UserId { get; set; }
 
         [Required(ErrorMessage = "Имя не указано")]
