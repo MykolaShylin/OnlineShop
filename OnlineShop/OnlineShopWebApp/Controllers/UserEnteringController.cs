@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Constants = OnlineShop.DB.Models.Constants;
 using System;
+using OnlineShopWebApp.Services;
 
 namespace OnlineShopWebApp.Controllers
 {
@@ -18,19 +19,21 @@ namespace OnlineShopWebApp.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
-        public UserEnteringController(UserManager<User> userManager, SignInManager<User> signInManager)
+        private readonly EmailService _emailService;
+        public UserEnteringController(UserManager<User> userManager, SignInManager<User> signInManager, EmailService emailService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _emailService = emailService;
         }
         public async Task<ActionResult> Login(string returnUrl)
         {
-            if(returnUrl == "/Basket/Buying" || returnUrl == "/Product/Comparing")
+            if (returnUrl == "/Basket/Buying" || returnUrl == "/Product/Comparing")
             {
                 returnUrl = $"/Product/CategoryProducts?isAllListProducts={true}";
             }
             var logInViewModel = new LogInViewModel()
-            { 
+            {
                 ReturnUrl = returnUrl,
                 ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
             };
@@ -40,9 +43,21 @@ namespace OnlineShopWebApp.Controllers
         [HttpPost]
         public async Task<ActionResult> LoginAsync(LogInViewModel login)
         {
+            login.ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
             if (ModelState.IsValid)
             {
+                var user = await _userManager.FindByNameAsync(login.NameLogin);
+
+                if (user != null)
+                {
+                    if (!await _userManager.IsEmailConfirmedAsync(user))
+                    {
+                        ModelState.AddModelError(string.Empty, "Вы не подтвердили свой email");
+                        return View(login);
+                    }
+                }
+
                 var result = await _signInManager.PasswordSignInAsync(login.NameLogin, login.Password, login.IsRemember, false);
                 if (result.Succeeded)
                 {
@@ -53,7 +68,6 @@ namespace OnlineShopWebApp.Controllers
                     ModelState.AddModelError("", "Пароль или логин не верный");
                 }
             }
-            login.ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             return View(login);
         }
 
@@ -72,7 +86,7 @@ namespace OnlineShopWebApp.Controllers
             return Challenge(properties, provider);
         }
 
-        
+
         public async Task<ActionResult> ExternalLoginCallback(string returnUrl = null, string remoteError = null)
         {
             returnUrl = returnUrl ?? Url.Content("~/");
@@ -97,7 +111,7 @@ namespace OnlineShopWebApp.Controllers
             var signInResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false, false);
 
             if (signInResult.Succeeded)
-            {                
+            {
                 return LocalRedirect(returnUrl);
             }
             else
@@ -118,15 +132,18 @@ namespace OnlineShopWebApp.Controllers
                             RealName = info.Principal.FindFirstValue(ClaimTypes.Name),
                             PhoneNumber = info.Principal.FindFirstValue(ClaimTypes.MobilePhone)
                         };
-                        defaultPassword = Guid.NewGuid().ToString().Substring(0,10);
+                        defaultPassword = Guid.NewGuid().ToString().Substring(0, 10);
                         isNewUser = true;
                         await _userManager.CreateAsync(user, defaultPassword);
                         await _userManager.AddToRoleAsync(user, Constants.UserRoleName);
                     }
+
+                    SendEmailConfirmAsync(user);
+
                     await _userManager.AddLoginAsync(user, info);
                     await _signInManager.SignInAsync(user, false);
 
-                    if(isNewUser)
+                    if (isNewUser)
                     {
                         return Redirect($"/Home/Index?defaultPassword={defaultPassword}");
                     }
@@ -138,7 +155,18 @@ namespace OnlineShopWebApp.Controllers
 
                 return View("Error");
             }
-        }        
+        }
+        private async Task SendEmailConfirmAsync(User user)
+        {
+            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var callbackUrl = Url.Action(
+                "ConfirmEmail",
+                "UserRegistration",
+                new { userId = user.Id, code = code },
+                protocol: HttpContext.Request.Scheme);
+
+            await _emailService.SendEmailConfirmAsync(user.Email, callbackUrl);
+        }
     }
 
 }

@@ -43,7 +43,7 @@ namespace OnlineShopWebApp.Controllers
 
             var orderDb = Mapping.ConvertToOrderDb(order, basketItems);
 
-            await _emailService.SendEmailAsync(user.Email, Mapping.ConvertToBasketItemsView(basketItems));
+            await _emailService.SendOrderConfirmEmailAsync(user.Email, Mapping.ConvertToBasketItemsView(basketItems));
 
             await _closedPurchases.SaveAsync(orderDb);
             await _baskets.CloseAsync(user.Id);

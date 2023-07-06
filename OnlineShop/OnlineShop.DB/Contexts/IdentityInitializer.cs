@@ -19,6 +19,7 @@ namespace OnlineShop.DB.Contexts
             var login = "Metall_Head";
             var nikName = "Metall_Head";
             var phone = "+38(097)-528-86-99";
+            var emailConfirmed = true;
 
             var adminRoleDesc = "Доступ ко всему функционалу сайта! Внимание, не предоставляйте эти права доступа людям, которым вы не доверяете, это может повлиять на работу сайта!";
             var userRoleDesc = "Назначается всем новым зарегестрированным пользователям. Возможность только совершать покупки";
@@ -51,7 +52,8 @@ namespace OnlineShop.DB.Contexts
                     Email = email, 
                     PhoneNumber = phone,
                     Avatar = null,
-                    NikName = nikName
+                    NikName = nikName,
+                    EmailConfirmed= emailConfirmed,
                 };
                 var result = userManager.CreateAsync(admin, password).Result;
                 if (result.Succeeded)

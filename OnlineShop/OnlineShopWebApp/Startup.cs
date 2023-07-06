@@ -55,7 +55,8 @@ namespace OnlineShopWebApp
                     options.Password.RequireUppercase = false;
                     options.Password.RequireNonAlphanumeric = false;
                 })
-                .AddEntityFrameworkStores<IdentityContext>();
+                .AddEntityFrameworkStores<IdentityContext>()
+                .AddDefaultTokenProviders();
 
             services.AddTransient<EmailService>();
             services.AddTransient<IPictures, PicturesDbStorage>();
@@ -67,11 +68,13 @@ namespace OnlineShopWebApp
             services.AddTransient<IProductComparer, ComparingProductsDbStorage>();
             services.AddTransient<IDiscount, DiscountsDbStorage>();
 
+
             services.AddHttpClient("FeedbackApi", httpClient =>
             {
                 httpClient.BaseAddress = new Uri("https://localhost:7274");
             });
             services.AddTransient<FeedbackApiClient>();
+
             services.ConfigureApplicationCookie(options =>
                 {
                     options.ExpireTimeSpan = TimeSpan.FromHours(8);
@@ -92,19 +95,6 @@ namespace OnlineShopWebApp
                 {
                     options.ClientId = Configuration["Authentication:Google:ClientId"];
                     options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
-                })
-                .AddJwtBearer(options =>
-                {
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,
-                        ValidIssuer = Configuration["JwtToken:Issuer"],
-                        ValidAudience = Configuration["JwtToken:Issuer"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtToken:SecuredKey"]))
-                    };
                 });
 
 
