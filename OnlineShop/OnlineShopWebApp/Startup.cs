@@ -28,6 +28,7 @@ using OnlineShop.DB.Storages;
 using OnlineShopWebApp.Controllers;
 using OnlineShopWebApp.FeedbackApi;
 using OnlineShopWebApp.FeedbackApi.Models;
+using OnlineShopWebApp.Services;
 using Serilog;
 
 namespace OnlineShopWebApp
@@ -56,6 +57,7 @@ namespace OnlineShopWebApp
                 })
                 .AddEntityFrameworkStores<IdentityContext>();
 
+            services.AddTransient<EmailService>();
             services.AddTransient<IPictures, PicturesDbStorage>();
             services.AddTransient<IProductsStorage, ProductsDbStorage>();
             services.AddTransient<IFlavor, FlavorsDbStorage>();

@@ -18,7 +18,7 @@
     <tbody>
         @if (Model != null)
         {
-            foreach (var basketItem in @Model.Items) 
+            foreach (var basketItem in @Model.Items)
             {
                 <tr style="text-align:center">
                     <td>@basketItem.Product.Name</td>
@@ -63,5 +63,3 @@ else
 <div style="float:left">
     <a class="btn btn-dark btn-lg" asp-area="" asp-controller="Product" asp-action="CategoryProducts" asp-route-isAllListProducts="@true" role="button">Продолжить покупки </a>
 </div>
-
-

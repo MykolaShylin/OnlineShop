@@ -9,6 +9,7 @@ using OnlineShopWebApp.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using OnlineShopWebApp.Services;
 
 namespace OnlineShopWebApp.Controllers
 {
@@ -18,12 +19,14 @@ namespace OnlineShopWebApp.Controllers
         private readonly IBasketStorage _baskets;
         private readonly IPurchases _closedPurchases;
         private readonly UserManager<User> _userManager;
+        private readonly EmailService _emailService;
 
-        public OrderController(IBasketStorage baskets, IPurchases closedPurchases, UserManager<User> userManager)
+        public OrderController(IBasketStorage baskets, IPurchases closedPurchases, UserManager<User> userManager, EmailService emailService)
         {
             _baskets = baskets;
             _closedPurchases = closedPurchases;
             _userManager = userManager;
+            _emailService = emailService;
         }
 
         public IActionResult Confirmation()
@@ -34,11 +37,17 @@ namespace OnlineShopWebApp.Controllers
         [HttpPost]
         public async Task<ActionResult> OrderingAsync(OrderViewModel order)
         {
-            var userId = (await _userManager.FindByNameAsync(User.Identity.Name)).Id;
-            var basketItems = (await _baskets.TryGetExistingByUserIdAsync(userId)).Items;
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+
+            var basketItems = (await _baskets.TryGetExistingByUserIdAsync(user.Id)).Items;
+
             var orderDb = Mapping.ConvertToOrderDb(order, basketItems);
+
+            await _emailService.SendEmailAsync(user.Email, Mapping.ConvertToBasketItemsView(basketItems));
+
             await _closedPurchases.SaveAsync(orderDb);
-            await _baskets.CloseAsync(userId);
+            await _baskets.CloseAsync(user.Id);
+
             return Redirect("Confirmation");
         }
     }
