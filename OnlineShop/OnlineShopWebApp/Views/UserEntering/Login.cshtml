@@ -37,7 +37,8 @@
                         <button type="submit" asp-controller="UserEntering" asp-action="ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" class="btn btn-primary w-50" style="margin-bottom:10px" name="provider" value="@provider.Name">@provider.DisplayName</button>
                     }
                 </div>
-                <a asp-controller="UserRegistration" asp-action="Register" asp-route-returnUrl="@Model.ReturnUrl" style="font-weight:200; color:crimson">Еще нет аккаунта?</a>
+                <a asp-controller="UserEntering" asp-action="ForgotPassword" style="font-weight:200; color:red">Забыли пароль?</a>
+                <a asp-controller="UserRegistration" asp-action="Register" asp-route-returnUrl="@Model.ReturnUrl" style="font-weight:200; color:darkolivegreen">Еще нет аккаунта?</a>
             </div>
         </div>
     </div>

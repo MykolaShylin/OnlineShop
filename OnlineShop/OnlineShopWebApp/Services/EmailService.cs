@@ -2,6 +2,7 @@
 using MimeKit;
 using OnlineShop.DB.Models;
 using OnlineShopWebApp.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -60,6 +61,32 @@ namespace OnlineShopWebApp.Services
             emailMessage.Body = new BodyBuilder()
             {
                 HtmlBody = $"<h2>Подтвердите регистрацию, <a href='{callbackUrl}'>перейдя по ссылке:</a></h2>"
+            }
+            .ToMessageBody();
+
+
+            using (var client = new SmtpClient())
+            {
+                await client.ConnectAsync("smtp.gmail.com", 465, true);
+                await client.AuthenticateAsync("bullbody.ua@gmail.com", "wwduretiamqmywuf");
+                await client.SendAsync(emailMessage);
+
+                await client.DisconnectAsync(true);
+            }
+        }
+
+        public async Task SendEmailResetPasswordAsync(string email, string callbackUrl)
+        {
+            using var emailMessage = new MimeMessage();
+
+            emailMessage.From.Add(new MailboxAddress("Bull Body, Администрация сайта", "bullbody.ua@gmail.com"));
+            emailMessage.To.Add(new MailboxAddress("", email));
+            emailMessage.Subject = "Сброс пароля";
+
+
+            emailMessage.Body = new BodyBuilder()
+            {
+                HtmlBody = $"<h2>Для сброса пароля, <a href='{callbackUrl}'>перейдите по ссылке:</a></h2>"
             }
             .ToMessageBody();
 
