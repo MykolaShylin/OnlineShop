@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using OnlineShop.DB.Models;
 using OnlineShop.DB.Models.Interfaces;
 using OnlineShopWebApp.FeedbackApi;
@@ -10,8 +11,47 @@ using System.Security.Cryptography.Xml;
 
 namespace OnlineShopWebApp.Helpers
 {
-    public class Mapping
+    public static class Mapping
     {
+
+        public static List<T2> MappToViewModelParameters<T1,T2>(this List<T1> parameters)
+        {
+            var mapperConfig = new MapperConfiguration(configure => configure.CreateMap<T1, T2>());
+
+            var mapper = new Mapper(mapperConfig);
+
+            return mapper.Map<List<T2>>(parameters);
+        }
+
+        public static T2 MappToViewModelParameter <T1, T2>(this T1 parameter)
+        {
+            var mapperConfig = new MapperConfiguration(configure => configure.CreateMap<T1, T2>());
+
+            var mapper = new Mapper(mapperConfig);
+
+            return mapper.Map<T2>(parameter);
+        }
+
+        public static T2 MappToDbParameter<T1, T2>(this T1 parameter)
+        {
+            var mapperConfig = new MapperConfiguration(configure => configure.CreateMap<T1, T2>());
+
+            var mapper = new Mapper(mapperConfig);
+
+            return mapper.Map<T2>(parameter);
+        }
+
+        public static List<T2> MappToDbParameters<T1, T2>(this List<T1> parameters)
+        {
+            var mapperConfig = new MapperConfiguration(configure => configure.CreateMap<T1, T2>());
+
+            var mapper = new Mapper(mapperConfig);
+
+            return mapper.Map<List<T2>>(parameters);
+        }
+
+
+
         public static List<DiscountViewModel> ConvertToDiscountsProductsView(List<Discount> discounts)
         {
             var discountsView = new List<DiscountViewModel>();
@@ -264,7 +304,7 @@ namespace OnlineShopWebApp.Helpers
                 Name = product.Name,
                 Brand = product.Brand,
                 Cost = product.Cost,
-                Flavors = ConvertToFlavorsView(product.Flavors),
+                Flavors = product.Flavors.MappToViewModelParameters<Flavor, FlavorViewModel>(),
                 Description = product.Description,
                 AmountInStock = product.AmountInStock,
                 Pictures = product.Pictures,
@@ -307,7 +347,7 @@ namespace OnlineShopWebApp.Helpers
                     Id = product.Id,
                     UserId = product.UserId,
                     Product = ConvertToProductView(product.Product),
-                    Flavor = ConvertToFlavorView(product.Flavor)
+                    Flavor = product.Flavor.MappToViewModelParameter<Flavor, FlavorViewModel>()
                 };
                 productsView.Add(viewModel);
             }
@@ -333,21 +373,7 @@ namespace OnlineShopWebApp.Helpers
                 productsView.Add(viewModel);
             }
             return productsView;
-        }
-        public static List<FlavorViewModel> ConvertToFlavorsView(List<Flavor> flavors)
-        {
-            var flavorsViewModel = new List<FlavorViewModel>();
-            foreach (var flavor in flavors)
-            {
-                var flavorViewModel = new FlavorViewModel
-                {
-                    Id = flavor.Id,
-                    Name = flavor.Name
-                };
-                flavorsViewModel.Add(flavorViewModel);
-            }
-            return flavorsViewModel;
-        }
+        }        
 
         public static ChoosingProductInfo ConvertToProductInfoDb(ChoosingProductInfoViewModel product)
         {
@@ -423,7 +449,7 @@ namespace OnlineShopWebApp.Helpers
                 Name = product.Name,
                 Brand = product.Brand,
                 Cost = product.Cost,
-                Flavors = ConvertToFlavorsDb(product.Flavors),
+                Flavors = product.Flavors.MappToDbParameters<FlavorViewModel, Flavor>(),
                 Description = product.Description,
                 AmountInStock = product.AmountInStock,
                 Pictures = product.Pictures,
@@ -431,29 +457,6 @@ namespace OnlineShopWebApp.Helpers
                 DiscountCost = product.DiscountCost,
                 Concurrency = product.Concurrency
             };
-        }
-
-        public static FlavorViewModel ConvertToFlavorView(Flavor flavor)
-        {
-            return new FlavorViewModel
-            {
-                Id = flavor.Id,
-                Name = flavor.Name
-            };
-        }
-        public static List<Flavor> ConvertToFlavorsDb(List<FlavorViewModel> flavors)
-        {
-            var flavorsViewModel = new List<Flavor>();
-            foreach (var flavor in flavors)
-            {
-                var flavorViewModel = new Flavor
-                {
-                    Id = flavor.Id,
-                    Name = flavor.Name
-                };
-                flavorsViewModel.Add(flavorViewModel);
-            }
-            return flavorsViewModel;
         }
     }
 }

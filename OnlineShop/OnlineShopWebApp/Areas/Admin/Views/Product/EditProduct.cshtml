@@ -60,7 +60,8 @@
                     }
                 </div>
                 <div class="col-8">
-                    <div class="text-danger" style="font-size:small" asp-validation-summary="ModelOnly"></div>
+                    <div class="text-danger" style="font-size:small" asp-validation-summary="All"></div>
+                    <input hidden="hidden" asp-for="Feedbacks" value="@Model.Feedbacks" />
                     <input hidden="hidden" asp-for="Concurrency" value="@Convert.ToBase64String(Model.Concurrency)" />
                     <input hidden="hidden" asp-for="DiscountCost" value="@Convert.ToInt32(Model.DiscountCost)" />
                     <input hidden="hidden" asp-for="DiscountDescription" value="@Model.DiscountDescription" />

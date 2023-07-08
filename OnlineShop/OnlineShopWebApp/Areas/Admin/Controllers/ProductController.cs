@@ -17,6 +17,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.CodeAnalysis;
 using OnlineShopWebApp.FeedbackApi;
+using AutoMapper;
 
 namespace OnlineShopWebApp.Areas.Admin.Controllers
 {
@@ -41,10 +42,10 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
         public async Task<IActionResult> ProductsInStock()
         {
             var existingProducts = Mapping.ConvertToProductsView(await _productsInStock.GetAllAsync());
-            var existingFlavors = Mapping.ConvertToFlavorsView(await _flavors.GetAllAsync());
+            var existingFlavors = (await _flavors.GetAllAsync()).MappToViewModelParameters<Flavor, FlavorViewModel>();
             ViewBag.Flavors = existingFlavors;
             return View(existingProducts);
-        }
+        }        
 
         [HttpPost]
         public async Task<ActionResult> AddAsync(ProductViewModel product, List<string> flavors)
@@ -68,10 +69,10 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
 
         public async Task<ActionResult> EditProduct(int productId)
         {
-            var feedbacks = await _feedbackApiClient.GetFeedbacksAsync(productId);
+            //var feedbacks = await _feedbackApiClient.GetFeedbacksAsync(productId);
+            //productView.Feedbacks = Mapping.ConvertToFeedbacksView(feedbacks);
             var productView = Mapping.ConvertToProductView(await _productsInStock.TryGetByIdAsync(productId));
-            productView.Feedbacks = Mapping.ConvertToFeedbacksView(feedbacks);
-            var existingFlavors = Mapping.ConvertToFlavorsView(await _flavors.GetAllAsync());
+            var existingFlavors = (await _flavors.GetAllAsync()).MappToViewModelParameters<Flavor, FlavorViewModel>();
             ViewBag.Flavors = existingFlavors;
             return View(productView);
         }
@@ -79,7 +80,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
         [HttpPost]
         public async Task<ActionResult> EditProductAsync(ProductViewModel product, List<string> flavors, List<string> pictures)
         {
-            var productView = await GetProductforViewAsync(product, flavors, pictures);
+            var productView = await GetProductForViewAsync(product, flavors, pictures);
             if (product.Name == product.Brand)
             {
                 ModelState.AddModelError("Name", "Название и бренд продукта не должны совпадать");
@@ -91,7 +92,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
                 if (productToUpdate == null)
                 {
                     ModelState.AddModelError(string.Empty, "Продукт, который вы пытаетесь отредактирвать, был удален другим пользователем! Вернитесь на страницу продуктов!");
-                    ViewBag.Flavors = Mapping.ConvertToFlavorsView(await _flavors.GetAllAsync());                    
+                    ViewBag.Flavors = (await _flavors.GetAllAsync()).MappToViewModelParameters<Flavor, FlavorViewModel>();                    
                     return View(productView);
                 }
                 if (product.UploadedFile != null)
@@ -117,7 +118,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
                     if (databaseEntry == null)
                     {
                         ModelState.AddModelError(string.Empty, "Продукт, который вы пытаетесь отредактирвать, был удален другим пользователем! Вернитесь на страницу продуктов!");
-                        ViewBag.Flavors = Mapping.ConvertToFlavorsView(await _flavors.GetAllAsync());
+                        ViewBag.Flavors = (await _flavors.GetAllAsync()).MappToViewModelParameters<Flavor, FlavorViewModel>();
                         return View(productView);
                     }
                     else
@@ -163,11 +164,11 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
                     }
                 }
             }
-            ViewBag.Flavors = Mapping.ConvertToFlavorsView(await _flavors.GetAllAsync());
+            ViewBag.Flavors = (await _flavors.GetAllAsync()).MappToViewModelParameters<Flavor, FlavorViewModel>();
             return View(productView);
         }
 
-        private async Task<ProductViewModel> GetProductforViewAsync(ProductViewModel product, List<string> flavors, List<string> pictures)
+        private async Task<ProductViewModel> GetProductForViewAsync(ProductViewModel product, List<string> flavors, List<string> pictures)
         {
             product.Pictures = new List<ProductPicture>();
 
@@ -179,7 +180,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
             product.Flavors = new List<FlavorViewModel>();
             foreach (var flavor in flavors)
             {
-                var flavorView = Mapping.ConvertToFlavorView(await _flavors.TryGetByNameAsync(flavor));
+                var flavorView = (await _flavors.TryGetByNameAsync(flavor)).MappToViewModelParameter<Flavor, FlavorViewModel>();
                 product.Flavors.Add(flavorView);
             }
             return product;
