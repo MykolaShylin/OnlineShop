@@ -35,7 +35,7 @@ namespace OnlineShopWebApp.Models
         public decimal DiscountCost { get; set; }
         public List<ProductPicture> Pictures { get; set; }
 
-        public ProductPicture Picture => Pictures.Count == 0 ? null : Pictures[0];
+        public ProductPicture Picture => Pictures?[0] ?? null;
 
         [Required(ErrorMessage = "Количество не указано")]
         public int AmountInStock { get; set; }
