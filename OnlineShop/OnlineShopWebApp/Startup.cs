@@ -28,6 +28,7 @@ using OnlineShop.DB.Storages;
 using OnlineShopWebApp.Controllers;
 using OnlineShopWebApp.FeedbackApi;
 using OnlineShopWebApp.FeedbackApi.Models;
+using OnlineShopWebApp.Helpers;
 using OnlineShopWebApp.Services;
 using Serilog;
 
@@ -68,6 +69,7 @@ namespace OnlineShopWebApp
             services.AddTransient<IProductComparer, ComparingProductsDbStorage>();
             services.AddTransient<IDiscount, DiscountsDbStorage>();
 
+            services.AddAutoMapper(typeof(MappingProfile));
 
             services.AddHttpClient("FeedbackApi", httpClient =>
             {

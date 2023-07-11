@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using OnlineShopWebApp.FeedbackApi;
 using OnlineShopWebApp.FeedbackApi.Models;
+using AutoMapper;
 
 namespace OnlineShopWebApp.Controllers
 {
@@ -24,13 +25,15 @@ namespace OnlineShopWebApp.Controllers
         private readonly IFlavor _flavors;
         private readonly UserManager<User> _userManager;
         private readonly FeedbackApiClient _feedbackApiClient;
-        public ProductController(IProductsStorage products, IProductComparer comparingProducts, IFlavor flavors, UserManager<User> userManager, FeedbackApiClient feedbackApiClient)
+        private readonly IMapper _mapping;
+        public ProductController(IProductsStorage products, IProductComparer comparingProducts, IFlavor flavors, UserManager<User> userManager, FeedbackApiClient feedbackApiClient, IMapper mapping)
         {
             this._products = products;
             _comparingProducts = comparingProducts;
             _flavors = flavors;
             _userManager = userManager;
             _feedbackApiClient = feedbackApiClient;
+            _mapping = mapping;
         }
         public async Task<IActionResult> Index(int prodId)
         {
@@ -38,8 +41,8 @@ namespace OnlineShopWebApp.Controllers
             var product = await _products.TryGetByIdAsync(prodId);
             if (product != null)
             {
-                var productView = Mapping.ConvertToProductView(product);
-                productView.Feedbacks = Mapping.ConvertToFeedbacksView(feedbacks);
+                var productView = _mapping.Map<ProductViewModel>(product);
+                productView.Feedbacks = _mapping.Map<List<FeedbackViewModel>>(feedbacks);
                 return View(productView);
             }
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
@@ -53,7 +56,7 @@ namespace OnlineShopWebApp.Controllers
             return View(newFeedback);
         }
 
-        
+
         public async Task<IActionResult> DeleteFeedbackAsync(int feedbackId, int productId)
         {
             await _feedbackApiClient.DeleteAsync(feedbackId);
@@ -96,28 +99,15 @@ namespace OnlineShopWebApp.Controllers
         }
         public async Task<IActionResult> CategoryProducts(bool isAllListProducts, ProductCategories category)
         {
+            var products = await _products.GetAllAsync();
+            var productsView = _mapping.Map<List<ProductViewModel>>(products);
+
             if (!isAllListProducts)
             {
-                var products = await _products.TryGetByCategoryAsync(category);
-                var productsView = new List<ProductViewModel>();
-                foreach (var product in products)
-                {
-                    var productViewModel = Mapping.ConvertToProductView(product);
-                    productsView.Add(productViewModel);
-                }
-                return View(productsView);
-            }
-            else
-            {
-                var products = await _products.GetAllAsync();
-                var productsView = new List<ProductViewModel>();
-                foreach (var product in products)
-                {
-                    var productViewModel = Mapping.ConvertToProductView(product);
-                    productsView.Add(productViewModel);
-                }
-                return View(productsView);
-            }
+                products = await _products.TryGetByCategoryAsync(category);
+                productsView = _mapping.Map<List<ProductViewModel>>(products);
+            }            
+            return View(productsView);
         }
 
         public async Task<IActionResult> SaleProduct(string prodName)

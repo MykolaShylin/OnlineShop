@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 
 namespace OnlineShopWebApp.Controllers
 {
@@ -22,20 +23,22 @@ namespace OnlineShopWebApp.Controllers
         private readonly IPurchases _closedPurchases;
         private readonly IFlavor _flavors;
         private readonly UserManager<User> _userManager;
+        private readonly IMapper _mapping;
 
-        public BasketController(IProductsStorage products, IBasketStorage baskets, IPurchases closedPurchases, IFlavor flavors, UserManager<User> userManager)
+        public BasketController(IProductsStorage products, IBasketStorage baskets, IPurchases closedPurchases, IFlavor flavors, UserManager<User> userManager, IMapper mapping)
         {
             _products = products;
             _baskets = baskets;
             _closedPurchases = closedPurchases;
             _flavors = flavors;
             _userManager = userManager;
+            _mapping = mapping;
         }
         public async Task<IActionResult> CheckOut()
         {
             var userId = (await _userManager.FindByNameAsync(User.Identity.Name)).Id;
             var basket = await _baskets.TryGetExistingByUserIdAsync(userId);
-            var basketView = Mapping.ConvertToBasketView(basket);
+            var basketView = _mapping.Map<BasketViewModel>(basket);
             return View(basketView);
         }
         public async Task<IActionResult> Buying(int prodId, int flavorId, int amount)
@@ -58,8 +61,8 @@ namespace OnlineShopWebApp.Controllers
             var userId = (await _userManager.FindByNameAsync(User.Identity.Name)).Id;
             var customer = await _userManager.FindByNameAsync(User.Identity.Name);
             var basket = await _baskets.TryGetExistingByUserIdAsync(userId);
-            var basketView = Mapping.ConvertToBasketView(basket);
-            ViewBag.Customer = Mapping.ConvertToUserView(customer);
+            var basketView = _mapping.Map<BasketViewModel>(basket);
+            ViewBag.Customer = _mapping.Map<UserViewModel>(customer);
             return View(basketView);
         }
 

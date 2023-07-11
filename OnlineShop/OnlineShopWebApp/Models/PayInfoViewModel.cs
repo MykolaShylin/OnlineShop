@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using OnlineShop.DB.Models;
 using System.Collections.Generic;
+using AutoMapper;
 
 namespace OnlineShopWebApp.Models
 {

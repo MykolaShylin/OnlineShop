@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using OnlineShopWebApp.Services;
+using AutoMapper;
+using System;
 
 namespace OnlineShopWebApp.Controllers
 {
@@ -20,13 +22,15 @@ namespace OnlineShopWebApp.Controllers
         private readonly IPurchases _closedPurchases;
         private readonly UserManager<User> _userManager;
         private readonly EmailService _emailService;
+        private readonly IMapper _mapping;
 
-        public OrderController(IBasketStorage baskets, IPurchases closedPurchases, UserManager<User> userManager, EmailService emailService)
+        public OrderController(IBasketStorage baskets, IPurchases closedPurchases, UserManager<User> userManager, EmailService emailService, IMapper mapping)
         {
             _baskets = baskets;
             _closedPurchases = closedPurchases;
             _userManager = userManager;
             _emailService = emailService;
+            _mapping = mapping;
         }
 
         public IActionResult Confirmation()
@@ -41,7 +45,11 @@ namespace OnlineShopWebApp.Controllers
 
             var basketItems = (await _baskets.TryGetExistingByUserIdAsync(user.Id)).Items;
 
-            var orderDb = Mapping.ConvertToOrderDb(order, basketItems);
+            var orderDb = _mapping.Map<OrderViewModel, Order>(order, opt =>
+            {
+                opt.AfterMap((src, dest) => dest.Items = basketItems);
+                opt.BeforeMap((src, dest) => src.Id = Guid.NewGuid());
+            });
 
             await _emailService.SendOrderConfirmEmailAsync(user.Email, Mapping.ConvertToBasketItemsView(basketItems));
 

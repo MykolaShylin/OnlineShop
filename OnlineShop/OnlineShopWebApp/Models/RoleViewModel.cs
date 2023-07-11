@@ -1,7 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using AutoMapper;
+using OnlineShop.DB.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace OnlineShopWebApp.Models
 {
+    [AutoMap(typeof(Role))]
     public class RoleViewModel
     {
 

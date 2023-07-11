@@ -60,7 +60,7 @@
                     }
                 </div>
                 <div class="col-8">
-                    <div class="text-danger" style="font-size:small" asp-validation-summary="All"></div>
+                    <div class="text-danger" style="font-size:small" asp-validation-summary="ModelOnly"></div>
                     <input hidden="hidden" asp-for="Feedbacks" value="@Model.Feedbacks" />
                     <input hidden="hidden" asp-for="Concurrency" value="@Convert.ToBase64String(Model.Concurrency)" />
                     <input hidden="hidden" asp-for="DiscountCost" value="@Convert.ToInt32(Model.DiscountCost)" />
@@ -75,7 +75,7 @@
                         </div>
                         <label for="brand" class="col-3 align-self-center col-form-label">Бренд продукта</label>
                         <div class="col-9 mb-2">
-                            <input style="font-size:small" asp-for=Brand class="form-control" id="brand" value="@Model.Brand">
+                            <input style="font-size:small" asp-for="Brand" class="form-control" id="brand" value="@Model.Brand">
                         </div>
                         <div class="col-12 mb-2">
                             <span asp-validation-for="Brand" style="color:red"></span>

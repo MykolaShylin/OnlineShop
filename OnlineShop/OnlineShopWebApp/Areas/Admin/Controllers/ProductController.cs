@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.CodeAnalysis;
 using OnlineShopWebApp.FeedbackApi;
 using AutoMapper;
+using OnlineShopWebApp.FeedbackApi.Models;
 
 namespace OnlineShopWebApp.Areas.Admin.Controllers
 {
@@ -69,9 +70,9 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
 
         public async Task<ActionResult> EditProduct(int productId)
         {
-            //var feedbacks = await _feedbackApiClient.GetFeedbacksAsync(productId);
-            //productView.Feedbacks = Mapping.ConvertToFeedbacksView(feedbacks);
             var productView = Mapping.ConvertToProductView(await _productsInStock.TryGetByIdAsync(productId));
+            var feedbacks = await _feedbackApiClient.GetFeedbacksAsync(productId);
+            productView.Feedbacks = feedbacks.MappToViewModelParameters<Feedback, FeedbackViewModel>();
             var existingFlavors = (await _flavors.GetAllAsync()).MappToViewModelParameters<Flavor, FlavorViewModel>();
             ViewBag.Flavors = existingFlavors;
             return View(productView);
