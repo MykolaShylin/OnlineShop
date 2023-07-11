@@ -203,6 +203,23 @@ namespace OnlineShop.DB.Storages
             ProductsDb[7].Flavors.AddRange(new List<Flavor> { FlavorsDb[1], FlavorsDb[2], FlavorsDb[4], FlavorsDb[5], FlavorsDb[6] });
             ProductsDb[8].Flavors.AddRange(new List<Flavor> { FlavorsDb[11] });
 
+            var DiscountsDb = new Discount[]
+            {
+                new Discount() { DiscountPercent= 0 },
+                new Discount() { DiscountPercent= 5 },
+                new Discount() { DiscountPercent= 10 },
+                new Discount() { DiscountPercent= 15 },
+                new Discount() { DiscountPercent= 20 },
+                new Discount() { DiscountPercent= 25 },
+                new Discount() { DiscountPercent= 30 },
+                new Discount() { DiscountPercent= 50 },
+                new Discount() { DiscountPercent= 80 }
+            };
+
+            dataBaseContext.Discounts.AddRange(DiscountsDb);
+
+            DiscountsDb[0].Products.AddRange(ProductsDb);
+
             await dataBaseContext.SaveChangesAsync();
         }
 

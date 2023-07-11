@@ -33,7 +33,8 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
         private readonly IPictures _pictures;
         private readonly FeedbackApiClient _feedbackApiClient;
         private readonly IMapper _mapping;
-        public ProductController(IWebHostEnvironment appEnvironment, IFlavor flavors, IProductsStorage productsInStock, IPictures pictures, FeedbackApiClient feedbackApiClient, IMapper mapping)
+        private readonly IDiscount _discount;
+        public ProductController(IWebHostEnvironment appEnvironment, IFlavor flavors, IProductsStorage productsInStock, IPictures pictures, FeedbackApiClient feedbackApiClient, IMapper mapping, IDiscount discount)
         {
             _productsInStock = productsInStock;
             _flavors = flavors;
@@ -41,6 +42,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
             _pictures = pictures;
             _feedbackApiClient = feedbackApiClient;
             _mapping = mapping;
+            _discount = discount;
         }
 
         public async Task<IActionResult> ProductsInStock()
@@ -66,6 +68,9 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
             {
                 var productDb = await CreateNewProductWithFilesAsync(product, flavors);
                 await _productsInStock.SaveAsync(productDb);
+
+                await _discount.AddAsync(await _productsInStock.TryGetByNameAsync(productDb.Name), await _discount.GetNoDiscountAsync(), "Без скидки");
+
                 return Redirect("ProductsInStock");
             }
             return Redirect("ProductsInStock");
@@ -290,6 +295,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
                 DiscountCost = product.DiscountCost,
                 DiscountDescription = product.DiscountDescription ?? string.Empty,
             };
+
         }
         private string GetProductImagePath(ProductCategories categori)
         {

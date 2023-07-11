@@ -39,19 +39,19 @@ namespace OnlineShop.DB.Contexts
 
             modelBuilder.Entity<Product>().HasMany(x=>x.Pictures).WithOne().OnDelete(DeleteBehavior.Cascade);
 
-            var DiscountsDb = new Discount[]
-            {
-                new Discount() { Id = 1, DiscountPercent= 5 },
-                new Discount() { Id = 2, DiscountPercent= 10},
-                new Discount() { Id = 3, DiscountPercent= 15 },
-                new Discount() { Id = 4, DiscountPercent= 20 },
-                new Discount() { Id = 5, DiscountPercent= 25 },
-                new Discount() { Id = 6, DiscountPercent= 30 },
-                new Discount() { Id = 7, DiscountPercent= 50 },
-                new Discount() { Id = 8, DiscountPercent= 80 },
-            };
+            //var DiscountsDb = new Discount[]
+            //{
+            //    new Discount() { Id = 1, DiscountPercent= 5 },
+            //    new Discount() { Id = 2, DiscountPercent= 10},
+            //    new Discount() { Id = 3, DiscountPercent= 15 },
+            //    new Discount() { Id = 4, DiscountPercent= 20 },
+            //    new Discount() { Id = 5, DiscountPercent= 25 },
+            //    new Discount() { Id = 6, DiscountPercent= 30 },
+            //    new Discount() { Id = 7, DiscountPercent= 50 },
+            //    new Discount() { Id = 8, DiscountPercent= 80 },
+            //};
 
-            modelBuilder.Entity<Discount>().HasData(DiscountsDb);
+            //modelBuilder.Entity<Discount>().HasData(DiscountsDb);
 
             //var FlavorsDb = new Flavor[]
             //{

@@ -13,5 +13,6 @@ namespace OnlineShop.DB.Models.Interfaces
         Task<List<Discount>> GetAllAsync();
         Task AddAsync(Product product, Discount discount, string discountDescription);
         Task<Discount> TryGetByIdAsync(int discountId);
+        Task<Discount> GetNoDiscountAsync();
     }
 }
