@@ -51,7 +51,7 @@ namespace OnlineShopWebApp.Controllers
                 opt.BeforeMap((src, dest) => src.Id = Guid.NewGuid());
             });
 
-            await _emailService.SendOrderConfirmEmailAsync(user.Email, Mapping.ConvertToBasketItemsView(basketItems));
+            await _emailService.SendOrderConfirmEmailAsync(user.Email, _mapping.Map<List<BasketItemViewModel>>(basketItems));
 
             await _closedPurchases.SaveAsync(orderDb);
             await _baskets.CloseAsync(user.Id);

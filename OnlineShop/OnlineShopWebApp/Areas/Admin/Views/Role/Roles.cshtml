@@ -92,47 +92,7 @@
                         }
                     </table>
                 </div>
-            </div>
-            <div class="card-footer">
-                <a href="#" data-toggle="modal" data-target="#addRoleModal" style="display:block;">
-                    <span class="btn btn-warning btn" role="button">Добавить роль</span>
-                </a>
-                <div id="addRoleModal" class="modal fade">
-                    <div class="modal-dialog">
-                        <div class="modal-content" style="border: 4px solid orange;font-size: 12px">
-                            <div class="modal-header" style="border-bottom: 4px solid orange">
-                                <h4 class="modal-title" style="color:red">НОВАЯ РОЛЬ</h4>
-                                <button class="close" type="button" data-dismiss="modal">X</button>
-                            </div>
-                            <div class="modal-body">
-                                <form role="form" method="post">
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <div style="font-size:12px">
-                                                <div class="form-group">
-                                                    <label for="name">Название</label>
-                                                    <input asp-for="@Model.First().Name" class="form-control" id="name" placeholder="Введите название роли" />
-                                                </div>
-                                                <div class="col-12 text-center">
-                                                    <span asp-validation-for="@Model.First().Name" style="color:red"></span>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="desc">Описание</label>
-                                                    <textarea asp-for="@Model.First().Description" type="text" class="form-control" id="desc" placeholder="Введите описание роли"></textarea>
-                                                </div>
-                                                <div class="col-12 text-center">
-                                                    <span asp-validation-for="@Model.First().Description" style="color:red"></span>
-                                                </div>
-                                            </div>
-                                            <button class="btn btn-warning btn-block" style="margin-top:10px" type="submit" asp-area="Admin" asp-controller="Role" asp-action="AddRole">Добавить</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            </div>            
         </div>
     </div>
 </div>

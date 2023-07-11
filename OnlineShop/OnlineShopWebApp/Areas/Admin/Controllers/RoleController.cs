@@ -33,7 +33,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
 
         public async Task<IActionResult> Roles()
         {
-            var rolesView = _mapping.Map<RoleViewModel>(await _roleManager.Roles.ToListAsync());
+            var rolesView = _mapping.Map<List<RoleViewModel>>(await _roleManager.Roles.ToListAsync());
             return View(rolesView);
         }
         public async Task<IActionResult> DeleteRole(string id)
@@ -56,13 +56,6 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
                 await _roleManager.UpdateAsync(role);
             }
             return RedirectToAction($"Roles");
-        }
-
-        [HttpPost]
-        public async Task<ActionResult> AddRoleAsync(RoleViewModel roleModel)
-        {
-            await _roleManager.CreateAsync(new Role() { Name = roleModel.Name, Description = roleModel.Description });
-            return RedirectToAction("Roles");
         }
 
         public async Task<IActionResult> ChangeUserRole(string userId)

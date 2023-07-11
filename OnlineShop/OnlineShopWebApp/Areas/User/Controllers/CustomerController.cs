@@ -35,17 +35,17 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
             _mapping = mapping;
         }
 
-        public async Task<IActionResult> ClosedOrdersAsync()
+        public async Task<IActionResult> ClosedOrders()
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            var closedOrders = Mapping.ConvertToOrdersView((await _closedOrders.TryGetByUserIdAsync(user.Id)));
+            var closedOrders = _mapping.Map<List<OrderViewModel>>((await _closedOrders.TryGetByUserIdAsync(user.Id)));
             return View(closedOrders);
         }
 
         public async Task<IActionResult> OrderDataAsync(Guid id)
         {
             var order = await _closedOrders.TryGetByIdAsync(id);
-            var orderView = Mapping.ConvertToOrderView(order);
+            var orderView = _mapping.Map<OrderViewModel>(order);
             return View(orderView);
         }
         public async Task<IActionResult> PersonalDataAsync()

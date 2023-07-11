@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using OnlineShopWebApp.Services;
 using Microsoft.AspNetCore.Authorization;
+using AutoMapper;
 
 namespace OnlineShopWebApp.Controllers
 {
@@ -19,12 +20,13 @@ namespace OnlineShopWebApp.Controllers
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly EmailService _emailService;
-
-        public UserRegistrationController(UserManager<User> userManager, SignInManager<User> signInManager, EmailService emailService)
+        private readonly IMapper _mapping;
+        public UserRegistrationController(UserManager<User> userManager, SignInManager<User> signInManager, EmailService emailService, IMapper mapping)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailService = emailService;
+            _mapping = mapping;
         }
         public IActionResult Register(string returnUrl)
         {
@@ -34,7 +36,7 @@ namespace OnlineShopWebApp.Controllers
         [HttpPost]
         public async Task<ActionResult> RegistrationConfirmAsync(UserViewModel user, string returnUrl)
         {
-            var userDb = Mapping.ConvertToUserDb(user);
+            var userDb = _mapping.Map<User>(user);
             if (user.Name == user.Password)
             {
                 ModelState.AddModelError("", "Имя и пароль не должны совпадать");

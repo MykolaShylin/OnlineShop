@@ -32,6 +32,11 @@ namespace OnlineShop.DB.Contexts
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
+            modelBuilder.Entity<Product>().Property(x => x.Concurrency)
+            .IsConcurrencyToken(true)
+            .ValueGeneratedOnAddOrUpdate()
+            .HasColumnName("Concurrency");
+
             modelBuilder.Entity<Product>().HasMany(x=>x.Pictures).WithOne().OnDelete(DeleteBehavior.Cascade);
 
             var DiscountsDb = new Discount[]

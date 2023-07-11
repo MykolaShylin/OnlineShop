@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OnlineShop.DB.Models;
 using OnlineShop.DB.Models.Interfaces;
@@ -13,19 +14,20 @@ namespace OnlineShopWebApp.Views.Shared.Components.Cart
     {
         private readonly IBasketStorage _baskets;
         private readonly UserManager<User> _userManager;
-        public BasketViewComponent(IBasketStorage baskets, UserManager<User> userManager)
+        private readonly IMapper _mapping;
+        public BasketViewComponent(IBasketStorage baskets, UserManager<User> userManager, IMapper mapping)
         {
             _baskets = baskets;
             _userManager = userManager;
+            _mapping = mapping;
         }
         public async Task<IViewComponentResult> InvokeAsync()
         {
             BasketViewModel basketView = null;
             if(User.Identity.Name != null)
             {
-                var userId = (await _userManager.FindByNameAsync(User.Identity.Name))?.Id;
-                var basket = userId == null ? null : await _baskets.TryGetExistingByUserIdAsync(userId);                
-                basketView = userId == null ? null : Mapping.ConvertToBasketView(basket);
+                var userId = (await _userManager.FindByNameAsync(User.Identity.Name))?.Id;            
+                basketView = userId == null ? null : _mapping.Map<BasketViewModel>(await _baskets.TryGetExistingByUserIdAsync(userId));
             }
             decimal productCounts = basketView?.Amount ?? 0;
             return View("Basket", productCounts);

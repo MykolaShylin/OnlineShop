@@ -93,7 +93,7 @@ namespace OnlineShopWebApp.Controllers
         {
             var userId = (await _userManager.FindByNameAsync(User.Identity.Name)).Id;
             var comparingProducts = await _comparingProducts.GetAllAsync(userId);
-            var comparingView = Mapping.ConvertToComparerView(comparingProducts);
+            var comparingView = _mapping.Map<List<ComparingProductsViewModel>>(comparingProducts);
             ViewBag.UserId = userId;
             return View(comparingView);
         }

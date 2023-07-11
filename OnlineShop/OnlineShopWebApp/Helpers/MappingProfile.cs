@@ -13,6 +13,8 @@ namespace OnlineShopWebApp.Helpers
         {
             CreateMap<Flavor, FlavorViewModel>().ReverseMap();
 
+            CreateMap<ComparingProducts, ComparingProductsViewModel>().ReverseMap();
+
             CreateMap<PayInfo, PayInfoViewModel>()
                 .ReverseMap()
                 .ForPath(x => x.Id, opt => opt.MapFrom(x => x.Id == 0 ? new PayInfo().Id : x.Id));
