@@ -19,10 +19,6 @@ namespace OnlineShop.DB.Storages
 
         public async Task SaveAsync(Product product)
         {
-            var passedInTimestamp = new byte[] { 0, 0, 0, 0, 0, 0, 0, 120 };
-            var entry = dataBaseContext.Entry(product).Property(u => u.Concurrency);
-            entry.OriginalValue = passedInTimestamp;
-
             dataBaseContext.Products.Add(product);
             await dataBaseContext.SaveChangesAsync();
         }
