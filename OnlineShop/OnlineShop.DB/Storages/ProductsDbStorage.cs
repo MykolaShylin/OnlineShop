@@ -10,10 +10,8 @@ namespace OnlineShop.DB.Storages
     public class ProductsDbStorage : IProductsStorage
     {
         private readonly DataBaseContext dataBaseContext;
-        private List<Product> _products;
         public ProductsDbStorage(DataBaseContext dataBaseContext)
         {
-            _products = new List<Product>();
             this.dataBaseContext = dataBaseContext;
         }
 
@@ -32,7 +30,7 @@ namespace OnlineShop.DB.Storages
         {
             var updateProduct = await TryGetByIdAsync(product.Id);
 
-            dataBaseContext.Entry(updateProduct).Property(x=>x.Concurrency).OriginalValue = product.Concurrency;
+            dataBaseContext.Entry(updateProduct).Property(x => x.Concurrency).OriginalValue = product.Concurrency;
             updateProduct.Category = product.Category;
             updateProduct.Brand = product.Brand;
             updateProduct.Name = product.Name;
@@ -51,7 +49,7 @@ namespace OnlineShop.DB.Storages
             updateProduct.Pictures = product.Pictures;
             updateProduct.DiscountCost = product.DiscountCost;
             updateProduct.DiscountDescription = product.DiscountDescription;
-            
+
             await dataBaseContext.SaveChangesAsync();
         }
         public async Task<Product> TryGetByIdAsync(int id)

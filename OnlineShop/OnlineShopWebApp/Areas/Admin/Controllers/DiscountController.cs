@@ -13,6 +13,7 @@ using System.Linq;
 using System.Reflection.Metadata;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 
 namespace OnlineShopWebApp.Areas.Admin.Controllers
 {
@@ -23,23 +24,24 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
         private readonly IProductsStorage _products;
         private readonly IDiscount _discounts;
         private readonly UserManager<User> _userManager;
-
-        public DiscountController(IDiscount discounts, IProductsStorage products, UserManager<User> userManager)
+        private readonly IMapper _mapping;
+        public DiscountController(IDiscount discounts, IProductsStorage products, UserManager<User> userManager, IMapper mapping)
         {
             _products = products;
             _userManager = userManager;
             _discounts = discounts;
+            _mapping = mapping;
         }
 
         public async Task<IActionResult> NoDiscountProducts()
         {
-            var products = Mapping.ConvertToProductsView((await _products.GetAllAsync()).Where(x=>x.DiscountCost == 0).ToList());
+            var products = _mapping.Map<List<ProductViewModel>>((await _products.GetAllAsync()).Where(x=>x.DiscountCost == 0).ToList());
             return View(products);
         }
 
         public async Task<IActionResult> ProductDiscountInfo(int productId, int discountId)
         {
-            var product = Mapping.ConvertToProductView((await _products.TryGetByIdAsync(productId)));
+            var product = _mapping.Map<ProductViewModel>((await _products.TryGetByIdAsync(productId)));
             ViewBag.Product = product;
             var discount = Mapping.ConvertToDiscountView((await _discounts.TryGetByIdAsync(discountId)));
             return View(discount);
@@ -67,7 +69,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
 
         public async Task<IActionResult> MakeDiscount(int prodId)
         {
-            var product = Mapping.ConvertToProductView((await _products.TryGetByIdAsync(prodId)));
+            var product = _mapping.Map<ProductViewModel>((await _products.TryGetByIdAsync(prodId)));
             ViewBag.Product = product;
             var discounts = Mapping.ConvertToDiscountsView((await _discounts.GetAllAsync()));
             return View(discounts);

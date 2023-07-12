@@ -51,7 +51,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
             var existingFlavors = _mapping.Map<List<FlavorViewModel>>(await _flavors.GetAllAsync());
             ViewBag.Flavors = existingFlavors;
             return View(existingProducts);
-        }        
+        }
 
         [HttpPost]
         public async Task<ActionResult> AddAsync(ProductViewModel product, List<string> flavors)
@@ -67,9 +67,10 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var productDb = await CreateNewProductWithFilesAsync(product, flavors);
+
                 await _productsInStock.SaveAsync(productDb);
 
-                await _discount.AddAsync(await _productsInStock.TryGetByNameAsync(productDb.Name), await _discount.GetNoDiscountAsync(), "Без скидки");
+                await _discount.AddAsync(await _productsInStock.TryGetByNameAsync(productDb.Name), await _discount.GetZeroDiscountAsync(), "Без скидки");
 
                 return Redirect("ProductsInStock");
             }
@@ -157,7 +158,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
                         {
                             ModelState.AddModelError("AmountInStock", "Текущее значение: " + databaseValues.AmountInStock);
                         }
-                        if (databaseValues.Flavors.Count != flavors.Count || databaseValues.Flavors.Select(x=>x.Name).Union(flavors).ToList().Count != flavors.Count)
+                        if (databaseValues.Flavors.Count != flavors.Count || databaseValues.Flavors.Select(x => x.Name).Union(flavors).ToList().Count != flavors.Count)
                         {
                             var errorMesage = string.Empty;
                             foreach (var flavor in databaseValues.Flavors)
@@ -283,7 +284,6 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
 
             return new Product
             {
-                Id = product.Id,
                 Category = product.Category,
                 Name = product.Name,
                 Brand = product.Brand,
@@ -292,8 +292,6 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
                 Description = product.Description,
                 AmountInStock = product.AmountInStock,
                 Pictures = imagesDb,
-                DiscountCost = product.DiscountCost,
-                DiscountDescription = product.DiscountDescription ?? string.Empty,
             };
 
         }

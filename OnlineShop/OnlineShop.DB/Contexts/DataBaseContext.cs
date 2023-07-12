@@ -172,9 +172,9 @@ namespace OnlineShop.DB.Contexts
             //modelBuilder.Entity<Flavor>().HasData(FlavorsDb);
             //modelBuilder.Entity<Product>().HasData(ProductsDb);
 
-            modelBuilder.Entity<Product>().HasMany(e => e.Flavors).WithMany(e => e.Products).UsingEntity<Dictionary<string, object>>("ProductFlavor",
-                x => x.HasOne<Flavor>().WithMany().HasForeignKey("FlavorId"),
-                x => x.HasOne<Product>().WithMany().HasForeignKey("ProductId"));
+            //modelBuilder.Entity<Product>().HasMany(e => e.Flavors).WithMany(e => e.Products).UsingEntity<Dictionary<string, object>>("ProductFlavor",
+            //    x => x.HasOne<Flavor>().WithMany().HasForeignKey("FlavorId"),
+            //    x => x.HasOne<Product>().WithMany().HasForeignKey("ProductId"));
 
         }
     }
