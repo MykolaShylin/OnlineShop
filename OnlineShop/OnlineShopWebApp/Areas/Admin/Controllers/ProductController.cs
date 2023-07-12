@@ -80,8 +80,6 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
         public async Task<ActionResult> EditProduct(int productId)
         {
             var productView = _mapping.Map<ProductViewModel>(await _productsInStock.TryGetByIdAsync(productId));
-            var feedbacks = await _feedbackApiClient.GetFeedbacksAsync(productId);
-            productView.Feedbacks = _mapping.Map<List<FeedbackViewModel>>(feedbacks);
             var existingFlavors = _mapping.Map<List<FlavorViewModel>>(await _flavors.GetAllAsync());
             ViewBag.Flavors = existingFlavors;
             return View(productView);
@@ -231,9 +229,9 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
             return await CreateNewProductAsync(product, flavors, picturesNames);
         }
 
-        public async Task<IActionResult> Delete(int prodId)
+        public async Task<IActionResult> Delete(int productId)
         {
-            var product = await _productsInStock.TryGetByIdAsync(prodId);
+            var product = await _productsInStock.TryGetByIdAsync(productId);
             await _productsInStock.DeleteAsync(product);
             return Redirect("ProductsInStock");
         }

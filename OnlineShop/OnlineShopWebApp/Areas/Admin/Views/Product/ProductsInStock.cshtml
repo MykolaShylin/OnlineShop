@@ -21,7 +21,7 @@
                 <table class="table" style="text-align:center">
                     <thead style="font-size:medium">
                         <tr>
-                            <th>№</th>
+                            <th>Id</th>
                             <th>Категория</th>
                             <th>Бренд</th>
                             <th>Название</th>
@@ -39,7 +39,7 @@
                             counter++;
                             ViewBag.ModalInfo = "productInfoModal" + counter;
                             <tr style="border-bottom-color:grey; border-bottom-style:solid; font-size:smaller;">
-                                <td>@counter</td>
+                                <td>@product.Id</td>
                                 <td>@EnumHelper.GetDisplayName(product.Category)</td>
                                 <td>@product.Brand</td>
                                 <td>
@@ -50,24 +50,7 @@
                                 </td>
                                 <td>@product.Cost</td>
                                 <td>
-                                    <a href="#" data-toggle="modal" data-target="#deleteModal" style="display:block;">
-                                        <span class="btn btn-light btn-sm p-0 m-0" role="button">Удалить</span>
-                                    </a>
-                                    <div id="deleteModal" class="modal fade">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h4 class="modal-title">Подтверждение</h4>
-                                                    <button class="close" type="button" data-dismiss="modal">×</button>
-                                                </div>
-                                                <div class="modal-body">Вы уверены, что хотите удалить этот продукт?</div>
-                                                <div class="modal-footer">
-                                                    <a asp-area="Admin" asp-controller="Product" asp-action="Delete" asp-route-prodId="@product.Id" role="button" class="btn btn-default">Удалить</a>
-                                                    <button class="btn btn-default float-right" type="button" data-dismiss="modal">Закрыть</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <a asp-area="Admin" asp-controller="Product" asp-action="Delete" asp-route-productId="@product.Id" class="btn btn-light btn-sm p-0 m-0" role="button">Удалить</a>                                    
                                 </td>
                                 <td>
                                     <a asp-area="Admin" asp-controller="Product" asp-action="EditProduct" asp-route-productId="@product.Id">Редактировать</a>
