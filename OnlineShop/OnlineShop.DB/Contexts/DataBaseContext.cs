@@ -32,21 +32,26 @@ namespace OnlineShop.DB.Contexts
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
+            modelBuilder.Entity<Product>().Property(x => x.Concurrency)
+            .IsConcurrencyToken(true)
+            .ValueGeneratedOnAddOrUpdate()
+            .HasColumnName("Concurrency");
+
             modelBuilder.Entity<Product>().HasMany(x=>x.Pictures).WithOne().OnDelete(DeleteBehavior.Cascade);
 
-            var DiscountsDb = new Discount[]
-            {
-                new Discount() { Id = 1, DiscountPercent= 5 },
-                new Discount() { Id = 2, DiscountPercent= 10},
-                new Discount() { Id = 3, DiscountPercent= 15 },
-                new Discount() { Id = 4, DiscountPercent= 20 },
-                new Discount() { Id = 5, DiscountPercent= 25 },
-                new Discount() { Id = 6, DiscountPercent= 30 },
-                new Discount() { Id = 7, DiscountPercent= 50 },
-                new Discount() { Id = 8, DiscountPercent= 80 },
-            };
+            //var DiscountsDb = new Discount[]
+            //{
+            //    new Discount() { Id = 1, DiscountPercent= 5 },
+            //    new Discount() { Id = 2, DiscountPercent= 10},
+            //    new Discount() { Id = 3, DiscountPercent= 15 },
+            //    new Discount() { Id = 4, DiscountPercent= 20 },
+            //    new Discount() { Id = 5, DiscountPercent= 25 },
+            //    new Discount() { Id = 6, DiscountPercent= 30 },
+            //    new Discount() { Id = 7, DiscountPercent= 50 },
+            //    new Discount() { Id = 8, DiscountPercent= 80 },
+            //};
 
-            modelBuilder.Entity<Discount>().HasData(DiscountsDb);
+            //modelBuilder.Entity<Discount>().HasData(DiscountsDb);
 
             //var FlavorsDb = new Flavor[]
             //{
@@ -167,9 +172,9 @@ namespace OnlineShop.DB.Contexts
             //modelBuilder.Entity<Flavor>().HasData(FlavorsDb);
             //modelBuilder.Entity<Product>().HasData(ProductsDb);
 
-            modelBuilder.Entity<Product>().HasMany(e => e.Flavors).WithMany(e => e.Products).UsingEntity<Dictionary<string, object>>("ProductFlavor",
-                x => x.HasOne<Flavor>().WithMany().HasForeignKey("FlavorId"),
-                x => x.HasOne<Product>().WithMany().HasForeignKey("ProductId"));
+            //modelBuilder.Entity<Product>().HasMany(e => e.Flavors).WithMany(e => e.Products).UsingEntity<Dictionary<string, object>>("ProductFlavor",
+            //    x => x.HasOne<Flavor>().WithMany().HasForeignKey("FlavorId"),
+            //    x => x.HasOne<Product>().WithMany().HasForeignKey("ProductId"));
 
         }
     }

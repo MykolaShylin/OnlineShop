@@ -10,10 +10,8 @@ namespace OnlineShop.DB.Storages
     public class ProductsDbStorage : IProductsStorage
     {
         private readonly DataBaseContext dataBaseContext;
-        private List<Product> _products;
         public ProductsDbStorage(DataBaseContext dataBaseContext)
         {
-            _products = new List<Product>();
             this.dataBaseContext = dataBaseContext;
         }
 
@@ -32,7 +30,7 @@ namespace OnlineShop.DB.Storages
         {
             var updateProduct = await TryGetByIdAsync(product.Id);
 
-            dataBaseContext.Entry(updateProduct).Property(x=>x.Concurrency).OriginalValue = product.Concurrency;
+            dataBaseContext.Entry(updateProduct).Property(x => x.Concurrency).OriginalValue = product.Concurrency;
             updateProduct.Category = product.Category;
             updateProduct.Brand = product.Brand;
             updateProduct.Name = product.Name;
@@ -51,7 +49,7 @@ namespace OnlineShop.DB.Storages
             updateProduct.Pictures = product.Pictures;
             updateProduct.DiscountCost = product.DiscountCost;
             updateProduct.DiscountDescription = product.DiscountDescription;
-            
+
             await dataBaseContext.SaveChangesAsync();
         }
         public async Task<Product> TryGetByIdAsync(int id)
@@ -202,6 +200,23 @@ namespace OnlineShop.DB.Storages
             ProductsDb[6].Flavors.AddRange(new List<Flavor> { FlavorsDb[7], FlavorsDb[8], FlavorsDb[9], FlavorsDb[10], FlavorsDb[11] });
             ProductsDb[7].Flavors.AddRange(new List<Flavor> { FlavorsDb[1], FlavorsDb[2], FlavorsDb[4], FlavorsDb[5], FlavorsDb[6] });
             ProductsDb[8].Flavors.AddRange(new List<Flavor> { FlavorsDb[11] });
+
+            var DiscountsDb = new Discount[]
+            {
+                new Discount() { DiscountPercent= 0 },
+                new Discount() { DiscountPercent= 5 },
+                new Discount() { DiscountPercent= 10 },
+                new Discount() { DiscountPercent= 15 },
+                new Discount() { DiscountPercent= 20 },
+                new Discount() { DiscountPercent= 25 },
+                new Discount() { DiscountPercent= 30 },
+                new Discount() { DiscountPercent= 50 },
+                new Discount() { DiscountPercent= 80 }
+            };
+
+            dataBaseContext.Discounts.AddRange(DiscountsDb);
+
+            DiscountsDb[0].Products.AddRange(ProductsDb);
 
             await dataBaseContext.SaveChangesAsync();
         }

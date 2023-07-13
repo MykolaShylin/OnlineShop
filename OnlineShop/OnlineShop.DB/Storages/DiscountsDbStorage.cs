@@ -31,6 +31,10 @@ namespace OnlineShop.DB.Storages
             await dataBaseContext.SaveChangesAsync();
         }
 
+        public async Task<Discount> GetZeroDiscountAsync()
+        {
+            return await dataBaseContext.Discounts.Include(x => x.Products).ThenInclude(x => x.Flavors).Include(x => x.Products).ThenInclude(x => x.Pictures).FirstOrDefaultAsync(x => x.DiscountPercent == 0);
+        }
         public async Task<Discount> TryGetByIdAsync(int discountId)
         {
             return await dataBaseContext.Discounts.Include(x => x.Products).ThenInclude(x => x.Flavors).Include(x => x.Products).ThenInclude(x => x.Pictures).FirstOrDefaultAsync(x=>x.Id == discountId);

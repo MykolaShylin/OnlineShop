@@ -61,6 +61,7 @@
                 </div>
                 <div class="col-8">
                     <div class="text-danger" style="font-size:small" asp-validation-summary="ModelOnly"></div>
+                    <input hidden="hidden" asp-for="Feedbacks" value="@Model.Feedbacks" />
                     <input hidden="hidden" asp-for="Concurrency" value="@Convert.ToBase64String(Model.Concurrency)" />
                     <input hidden="hidden" asp-for="DiscountCost" value="@Convert.ToInt32(Model.DiscountCost)" />
                     <input hidden="hidden" asp-for="DiscountDescription" value="@Model.DiscountDescription" />
@@ -74,7 +75,7 @@
                         </div>
                         <label for="brand" class="col-3 align-self-center col-form-label">Бренд продукта</label>
                         <div class="col-9 mb-2">
-                            <input style="font-size:small" asp-for=Brand class="form-control" id="brand" value="@Model.Brand">
+                            <input style="font-size:small" asp-for="Brand" class="form-control" id="brand" value="@Model.Brand">
                         </div>
                         <div class="col-12 mb-2">
                             <span asp-validation-for="Brand" style="color:red"></span>
@@ -124,7 +125,7 @@
                                     else
                                     {
                                         <div class="form-check form-check-inline mb-2 text-lg-center">
-                                            <input class="form-check-input" name="product.Flavors" type="checkbox" value="@flavor.Name" id="flav">
+                                            <input class="form-check-input" name="flavors" type="checkbox" value="@flavor.Name" id="flav">
                                             <label class="form-check-label" for="flav">
                                                 @flavor.Name
                                             </label>
@@ -133,7 +134,7 @@
                                 }
                             </div>
                         </div>
-                        <input name="id" type="text" class="form-control" value="@Model.Id" hidden="hidden" />
+                        <input asp-for="Id" class="form-control" value="@Model.Id" hidden="hidden" />
                     </div>
                 </div>
                 <div class="col-4 float-left">

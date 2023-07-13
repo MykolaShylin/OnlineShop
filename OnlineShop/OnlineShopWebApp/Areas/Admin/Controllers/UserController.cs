@@ -1,4 +1,5 @@
 ﻿
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +9,7 @@ using OnlineShop.DB.Models.Interfaces;
 using OnlineShopWebApp.Helpers;
 using OnlineShopWebApp.Models;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,21 +22,23 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<Role> _roleManager;
-        public UserController(UserManager<User> userManager, RoleManager<Role> roleManager)
+        private readonly IMapper _mapping;
+        public UserController(UserManager<User> userManager, RoleManager<Role> roleManager, IMapper mapping)
         {
             _userManager = userManager;
             _roleManager = roleManager;
+            _mapping = mapping;
         }
         public async Task<IActionResult> Users()
         {
             var users = await _userManager.Users.ToListAsync();
-            var usersView = Mapping.ConvertToUsersView(users);
+            var usersView = _mapping.Map<List<UserViewModel>>(users);
             return View(usersView);
         }
         public async Task<IActionResult> UserInfo(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
-            var userView = Mapping.ConvertToUserView(user);
+            var userView = _mapping.Map<UserViewModel>(user);
             ViewBag.UserRoles = await _userManager.GetRolesAsync(user);
             return View(userView);
         }
@@ -74,7 +78,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                var userDb = Mapping.ConvertToUserDb(user);
+                var userDb = _mapping.Map<User>(user);
                 var result = await _userManager.CreateAsync(userDb, user.Password);
                 if (result.Succeeded)
                 {
@@ -95,7 +99,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
         public async Task<IActionResult> EditUserInfo(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
-            var userView = Mapping.ConvertToUserEditInfoView(user);
+            var userView = _mapping.Map<EditUserViewModel>(user);
             return View(userView);
         }
         [HttpPost]

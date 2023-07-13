@@ -2,9 +2,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
 using OnlineShop.DB.Models;
+using AutoMapper;
 
 namespace OnlineShopWebApp.Models
 {
+    
     public class DeliveryInfoViewModel
     {
         public int Id { get; set; }

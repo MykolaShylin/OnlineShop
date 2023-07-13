@@ -13,6 +13,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Constants = OnlineShop.DB.Models.Constants;
+using AutoMapper;
 
 namespace OnlineShopWebApp.Areas.Admin.Controllers
 {
@@ -22,15 +23,17 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
     {
         private readonly RoleManager<Role> _roleManager;
         private readonly UserManager<User> _userManager;
-        public RoleController(RoleManager<Role> roleManager, UserManager<User> userManager)
+        private readonly IMapper _mapping;
+        public RoleController(RoleManager<Role> roleManager, UserManager<User> userManager, IMapper mapping)
         {
             _roleManager = roleManager;
             _userManager = userManager;
+            _mapping = mapping;
         }
 
         public async Task<IActionResult> Roles()
         {
-            var rolesView = Mapping.ConvertToRolesView(await _roleManager.Roles.ToListAsync());
+            var rolesView = _mapping.Map<List<RoleViewModel>>(await _roleManager.Roles.ToListAsync());
             return View(rolesView);
         }
         public async Task<IActionResult> DeleteRole(string id)
@@ -53,13 +56,6 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
                 await _roleManager.UpdateAsync(role);
             }
             return RedirectToAction($"Roles");
-        }
-
-        [HttpPost]
-        public async Task<ActionResult> AddRoleAsync(RoleViewModel roleModel)
-        {
-            await _roleManager.CreateAsync(new Role() { Name = roleModel.Name, Description = roleModel.Description });
-            return RedirectToAction("Roles");
         }
 
         public async Task<IActionResult> ChangeUserRole(string userId)

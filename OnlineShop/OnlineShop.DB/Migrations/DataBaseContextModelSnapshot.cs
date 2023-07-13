@@ -22,6 +22,21 @@ namespace OnlineShop.DB.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("FlavorProduct", b =>
+                {
+                    b.Property<int>("FlavorsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("FlavorsId", "ProductsId");
+
+                    b.HasIndex("ProductsId");
+
+                    b.ToTable("FlavorProduct");
+                });
+
             modelBuilder.Entity("OnlineShop.DB.Models.Basket", b =>
                 {
                     b.Property<Guid>("Id")
@@ -179,48 +194,6 @@ namespace OnlineShop.DB.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Discounts");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            DiscountPercent = 5
-                        },
-                        new
-                        {
-                            Id = 2,
-                            DiscountPercent = 10
-                        },
-                        new
-                        {
-                            Id = 3,
-                            DiscountPercent = 15
-                        },
-                        new
-                        {
-                            Id = 4,
-                            DiscountPercent = 20
-                        },
-                        new
-                        {
-                            Id = 5,
-                            DiscountPercent = 25
-                        },
-                        new
-                        {
-                            Id = 6,
-                            DiscountPercent = 30
-                        },
-                        new
-                        {
-                            Id = 7,
-                            DiscountPercent = 50
-                        },
-                        new
-                        {
-                            Id = 8,
-                            DiscountPercent = 80
-                        });
                 });
 
             modelBuilder.Entity("OnlineShop.DB.Models.Flavor", b =>
@@ -307,7 +280,8 @@ namespace OnlineShop.DB.Migrations
                         .IsConcurrencyToken()
                         .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
+                        .HasColumnType("rowversion")
+                        .HasColumnName("Concurrency");
 
                     b.Property<decimal>("Cost")
                         .HasColumnType("decimal(18,2)");
@@ -359,19 +333,19 @@ namespace OnlineShop.DB.Migrations
                     b.ToTable("Pictures");
                 });
 
-            modelBuilder.Entity("ProductFlavor", b =>
+            modelBuilder.Entity("FlavorProduct", b =>
                 {
-                    b.Property<int>("FlavorId")
-                        .HasColumnType("int");
+                    b.HasOne("OnlineShop.DB.Models.Flavor", null)
+                        .WithMany()
+                        .HasForeignKey("FlavorsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.HasKey("FlavorId", "ProductId");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("ProductFlavor");
+                    b.HasOne("OnlineShop.DB.Models.Product", null)
+                        .WithMany()
+                        .HasForeignKey("ProductsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("OnlineShop.DB.Models.BasketItem", b =>
@@ -456,21 +430,6 @@ namespace OnlineShop.DB.Migrations
                         .WithMany("Pictures")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("ProductFlavor", b =>
-                {
-                    b.HasOne("OnlineShop.DB.Models.Flavor", null)
-                        .WithMany()
-                        .HasForeignKey("FlavorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("OnlineShop.DB.Models.Product", null)
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("OnlineShop.DB.Models.Basket", b =>

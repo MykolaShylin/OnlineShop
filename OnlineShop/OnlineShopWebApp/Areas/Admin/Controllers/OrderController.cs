@@ -11,6 +11,9 @@ using System.Linq;
 using System.Reflection.Metadata;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
+using OnlineShopWebApp.Models;
+using System.Collections.Generic;
 
 namespace OnlineShopWebApp.Areas.Admin.Controllers
 {
@@ -20,16 +23,18 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
     {
         private IPurchases _closedPurchases;
         private readonly UserManager<User> _userManager;
+        private readonly IMapper _mapping;
 
-        public OrderController(IPurchases closedPurchases, UserManager<User> userManager)
+        public OrderController(IPurchases closedPurchases, UserManager<User> userManager, IMapper mapping)
         {
             _closedPurchases = closedPurchases;
             _userManager = userManager;
+            _mapping = mapping;
         }
         public async Task<IActionResult> ClosedOrders()
         {
             var closedOrders = await _closedPurchases.GetAllAsync();
-            var closedOrdersView = Mapping.ConvertToOrdersView(closedOrders);
+            var closedOrdersView = _mapping.Map<List<OrderViewModel>>(closedOrders);
             return View(closedOrdersView);
         }
         [HttpPost]
@@ -58,8 +63,8 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
         {
             var order = await _closedPurchases.TryGetByIdAsync(id);
             var customer = await _userManager.FindByIdAsync(order.deliveryInfo.CustomerId);
-            var orderView = Mapping.ConvertToOrderView(order);
-            var customerView = Mapping.ConvertToUserView(customer);
+            var orderView = _mapping.Map<OrderViewModel>(order);
+            var customerView = _mapping.Map<UserViewModel>(customer);
             ViewBag.CustomerInfo = customerView;
             return View(orderView);
         }        

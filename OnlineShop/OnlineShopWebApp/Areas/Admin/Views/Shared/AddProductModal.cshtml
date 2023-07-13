@@ -63,7 +63,7 @@
                                 @foreach(var flavor in ViewBag.Flavors)
                                 {
                                     <div class="form-check form-check-inline mb-2 text-lg-center">
-                                        <input class="form-check-input" name="Flavors" type="checkbox" id="flav">
+                                        <input class="form-check-input" name="flavors" value="@flavor.Name" type="checkbox" id="flav">
                                         <label class="form-check-label" for="flav">
                                             @flavor.Name
                                         </label>

@@ -1,4 +1,5 @@
 ﻿
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -25,36 +26,39 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
         private readonly UserManager<User> _userManager;
         private IPurchases _closedOrders;
         private readonly IWebHostEnvironment _appEnvironment;
-        public CustomerController(IPurchases closedPurchases, UserManager<User> userManager, IWebHostEnvironment appEnvironment)
+        private readonly IMapper _mapping;
+        public CustomerController(IPurchases closedPurchases, UserManager<User> userManager, IWebHostEnvironment appEnvironment, IMapper mapping)
         {
             _userManager = userManager;
             _appEnvironment = appEnvironment;
             _closedOrders = closedPurchases;
+            _mapping = mapping;
         }
 
-        public async Task<IActionResult> ClosedOrdersAsync()
+        public async Task<IActionResult> ClosedOrders()
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            var closedOrders = Mapping.ConvertToOrdersView((await _closedOrders.TryGetByUserIdAsync(user.Id)));
+            var closedOrders = _mapping.Map<List<OrderViewModel>>((await _closedOrders.TryGetByUserIdAsync(user.Id)));
             return View(closedOrders);
         }
 
         public async Task<IActionResult> OrderDataAsync(Guid id)
         {
             var order = await _closedOrders.TryGetByIdAsync(id);
-            var orderView = Mapping.ConvertToOrderView(order);
+            var orderView = _mapping.Map<OrderViewModel>(order);
             return View(orderView);
         }
         public async Task<IActionResult> PersonalDataAsync()
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            return View(Mapping.ConvertToUserView(user));
+            var userView = _mapping.Map<UserViewModel>(user);
+            return View(userView);
         }
 
         public async Task<IActionResult> EditPersonalDataAsync()
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            var userView = Mapping.ConvertToUserEditInfoView(user);
+            var userView = _mapping.Map<EditUserViewModel>(user);
             return View(userView);
         }
 
