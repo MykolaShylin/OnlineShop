@@ -86,7 +86,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> EditProductAsync(ProductViewModel product, List<string> flavors, List<string> pictures)
+        public async Task<IActionResult> EditProductAsync(ProductViewModel product, List<string> flavors, List<string> pictures)
         {
             var productView = await GetProductForViewAsync(product, flavors, pictures);
             ViewBag.Flavors = _mapping.Map<List<FlavorViewModel>>(await _flavors.GetAllAsync());
@@ -178,12 +178,12 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
         private async Task<ProductViewModel> GetProductForViewAsync(ProductViewModel product, List<string> flavors, List<string> pictures)
         {
             product.Pictures = new List<ProductPicture>();
-
             foreach (var path in pictures)
             {
-                var newPath = new ProductPicture { Path = pictures.First() };
-                product.Pictures.Add(newPath);
+                var pictureView = await _pictures.TryGetByPathAsync(path);
+                product.Pictures.Add(pictureView);
             }
+
             product.Flavors = new List<FlavorViewModel>();
             foreach (var flavor in flavors)
             {

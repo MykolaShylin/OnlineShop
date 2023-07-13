@@ -49,7 +49,9 @@ namespace OnlineShopWebApp.Helpers
                 .ForMember(x => x.Phone, opt => opt.MapFrom(x => x.PhoneNumber));
 
             CreateMap<Product, ProductViewModel>()
-                .ForMember(x => x.DiscountDescription, opt => opt.MapFrom(x => x.DiscountDescription ?? string.Empty));
+                .ForMember(x => x.DiscountDescription, opt => opt.MapFrom(x => x.DiscountDescription ?? string.Empty))
+                .ReverseMap()
+                .ForPath(x => x.DiscountDescription, opt => opt.MapFrom(x => x.DiscountDescription ?? string.Empty));
 
             CreateMap<BasketItem, BasketItemViewModel>().ReverseMap();
             CreateMap<Basket, BasketViewModel>().ReverseMap();
