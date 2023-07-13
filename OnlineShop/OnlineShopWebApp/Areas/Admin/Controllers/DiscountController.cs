@@ -43,20 +43,20 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
         {
             var product = _mapping.Map<ProductViewModel>((await _products.TryGetByIdAsync(productId)));
             ViewBag.Product = product;
-            var discount = Mapping.ConvertToDiscountView((await _discounts.TryGetByIdAsync(discountId)));
+            var discount = _mapping.Map<DiscountViewModel>((await _discounts.TryGetByIdAsync(discountId)));
             return View(discount);
         }
 
         public async Task<IActionResult> SortedDiscounts(int discountId)
         {
-            ViewBag.Discount = Mapping.ConvertToDiscountView((await _discounts.TryGetByIdAsync(discountId)));
-            var discounts = Mapping.ConvertToDiscountsView((await _discounts.GetAllAsync()));
+            ViewBag.Discount = _mapping.Map<DiscountViewModel>((await _discounts.TryGetByIdAsync(discountId)));
+            var discounts = _mapping.Map<List<DiscountViewModel>>((await _discounts.GetAllAsync()));
             return View(discounts);
         }
         public async Task<IActionResult> DiscountProducts()
         {
             var discounts = await _discounts.GetAllAsync();
-            var discountsView = Mapping.ConvertToDiscountsProductsView(discounts);
+            var discountsView = _mapping.Map<List<DiscountViewModel>>(discounts);
             return View(discountsView);
         }
 
@@ -71,7 +71,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
         {
             var product = _mapping.Map<ProductViewModel>((await _products.TryGetByIdAsync(prodId)));
             ViewBag.Product = product;
-            var discounts = Mapping.ConvertToDiscountsView((await _discounts.GetAllAsync()));
+            var discounts = _mapping.Map<List<DiscountViewModel>>((await _discounts.GetAllAsync()));
             return View(discounts);
         }
 
@@ -92,7 +92,12 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
             var product = await _products.TryGetByIdAsync(productId);
             var discount = await _discounts.TryGetByIdAsync(discountId);
             var discounts = await _discounts.GetAllAsync();
-            var editView = Mapping.ConvertToEditDiscountView(product, discount, discounts);
+            var editView = new EditProductDiscountViewModel
+            {
+                Product = _mapping.Map<ProductViewModel>(product),
+                Discount = _mapping.Map<DiscountViewModel>(discount),
+                Discounts = _mapping.Map<List<DiscountViewModel>>(discounts)
+            };
             return View(editView);
         }
 
@@ -102,7 +107,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var product = await _products.TryGetByIdAsync(productId);
-                _discounts.ChangeDiscountAsync(product, oldDiscountId, newDiscountId, discountDescription);
+                await _discounts.ChangeDiscountAsync(product, oldDiscountId, newDiscountId, discountDescription);
             }
             return Redirect($"ProductDiscountInfo?productId={productId}&discountId={newDiscountId}");
         }

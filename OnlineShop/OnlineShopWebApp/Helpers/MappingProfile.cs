@@ -53,6 +53,8 @@ namespace OnlineShopWebApp.Helpers
                 .ReverseMap()
                 .ForPath(x => x.DiscountDescription, opt => opt.MapFrom(x => x.DiscountDescription ?? string.Empty));
 
+            CreateMap<Discount, DiscountViewModel>().ReverseMap();
+
             CreateMap<BasketItem, BasketItemViewModel>().ReverseMap();
             CreateMap<Basket, BasketViewModel>().ReverseMap();
 
