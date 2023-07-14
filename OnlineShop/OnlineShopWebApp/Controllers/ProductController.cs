@@ -26,7 +26,8 @@ namespace OnlineShopWebApp.Controllers
         private readonly UserManager<User> _userManager;
         private readonly FeedbackApiClient _feedbackApiClient;
         private readonly IMapper _mapping;
-        public ProductController(IProductsStorage products, IProductComparer comparingProducts, IFlavor flavors, UserManager<User> userManager, FeedbackApiClient feedbackApiClient, IMapper mapping)
+        private readonly IDiscount _discounts;
+        public ProductController(IProductsStorage products, IProductComparer comparingProducts, IFlavor flavors, UserManager<User> userManager, FeedbackApiClient feedbackApiClient, IMapper mapping, IDiscount discounts)
         {
             this._products = products;
             _comparingProducts = comparingProducts;
@@ -34,6 +35,7 @@ namespace OnlineShopWebApp.Controllers
             _userManager = userManager;
             _feedbackApiClient = feedbackApiClient;
             _mapping = mapping;
+            _discounts = discounts;
         }
         public async Task<IActionResult> Index(int prodId)
         {
@@ -100,12 +102,12 @@ namespace OnlineShopWebApp.Controllers
         public async Task<IActionResult> CategoryProducts(bool isAllListProducts, ProductCategories category)
         {
             var products = await _products.GetAllAsync();
-            var productsView = _mapping.Map<List<ProductViewModel>>(products);
+            var productsView = _mapping.Map<List<MainPageProductsViewModel>>(products);
 
             if (!isAllListProducts)
             {
                 products = await _products.TryGetByCategoryAsync(category);
-                productsView = _mapping.Map<List<ProductViewModel>>(products);
+                productsView = _mapping.Map<List<MainPageProductsViewModel>>(products);
             }            
             return View(productsView);
         }

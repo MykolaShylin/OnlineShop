@@ -79,7 +79,16 @@
                     </div>
                 </div>                
                 <input type="text" readonly="readonly" style="visibility:hidden" value="@Model.Id" name="prodId" />
-                <h5 style = "color:royalblue; font-size: 25px">Цена:<span style = "color:red; font-size: 50px"> @Model.Cost грн</span></h5><br />
+                @if(Model.Cost == Model.DiscountCost)
+                {
+                    <h5 style = "color:royalblue; font-size: 25px">Цена:<span style = "color:red; font-size: 50px"> @Model.Cost грн</span></h5><br />
+                }
+                else
+                {
+                    <h3 class="font-weight-bold">Обратите внимание, на товар действует скидка!</h3>
+                    <h3>Причина: <span class="alert-danger">@Model.DiscountDescription</span></h3><br />
+                    <h5 style = "color:royalblue; font-size: 25px">Цена со скидкой:<span style = "color:red; font-size: 50px"> @Model.Cost грн</span></h5><br />
+                }
                 <div class="btn-group ">
                     <button class="btn btn-outline-success" type="submit" style="margin-right:20px" asp-area="" asp-controller="Basket" asp-action="Buying">Добавить в корзину</button>
                     <button class="btn btn-outline-info" style="margin-right:20px" asp-controller="Product" asp-action="Comparing">Добавить к сравнению</button>

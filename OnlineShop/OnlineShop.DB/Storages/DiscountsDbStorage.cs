@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OnlineShop.DB.Contexts;
+using OnlineShop.DB.Migrations;
 using OnlineShop.DB.Models;
 using OnlineShop.DB.Models.Enumerations;
 using OnlineShop.DB.Models.Interfaces;
@@ -17,20 +18,25 @@ namespace OnlineShop.DB.Storages
         public async Task AddAsync(Product product, Discount discount, string discountDescription)
         {
             product.DiscountDescription = discountDescription;
-            product.DiscountCost = decimal.Ceiling(((product.Cost * 100) * (100 - discount.DiscountPercent) / 100) / 100);
-            var discounts = await GetAllAsync();
+            product.DiscountCost = CalculateDiscount(product.Cost, discount.DiscountPercent);
 
-            foreach (var disc in discounts)
-            {
-                if (disc.Id == discount.Id)
-                {
-                    disc.Products.Add(product);
-                    break;
-                }
-            }
+            var discountDb = await TryGetByIdAsync(discount.Id);
+            discountDb.Products.Add(product);
+
             await dataBaseContext.SaveChangesAsync();
         }
 
+        public async Task<Discount> GetByProductIdAsync(int productId)
+        {
+            return await dataBaseContext.Discounts.Include(x=>x.Products).FirstOrDefaultAsync(x=>x.Products.Any(z=>z.Id == productId));
+        }
+
+        public async Task<List<Product>> GetNoDiscountProductsAsync()
+        {
+            var discount = await GetZeroDiscountAsync();
+            return discount.Products;
+
+        }
         public async Task<Discount> GetZeroDiscountAsync()
         {
             return await dataBaseContext.Discounts.Include(x => x.Products).ThenInclude(x => x.Flavors).Include(x => x.Products).ThenInclude(x => x.Pictures).FirstOrDefaultAsync(x => x.DiscountPercent == 0);
@@ -84,18 +90,22 @@ namespace OnlineShop.DB.Storages
 
         public async Task RemoveDiscountAsync(Product product, int discountId)
         {
-            var discounts = await GetAllAsync();
+            var discount = await TryGetByIdAsync(discountId);
+            discount.Products.Remove(product);
 
-            foreach (var discount in discounts)
-            {
-                if (discount.Id == discountId)
-                {
-                    discount.Products.Remove(product);
-                    product.DiscountDescription = string.Empty;
-                    break;
-                }
-            }
+            var zeroDiscount = await GetZeroDiscountAsync();
+            zeroDiscount.Products.Add(product);
+
+            product.DiscountDescription = string.Empty;
+            product.DiscountCost = product.Cost;
+
+
             await dataBaseContext.SaveChangesAsync();
+        }
+
+        public decimal CalculateDiscount(decimal cost, int discountPercent)
+        {
+            return decimal.Ceiling(((cost * 100) * (100 - discountPercent) / 100) / 100);
         }
     }
 }

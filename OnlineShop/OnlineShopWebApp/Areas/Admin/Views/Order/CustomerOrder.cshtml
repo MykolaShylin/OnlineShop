@@ -58,9 +58,18 @@
                             <tr>
                                 <td>Товар</td>
                                 <td>
-                                    @foreach (var product in Model.Items)
+                                    @foreach (var item in Model.Items)
                                     {
-                                        <p>@product.Product.Name - @product.Product.Flavors.First(x=>x.Id == product.ProductInfo.FlavorId).Name - @product.Amount шт.</p>
+                                        <p>@item.Product.Name - @item.Product.Flavors.First(x=>x.Id == item.ProductInfo.FlavorId).Name - @item.Amount шт.</p>
+                                        @if(item.ProductInfo.DiscountPercent == 0)
+                                        {
+                                            <p>Без скидки</p>
+                                        }
+                                        else
+                                        {
+                                            <p>Скидка: @item.ProductInfo.DiscountPercent</p>
+                                        }
+                                        <p>Цена товара, грн: @item.DiscountCost</p>
                                     }
                                 </td>
                             </tr>

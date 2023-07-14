@@ -24,8 +24,9 @@ namespace OnlineShopWebApp.Controllers
         private readonly IFlavor _flavors;
         private readonly UserManager<User> _userManager;
         private readonly IMapper _mapping;
+        private readonly IDiscount _discounts;
 
-        public BasketController(IProductsStorage products, IBasketStorage baskets, IPurchases closedPurchases, IFlavor flavors, UserManager<User> userManager, IMapper mapping)
+        public BasketController(IProductsStorage products, IBasketStorage baskets, IPurchases closedPurchases, IFlavor flavors, UserManager<User> userManager, IMapper mapping, IDiscount discounts)
         {
             _products = products;
             _baskets = baskets;
@@ -33,6 +34,7 @@ namespace OnlineShopWebApp.Controllers
             _flavors = flavors;
             _userManager = userManager;
             _mapping = mapping;
+            _discounts = discounts;
         }
         public async Task<IActionResult> CheckOut()
         {
@@ -45,7 +47,8 @@ namespace OnlineShopWebApp.Controllers
         {
             var userId = (await _userManager.FindByNameAsync(User.Identity.Name)).Id;
             var product = await _products.TryGetByIdAsync(prodId);
-            var productInfo = new ChoosingProductInfo { ProductId = prodId, FlavorId = flavorId };
+            var discount = (await _discounts.GetByProductIdAsync(prodId)).DiscountPercent;
+            var productInfo = new ChoosingProductInfo { ProductId = prodId, FlavorId = flavorId, DiscountPercent = discount };
             await _baskets.AddAsync(userId, product, productInfo, amount);
             return RedirectToAction("CheckOut");
         }            

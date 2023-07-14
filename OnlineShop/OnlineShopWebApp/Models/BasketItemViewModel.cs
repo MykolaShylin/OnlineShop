@@ -15,7 +15,14 @@ namespace OnlineShopWebApp.Models
         {
             get
             {
-                return Product.Cost * Amount;
+                return DiscountCost * Amount;
+            }
+        }
+        public decimal DiscountCost
+        {
+            get
+            {
+                return decimal.Ceiling(((Product.Cost * 100) * (100 - ProductInfo.DiscountPercent) / 100) / 100);
             }
         }
     }

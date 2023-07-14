@@ -72,10 +72,21 @@
                             <div class="col-10 pb-2">
                                 <textarea readonly="readonly" style="height:100px" type="text" name="description" class="form-control" id="description">@Model.Description</textarea>
                             </div>
-                            <label for="cost" class="col-2 align-self-center col-form-label">Цена продукта, грн</label>
-                            <div class="col-10 pb-2">
-                                <input readonly="readonly" type="text" name="cost" class="form-control" id="cost" value="@Model.Cost">
-                            </div>
+                            @if (Model.Cost == Model.DiscountCost)
+                            {
+                                <label for="cost" class="col-2 align-self-center col-form-label">Цена продукта, грн</label>
+                                <div class="col-10 pb-2">
+                                    <input readonly="readonly" type="text" name="cost" class="form-control" id="cost" value="@Model.Cost">
+                                </div>
+                            }
+                            else
+                            {
+                                <label for="cost" class="col-2 align-self-center col-form-label">Цена, грн</label>
+                                <div class="col-10 pb-2">
+                                    <input readonly="readonly" type="text" name="cost" class="form-control" id="cost" style="text-decoration-line:line-through; text-decoration-color:red" value="@Model.Cost">
+                                    <input readonly="readonly" type="text" name="cost" class="form-control text-danger" id="cost" value="@Model.DiscountCost">
+                                </div>
+                            }
                             <label for="count" class="col-2 align-self-center col-form-label">Количество, шт</label>
                             <div class="col-10">
                                 <input readonly="readonly" type="text" name="count" class="form-control" id="count" value="@Model.AmountInStock">

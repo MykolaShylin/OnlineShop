@@ -11,5 +11,7 @@ namespace OnlineShopWebApp.Models
         public int ProductId { get; set; }
         public int FlavorId { get; set; }
 
+        public int DiscountPercent { get; set; }
+
     }
 }

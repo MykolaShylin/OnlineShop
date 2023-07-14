@@ -6,6 +6,7 @@
             <th>Название</th>
             <th>Вкус</th>
             <th>Количество</th>
+            <th>Скидка</th>
             <th>Цена за единицу, грн</th>
             <th>Цена за количество, грн</th>
             @if (Model != null)
@@ -24,6 +25,14 @@
                     <td>@basketItem.Product.Name</td>
                     <td>@basketItem.Product.Flavors.First(x=>x.Id == basketItem.ProductInfo.FlavorId).Name</td>
                     <td>@basketItem.Amount</td>
+                    @if (basketItem.Product.Cost == basketItem.Product.DiscountCost)
+                    {
+                        <td>Без скидки</td>
+                    }
+                    else
+                    {
+                        <td>@basketItem.ProductInfo.DiscountPercent</td>
+                    }
                     <td>@basketItem.Product.Cost</td>
                     <td>@basketItem.Cost</td>
                     <td>

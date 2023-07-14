@@ -48,7 +48,16 @@
                                     </a>
                                     @await Html.PartialAsync("ProductInfoModal", @product)
                                 </td>
-                                <td>@product.Cost</td>
+                                <td>
+                                    @if (product.Cost == product.DiscountCost)
+                                    {
+                                        <span class="text-dark">@product.DiscountCost</span>
+                                    }
+                                    else
+                                    {
+                                        @product.DiscountCost
+                                    }
+                                </td>
                                 <td>
                                     <a asp-area="Admin" asp-controller="Product" asp-action="Delete" asp-route-productId="@product.Id" class="btn btn-light btn-sm p-0 m-0" role="button">Удалить</a>                                    
                                 </td>

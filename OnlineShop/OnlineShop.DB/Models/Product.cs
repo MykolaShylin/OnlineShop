@@ -17,7 +17,9 @@ namespace OnlineShop.DB.Models
         public string Name { get; set; }
         public string Brand { get; set; }
         public decimal Cost { get; set; }
-        public decimal DiscountCost { get; set; } = 0;
+
+        public decimal DiscountCost { get; set; }
+
         public string Description { get; set; }
         public string DiscountDescription { get; set; } = string.Empty;
         public int AmountInStock { get; set; }
@@ -27,5 +29,6 @@ namespace OnlineShop.DB.Models
 
         [Timestamp]
         public byte[] Concurrency { get; set; }
+
     }
 }

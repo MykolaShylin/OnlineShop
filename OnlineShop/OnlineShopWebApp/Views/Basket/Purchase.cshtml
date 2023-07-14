@@ -6,33 +6,71 @@
         <div class="col-8">
             <h3>Корзина:</h3>
             <table class="col-10">
-                @foreach (var product in Model.Items)
+                @foreach (var basketItem in Model.Items)
                 {
-                    <tr>
-                        <td rowspan="4"><img src="@product.Product.Pictures.First().Path" width="150"></td>
-                        <td>
-                            <label for="productname">Название:</label>
-                            <input id="productname" class="border-0 bg-white w-75" value="@product.Product.Name" readonly="readonly" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label for="productflawor">Вкус:</label>
-                            <input id="productflawor" class="border-0 bg-white" value="@product.Product.Flavors.First(x=>x.Id == product.ProductInfo.FlavorId).Name" readonly="readonly" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label for="productamount">Количество:</label>
-                            <input id="productamount" class="border-0 bg-white" value="@product.Amount" readonly="readonly" />
-                        </td>
-                    </tr>
-                    <tr style="border-bottom:solid">
-                        <td>
-                            <label for="productcost">Цена:</label>
-                            <input id="productcost" class="border-0 bg-white" value="@product.Cost" readonly="readonly" />
-                        </td>
-                    </tr>
+                    @if (basketItem.Product.Cost == basketItem.Product.DiscountCost)
+                    {
+                        <tr>
+                            <td rowspan="4"><img src="@basketItem.Product.Picture.Path" width="150"></td>
+                            <td>
+                                <label for="productname">Название:</label>
+                                <input id="productname" class="border-0 bg-white w-75" value="@basketItem.Product.Name" readonly="readonly" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="productflawor">Вкус:</label>
+                                <input id="productflawor" class="border-0 bg-white" value="@basketItem.Product.Flavors.First(x=>x.Id == basketItem.ProductInfo.FlavorId).Name" readonly="readonly" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="productamount">Количество:</label>
+                                <input id="productamount" class="border-0 bg-white" value="@basketItem.Amount" readonly="readonly" />
+                            </td>
+                        </tr>
+                        <tr style="border-bottom:solid">
+                            <td>
+                                <label for="productcost">Цена:</label>
+                                <input id="productcost" class="border-0 bg-white" value="@basketItem.Cost" readonly="readonly" />
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>
+                            <td rowspan="5"><img src="@basketItem.Product.Picture.Path" width="150"></td>
+                            <td>
+                                <label for="productname">Название:</label>
+                                <input id="productname" class="border-0 bg-white w-75" value="@basketItem.Product.Name" readonly="readonly" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="productflawor">Вкус:</label>
+                                <input id="productflawor" class="border-0 bg-white" value="@basketItem.Product.Flavors.First(x=>x.Id == basketItem.ProductInfo.FlavorId).Name" readonly="readonly" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="productamount">Количество:</label>
+                                <input id="productamount" class="border-0 bg-white" value="@basketItem.Amount" readonly="readonly" />
+                            </td>
+                        </tr>
+                        <tr style="border-bottom:solid">
+                            <td>
+                                <label for="discount">Скидка:</label>
+                                <input id="discount" class="border-0 bg-white" value="@basketItem.ProductInfo.DiscountPercent - @basketItem.Product.DiscountDescription" readonly="readonly" />
+                            </td>
+                        </tr>
+                        <tr style="border-bottom:solid">
+                            <td>
+                                <label for="productcost">Цена:</label>
+                                <input id="productcost" class="border-0 bg-white" value="@basketItem.Cost" readonly="readonly" />
+                            </td>
+                        </tr>
+                    }
+
                 }
             </table>
             <div class="form-group invisible">

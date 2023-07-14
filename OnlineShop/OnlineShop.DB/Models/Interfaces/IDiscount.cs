@@ -14,5 +14,8 @@ namespace OnlineShop.DB.Models.Interfaces
         Task AddAsync(Product product, Discount discount, string discountDescription);
         Task<Discount> TryGetByIdAsync(int discountId);
         Task<Discount> GetZeroDiscountAsync();
+        Task<Discount> GetByProductIdAsync(int productId);
+        Task<List<Product>> GetNoDiscountProductsAsync();
+        decimal CalculateDiscount(decimal cost, int discountPercent);
     }
 }

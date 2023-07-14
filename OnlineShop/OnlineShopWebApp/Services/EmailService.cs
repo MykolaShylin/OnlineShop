@@ -22,11 +22,12 @@ namespace OnlineShopWebApp.Services
             var orderDetail = string.Empty;
             foreach (var item in items)
             {
-                orderDetail += $"<h3 style=\"color: red;\">Брэнд: {item.Product.Name}</h3>\r\n" +
+                orderDetail += $"<h3 style=\"color: red;\">Брэнд: {item.Product.Brand}</h3>\r\n" +
                                 $"<h3>Название: {item.Product.Name}</h3>\r\n" +
                                 $"<h3>Вкус: {item.Product.Flavors.First(x => x.Id == item.ProductInfo.FlavorId).Name}</h3>\r\n " +
                                 $"<h3>Количество: {item.Amount}</h3>\r\n" +
-                                $"<h3>Цена: {item.Product.Cost}</h3>\r\n" +
+                                $"<h3>Скидка: {item.ProductInfo.DiscountPercent}%</h3>\r\n" +
+                                $"<h3>Цена: {item.Product.DiscountCost}</h3>\r\n" +
                                 $"<h3>Цена за количество: {item.Cost}</h3>\r\n" +
                                 $"<h2 style=\"color: red;\">Сумма заказа: {items.Sum(x => x.Cost)}</h3>\r\n";
 

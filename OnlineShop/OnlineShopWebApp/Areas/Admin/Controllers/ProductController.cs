@@ -206,9 +206,14 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
                 var pictureDb = await _pictures.TryGetByPathAsync(picture);
                 picturesDb.Add(pictureDb);
             }
+
             var productDb = _mapping.Map<Product>(productView);
+
+            var discount = await _discount.GetByProductIdAsync(productDb.Id);
+
             productDb.Flavors = flavorsDb;
             productDb.Pictures = picturesDb;
+            productDb.DiscountCost = _discount.CalculateDiscount(productDb.Cost, discount.DiscountPercent);
             return productDb;
         }
 

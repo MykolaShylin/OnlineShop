@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OnlineShop.DB.Contexts;
+using OnlineShop.DB.Migrations;
 using OnlineShop.DB.Models;
 using OnlineShop.DB.Models.Enumerations;
 using OnlineShop.DB.Models.Interfaces;
@@ -218,6 +219,11 @@ namespace OnlineShop.DB.Storages
 
             DiscountsDb[0].Products.AddRange(ProductsDb);
 
+            DiscountsDb[0].Products.ForEach(x => x.DiscountCost = (decimal.Ceiling(x.Cost * 100) * (100 - DiscountsDb[0].DiscountPercent) / 100) / 100);
+
+
+            await dataBaseContext.Discounts.ForEachAsync(x=>x.Products.ForEach(q => q.DiscountCost = decimal.Ceiling(((q.Cost * 100) * (100 - x.DiscountPercent) / 100) / 100)));
+
             await dataBaseContext.SaveChangesAsync();
         }
 
@@ -226,6 +232,7 @@ namespace OnlineShop.DB.Storages
             dataBaseContext.Flavors.RemoveRange(dataBaseContext.Flavors);
             dataBaseContext.Products.RemoveRange(dataBaseContext.Products);
             dataBaseContext.Pictures.RemoveRange(dataBaseContext.Pictures);
+            dataBaseContext.Discounts.RemoveRange(dataBaseContext.Discounts);
             await dataBaseContext.SaveChangesAsync();
         }
     }
