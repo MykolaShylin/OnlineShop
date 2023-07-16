@@ -13,6 +13,7 @@ namespace OnlineShopWebApp.Models
         public string Brand { get; set; }
         public decimal Cost { get; set; }
         public decimal DiscountCost { get; set; }
+        public int AmountInStock { get; set; }
 
         public Flavor Flavor { get; set; }
         public List<ProductPicture> Pictures { get; set; }

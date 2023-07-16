@@ -44,9 +44,9 @@ namespace OnlineShopWebApp.Controllers
             return View(basketView);
         }
         public async Task<IActionResult> Buying(int prodId, int flavorId, int amount)
-        {
-            var userId = (await _userManager.FindByNameAsync(User.Identity.Name)).Id;
+        {            
             var product = await _products.TryGetByIdAsync(prodId);
+            var userId = (await _userManager.FindByNameAsync(User.Identity.Name)).Id;
             var discount = (await _discounts.GetByProductIdAsync(prodId)).DiscountPercent;
             var productInfo = new ChoosingProductInfo { ProductId = prodId, FlavorId = flavorId, Cost = product.Cost, DiscountPercent = discount };
             await _baskets.AddAsync(userId, product, productInfo, amount);

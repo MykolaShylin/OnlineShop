@@ -19,18 +19,20 @@ namespace OnlineShopWebApp.Controllers
     public class OrderController : Controller
     {
         private readonly IBasketStorage _baskets;
+        private readonly IProductsStorage _products;
         private readonly IPurchases _closedPurchases;
         private readonly UserManager<User> _userManager;
         private readonly EmailService _emailService;
         private readonly IMapper _mapping;
 
-        public OrderController(IBasketStorage baskets, IPurchases closedPurchases, UserManager<User> userManager, EmailService emailService, IMapper mapping)
+        public OrderController(IBasketStorage baskets, IPurchases closedPurchases, UserManager<User> userManager, EmailService emailService, IMapper mapping, IProductsStorage products)
         {
             _baskets = baskets;
             _closedPurchases = closedPurchases;
             _userManager = userManager;
             _emailService = emailService;
             _mapping = mapping;
+            _products = products;
         }
 
         public IActionResult Confirmation()
@@ -54,6 +56,7 @@ namespace OnlineShopWebApp.Controllers
 
             await _emailService.SendOrderConfirmEmailAsync(user.Email, _mapping.Map<List<BasketItemViewModel>>(basketItems));
 
+            await _products.ReduceAmountInStock(orderDb.Items);
             await _closedPurchases.SaveAsync(orderDb);
             await _baskets.CloseAsync(user.Id);
 

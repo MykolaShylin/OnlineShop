@@ -16,5 +16,6 @@ namespace OnlineShop.DB.Models.Interfaces
         Task<Product> TryGetByNameAsync(string name);
         Task InitializeDefaultProductsAsync();
         Task ClearAllAsync();
+        Task ReduceAmountInStock(List<BasketItem> items);
     }
 }

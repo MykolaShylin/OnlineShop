@@ -235,5 +235,15 @@ namespace OnlineShop.DB.Storages
             dataBaseContext.Discounts.RemoveRange(dataBaseContext.Discounts);
             await dataBaseContext.SaveChangesAsync();
         }
+
+        public async Task ReduceAmountInStock(List<BasketItem> items)
+        {
+            foreach(var item in items)
+            {
+                var product = await TryGetByIdAsync(item.Product.Id);
+                product.AmountInStock = item.Amount > product.AmountInStock ? 0 : product.AmountInStock - item.Amount;
+            }
+            dataBaseContext.SaveChanges();
+        }
     }
 }

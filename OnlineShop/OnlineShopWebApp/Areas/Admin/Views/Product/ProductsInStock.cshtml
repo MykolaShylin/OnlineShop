@@ -25,6 +25,7 @@
                             <th>Категория</th>
                             <th>Бренд</th>
                             <th>Название</th>
+                            <th>Количество</th>
                             <th>Цена, грн</th>
                             <th></th>
                             <th></th>
@@ -47,6 +48,16 @@
                                         <span>@product.Name</span>
                                     </a>
                                     @await Html.PartialAsync("ProductInfoModal", @product)
+                                </td>
+                                <td>
+                                    @if(product.AmountInStock > 0)
+                                    {
+                                        @product.AmountInStock
+                                    }
+                                    else
+                                    {
+                                        <span style="color:red">Закончился!</span>
+                                    }
                                 </td>
                                 <td>
                                     @if (product.Cost == product.DiscountCost)
