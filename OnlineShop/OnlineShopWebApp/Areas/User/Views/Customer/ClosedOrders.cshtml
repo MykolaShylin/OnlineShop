@@ -29,7 +29,7 @@
                         counter++;
                         <tr>
                             <td>@counter</td>
-                            <td>@order.Items.Sum(x=>x.Cost)</td>
+                            <td>@order.TotalCost</td>
                             <td>@EnumHelper.GetDisplayName(order.orderStatus) </td>
                             <td>
                                 <a asp-controller="Customer" asp-action="OrderData" asp-area="User" asp-route-id="@order.Id">@order.Id</a>

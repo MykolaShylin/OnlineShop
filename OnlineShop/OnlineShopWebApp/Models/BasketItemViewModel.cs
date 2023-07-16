@@ -11,7 +11,7 @@ namespace OnlineShopWebApp.Models
         public ChoosingProductInfoViewModel ProductInfo { get; set; }
         public int Amount { get; set; }
 
-        public decimal Cost
+        public decimal TotalAmount
         {
             get
             {
@@ -22,7 +22,7 @@ namespace OnlineShopWebApp.Models
         {
             get
             {
-                return decimal.Ceiling(((Product.Cost * 100) * (100 - ProductInfo.DiscountPercent) / 100) / 100);
+                return decimal.Ceiling(((ProductInfo.Cost * 100) * (100 - ProductInfo.DiscountPercent) / 100) / 100);
             }
         }
     }

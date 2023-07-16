@@ -5,10 +5,10 @@
         <tr style="text-align:center">
             <th>Название</th>
             <th>Вкус</th>
-            <th>Количество</th>
-            <th>Скидка</th>
+            <th>Количество, шт</th>
             <th>Цена за единицу, грн</th>
-            <th>Цена за количество, грн</th>
+            <th>Скидка, %</th>
+            <th>Общая цена, грн</th>
             @if (Model != null)
             {
                 <th></th>
@@ -25,6 +25,7 @@
                     <td>@basketItem.Product.Name</td>
                     <td>@basketItem.Product.Flavors.First(x=>x.Id == basketItem.ProductInfo.FlavorId).Name</td>
                     <td>@basketItem.Amount</td>
+                    <td>@basketItem.Product.Cost</td>
                     @if (basketItem.Product.Cost == basketItem.Product.DiscountCost)
                     {
                         <td>Без скидки</td>
@@ -33,8 +34,7 @@
                     {
                         <td>@basketItem.ProductInfo.DiscountPercent</td>
                     }
-                    <td>@basketItem.Product.Cost</td>
-                    <td>@basketItem.Cost</td>
+                    <td>@basketItem.TotalAmount</td>
                     <td>
                         <a class="btn btn-sm btn-outline-success" asp-area="" asp-controller="Basket" asp-action="Buying" asp-route-prodId="@basketItem.Product.Id" asp-route-flavorId="@basketItem.ProductInfo.FlavorId" asp-route-amount="@basketItem.Amount" role="button">+</a>
                     </td>
@@ -44,8 +44,8 @@
                 </tr>
             }
             <tr style="text-align:center">
-                <td colspan="4">Сумма заказа, грн</td>
-                <td>@Model.Cost</td>
+                <td colspan="5">Сумма заказа, грн</td>
+                <td colspan="3" style="color:firebrick; font-size:x-large; font-weight:bold">@Model.Cost</td>
             </tr>
         }
         else

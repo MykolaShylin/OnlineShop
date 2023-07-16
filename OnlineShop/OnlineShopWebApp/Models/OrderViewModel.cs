@@ -2,6 +2,7 @@
 using OnlineShop.DB.Models.Enumerations;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace OnlineShopWebApp.Models
 {
@@ -12,7 +13,14 @@ namespace OnlineShopWebApp.Models
         public DeliveryInfoViewModel deliveryInfo { get; set; }
         public PayInfoViewModel payInfo { get; set; }
         public OrderStatuses orderStatus { get; set; }
-        public DateTime OrderDateTime { get; set; }  
+        public string OrderDateTime { get; set; }  
 
+        public decimal TotalCost
+        {
+            get
+            {
+                return Items?.Sum(x=>x.TotalAmount) ?? 0;
+            }
+        }
     }
 }

@@ -85,9 +85,9 @@
                 }
                 else
                 {
-                    <h3 class="font-weight-bold">Обратите внимание, на товар действует скидка!</h3>
-                    <h3>Причина: <span class="alert-danger">@Model.DiscountDescription</span></h3><br />
-                    <h5 style = "color:royalblue; font-size: 25px">Цена со скидкой:<span style = "color:red; font-size: 50px"> @Model.Cost грн</span></h5><br />
+                    <h5 class="font-weight-bold">Обратите внимание, на товар действует скидка!</h5>
+                    <h5>Причина: <span class="alert-danger">@Model.DiscountDescription</span></h5><br />
+                    <h5 style = "color:royalblue; font-size: 25px">Цена со скидкой:<span style = "color:red; font-size: 50px"> @Model.DiscountCost грн</span></h5><br />
                 }
                 <div class="btn-group ">
                     <button class="btn btn-outline-success" type="submit" style="margin-right:20px" asp-area="" asp-controller="Basket" asp-action="Buying">Добавить в корзину</button>

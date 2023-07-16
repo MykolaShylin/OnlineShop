@@ -49,6 +49,7 @@ namespace OnlineShopWebApp.Controllers
             {
                 opt.AfterMap((src, dest) => dest.Items = basketItems);
                 opt.BeforeMap((src, dest) => src.Id = Guid.NewGuid());
+                opt.BeforeMap((src, dest) => src.OrderDateTime = DateTime.UtcNow.ToString());
             });
 
             await _emailService.SendOrderConfirmEmailAsync(user.Email, _mapping.Map<List<BasketItemViewModel>>(basketItems));

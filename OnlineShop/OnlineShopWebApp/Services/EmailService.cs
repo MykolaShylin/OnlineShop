@@ -28,8 +28,8 @@ namespace OnlineShopWebApp.Services
                                 $"<h3>Количество: {item.Amount}</h3>\r\n" +
                                 $"<h3>Скидка: {item.ProductInfo.DiscountPercent}%</h3>\r\n" +
                                 $"<h3>Цена: {item.Product.DiscountCost}</h3>\r\n" +
-                                $"<h3>Цена за количество: {item.Cost}</h3>\r\n" +
-                                $"<h2 style=\"color: red;\">Сумма заказа: {items.Sum(x => x.Cost)}</h3>\r\n";
+                                $"<h3>Цена за количество: {item.TotalAmount}</h3>\r\n" +
+                                $"<h2 style=\"color: red;\">Сумма заказа: {items.Sum(x => x.TotalAmount)}</h3>\r\n";
 
             }
 

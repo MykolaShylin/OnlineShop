@@ -48,7 +48,7 @@ namespace OnlineShopWebApp.Controllers
             var userId = (await _userManager.FindByNameAsync(User.Identity.Name)).Id;
             var product = await _products.TryGetByIdAsync(prodId);
             var discount = (await _discounts.GetByProductIdAsync(prodId)).DiscountPercent;
-            var productInfo = new ChoosingProductInfo { ProductId = prodId, FlavorId = flavorId, DiscountPercent = discount };
+            var productInfo = new ChoosingProductInfo { ProductId = prodId, FlavorId = flavorId, Cost = product.Cost, DiscountPercent = discount };
             await _baskets.AddAsync(userId, product, productInfo, amount);
             return RedirectToAction("CheckOut");
         }            

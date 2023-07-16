@@ -20,7 +20,7 @@ namespace OnlineShop.DB.Models
 
         public Order()
         {
-            OrderDateTime = DateTime.Now;
+            OrderDateTime = DateTime.UtcNow;
 
             orderStatus = OrderStatuses.Created;
             Id = Guid.NewGuid();

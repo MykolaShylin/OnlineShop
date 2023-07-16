@@ -10,6 +10,8 @@ namespace OnlineShop.DB.Models
         public int Id { get; set; }
         public int ProductId { get; set; }
         public int DiscountPercent  { get; set; }
+
+        public decimal Cost { get; set; }
         public int FlavorId { get; set; }
         public List<BasketItem> BasketItems { get; set; } = new List<BasketItem>();
 

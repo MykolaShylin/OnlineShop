@@ -12,6 +12,7 @@ namespace OnlineShopWebApp.Models
         public int FlavorId { get; set; }
 
         public int DiscountPercent { get; set; }
+        public decimal Cost { get; set; }
 
     }
 }

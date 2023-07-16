@@ -67,15 +67,15 @@
                                         }
                                         else
                                         {
-                                            <p>Скидка: @item.ProductInfo.DiscountPercent</p>
+                                            <p>Скидка: @item.ProductInfo.DiscountPercent%</p>
                                         }
                                         <p>Цена товара, грн: @item.DiscountCost</p>
                                     }
                                 </td>
                             </tr>
                             <tr>
-                                <td>Общая сумма заказа</td>
-                                <td>@Model.Items.Sum(x=>x.Cost)</td>
+                                <td>Общая сумма заказа, грн</td>
+                                <td>@Model.TotalCost</td>
                             </tr>
                             <tr>
                                 <td>Статус заказа</td>
