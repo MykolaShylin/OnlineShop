@@ -22,16 +22,15 @@ namespace OnlineShopWebApp.Services
             var orderDetail = string.Empty;
             foreach (var item in items)
             {
-                orderDetail += $"<h3 style=\"color: red;\">Брэнд: {item.Product.Brand}</h3>\r\n" +
-                                $"<h3>Название: {item.Product.Name}</h3>\r\n" +
-                                $"<h3>Вкус: {item.Product.Flavors.First(x => x.Id == item.ProductInfo.FlavorId).Name}</h3>\r\n " +
-                                $"<h3>Количество: {item.Amount}</h3>\r\n" +
-                                $"<h3>Скидка: {item.ProductInfo.DiscountPercent}%</h3>\r\n" +
-                                $"<h3>Цена: {item.Product.DiscountCost}</h3>\r\n" +
-                                $"<h3>Цена за количество: {item.TotalAmount}</h3>\r\n" +
-                                $"<h2 style=\"color: red;\">Сумма заказа: {items.Sum(x => x.TotalAmount)}</h3>\r\n";
+                orderDetail += $"<h4>Название: {item.Product.Brand} - {item.Product.Name} - {item.Product.Flavors.First(x => x.Id == item.ProductInfo.FlavorId).Name}</h4>\r\n" +                                
+                                $"<h4>Количество: {item.Amount}</h4>\r\n" +
+                                $"<h4>Скидка: {item.ProductInfo.DiscountPercent}%</h4>\r\n" +
+                                $"<h4>Цена: {item.Product.DiscountCost}</h4>\r\n" +
+                                $"<h4>Цена за количество: {item.TotalAmount}</h4>\r\n";
 
             }
+
+            orderDetail += $"<h2 style=\"color: red;\">Сумма заказа: {items.Sum(x => x.TotalAmount)}</h2>\r\n";
 
             emailMessage.Body = new BodyBuilder()
             {
