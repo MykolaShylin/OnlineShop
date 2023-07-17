@@ -34,7 +34,7 @@ namespace OnlineShopWebApp.Models
         [StringLength(20, MinimumLength = 3, ErrorMessage = "Допускается от 3 до 20 символов")]
         public string Password { get; set; }
 
-        [Required(ErrorMessage = "Пароль не указан")]
+        [Required(ErrorMessage = "Повторный пароль не указан")]
         [DataType(DataType.Password)]
         [Compare("Password", ErrorMessage ="Пароли не совпадают")]
         public string PasswordConfirm { get; set; }

@@ -6,5 +6,7 @@ namespace OnlineShop.DB.Models
     {
         public const string AdminRoleName = "Admin";
         public const string UserRoleName = "User";
+
+        public const string OnlineShopName = "Bull Body";
     }
 }
