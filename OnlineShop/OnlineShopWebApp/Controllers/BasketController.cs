@@ -50,14 +50,14 @@ namespace OnlineShopWebApp.Controllers
             var discount = (await _discounts.GetByProductIdAsync(prodId)).DiscountPercent;
             var productInfo = new ChoosingProductInfo { ProductId = prodId, FlavorId = flavorId, Cost = product.Cost, DiscountPercent = discount };
             await _baskets.AddAsync(userId, product, productInfo, amount);
-            return RedirectToAction("CheckOut");
+            return RedirectToAction(nameof(CheckOut));
         }            
 
         public async Task<IActionResult> Deleting(int prodId)
         {
             var userId = (await _userManager.FindByNameAsync(User.Identity.Name)).Id;
             await _baskets.DeleteAsync(userId, prodId);
-            return RedirectToAction("CheckOut");
+            return RedirectToAction(nameof(CheckOut));
         }
         public async Task<IActionResult> Purchase()
         {

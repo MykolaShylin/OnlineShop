@@ -60,7 +60,7 @@ namespace OnlineShopWebApp.Controllers
             await _closedPurchases.SaveAsync(orderDb);
             await _baskets.CloseAsync(user.Id);
 
-            return Redirect("Confirmation");
+            return Redirect(nameof(Confirmation));
         }
     }
 }

@@ -48,7 +48,7 @@ namespace OnlineShopWebApp.Controllers
                 {
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(userDb);
                     var callbackUrl = Url.Action(
-                        "ConfirmEmail",
+                        nameof(ConfirmEmail),
                         "UserRegistration",
                         values: returnUrl == null ? new { userId = userDb.Id, code = code } : new { userId = userDb.Id, code = code, returnUrl = returnUrl },
                         protocol: HttpContext.Request.Scheme);

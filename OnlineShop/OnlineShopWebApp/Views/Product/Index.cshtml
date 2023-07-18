@@ -78,7 +78,7 @@
                         <input type="number" name="amount" class="form-control" id="amount" value="1"> 
                     </div>
                 </div>                
-                <input type="text" readonly="readonly" style="visibility:hidden" value="@Model.Id" name="prodId" />
+                <input type="text" hidden="hidden" value="@Model.Id" name="productId" />
                 @if(Model.AmountInStock > 0)
                 {
                     if(Model.Cost == Model.DiscountCost)

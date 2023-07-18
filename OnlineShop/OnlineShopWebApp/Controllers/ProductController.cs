@@ -15,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using OnlineShopWebApp.FeedbackApi;
 using OnlineShopWebApp.FeedbackApi.Models;
 using AutoMapper;
+using Microsoft.CodeAnalysis;
 
 namespace OnlineShopWebApp.Controllers
 {
@@ -62,7 +63,7 @@ namespace OnlineShopWebApp.Controllers
         public async Task<IActionResult> DeleteFeedbackAsync(int feedbackId, int productId)
         {
             await _feedbackApiClient.DeleteAsync(feedbackId);
-            return RedirectToAction("Index", new { prodId = productId });
+            return RedirectToAction(nameof(Index), new { prodId = productId });
         }
 
         [HttpPost]
@@ -70,24 +71,24 @@ namespace OnlineShopWebApp.Controllers
         {
 
             await _feedbackApiClient.AddAsync(feedbackModel);
-            return RedirectToAction("Index", new { prodId = feedbackModel.ProductId });
+            return RedirectToAction(nameof(Index), new { prodId = feedbackModel.ProductId });
         }
 
         [Authorize]
-        public async Task<IActionResult> Comparing(int prodId, int flavorId)
+        public async Task<IActionResult> Comparing(int productId, int flavorId)
         {
             var userId = (await _userManager.FindByNameAsync(User.Identity.Name)).Id;
-            var product = await _products.TryGetByIdAsync(prodId);
+            var product = await _products.TryGetByIdAsync(productId);
             var flavor = await _flavors.TryGetByIdAsync(flavorId);
             await _comparingProducts.AddAsync(userId, product, flavor);
-            return Redirect($"index?prodId={prodId}");
+            return RedirectToAction(nameof(Index), new { prodId = productId });
         }
 
         [Authorize]
         public async Task<IActionResult> Deleting(int prodId)
         {
             await _comparingProducts.DeleteAsync(prodId);
-            return RedirectToAction("CheckComparer");
+            return RedirectToAction(nameof(CheckComparer));
         }
 
         [Authorize]
@@ -115,7 +116,7 @@ namespace OnlineShopWebApp.Controllers
         public async Task<IActionResult> SaleProduct(string prodName)
         {
             var productId = (await _products.TryGetByNameAsync(prodName)).Id;
-            return Redirect($"index?prodId={productId}");
+            return RedirectToAction(nameof(Index), new { prodId = productId});
         }
     }
 }
