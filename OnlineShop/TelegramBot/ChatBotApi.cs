@@ -32,10 +32,7 @@ namespace TelegramBot
         /// <param name="update"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private async Task HandleUpdateAsync(
-            ITelegramBotClient botClient,
-            Update update,
-            CancellationToken cancellationToken)
+        private async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update,  CancellationToken cancellationToken)
         {
             if (update.Type == UpdateType.Message)
             {
@@ -83,8 +80,7 @@ namespace TelegramBot
         /// <param name="exception"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception,
-            CancellationToken cancellationToken)
+        public async Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
         {
             //Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(exception));
         }

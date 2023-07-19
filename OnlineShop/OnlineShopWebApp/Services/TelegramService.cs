@@ -29,14 +29,15 @@ namespace OnlineShopWebApp.Services
         private IConnection rabbitConnectionConsumer;
         private IModel rabbitChannelConsumer;
 
-        public TelegramService(IChatBotAPI chatBotApi, UserTelegramDbStorage userDbRepository,
-            IPurchases ordersRepository)
+        public TelegramService(IChatBotAPI chatBotApi, UserTelegramDbStorage userDbRepository,IPurchases ordersRepository)
         {
             this.chatBotApi = chatBotApi;
 
             chatBotApi.Init();
 
             ordersRepository.OrderStatusUpdatedEvent += OrdersRepository_OrderStatusUpdatedEvent;
+
+            ordersRepository.NewComfirmedOrderEvent += OrdersRepository_NewComfirmedOrderEvent;
 
             this.userDbRepository = userDbRepository;
             this.ordersRepository = ordersRepository;
@@ -117,8 +118,22 @@ namespace OnlineShopWebApp.Services
 
             var body = Encoding.UTF8.GetBytes(jsonMessage);
 
-            rabbitChannelPublisher.BasicPublish(exchange: "dev-ex-to-telegram", routingKey: "", basicProperties: null,
-                body: body);
+            rabbitChannelPublisher.BasicPublish(exchange: "dev-ex-to-telegram", routingKey: "", basicProperties: null, body: body);
+        }
+
+        private void OrdersRepository_NewComfirmedOrderEvent(object sender, NewComfirmedOrderEventArgs e)
+        {
+            var message = new QueueMessageModel()
+            {
+                ChatId = e.User.TelegramUserId!.Value,
+                MessageReceive = BuildNewOrdersMessage(e)
+            };
+
+            var jsonMessage = JsonConvert.SerializeObject(message);
+
+            var body = Encoding.UTF8.GetBytes(jsonMessage);
+
+            rabbitChannelPublisher.BasicPublish(exchange: "dev-ex-to-telegram", routingKey: "", basicProperties: null, body: body);
         }
 
         /// <summary>
@@ -129,7 +144,7 @@ namespace OnlineShopWebApp.Services
         {
             if (message.MessageType == MessageType.Text)
             {
-                var existingUser = userDbRepository.TryGetByTelegramUserId(message.UserId);
+                var existingUser = await userDbRepository.TryGetByTelegramUserIdAsync(message.UserId);
 
                 if (existingUser != null)
                 {
@@ -166,11 +181,11 @@ namespace OnlineShopWebApp.Services
             }
             else if (message.MessageType == MessageType.Contact)
             {
-                var result = userDbRepository.UpdateTelegramUserId(message.Phone, message.UserId);
+                var result = await userDbRepository.UpdateTelegramUserIdAsync(message.Phone, message.UserId);
 
                 if (result)
                 {
-                    var existingUser = userDbRepository.TryGetByTelegramUserId(message.UserId);
+                    var existingUser = await userDbRepository.TryGetByTelegramUserIdAsync(message.UserId);
 
                     chatBotApi.SendKeyboard(message.ChatId, $"Добро пожаловать, {existingUser.RealName}");
                 }

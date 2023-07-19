@@ -1,4 +1,5 @@
-﻿using OnlineShop.DB.Contexts;
+﻿using Microsoft.EntityFrameworkCore;
+using OnlineShop.DB.Contexts;
 using OnlineShop.DB.Models;
 using System;
 using System.Collections.Generic;
@@ -21,14 +22,14 @@ namespace OnlineShop.DB.Storages
         /// </summary>
         /// <param name="telegramUserId"></param>
         /// <returns></returns>
-        public User TryGetByTelegramUserId(long? telegramUserId)
+        public async Task<User> TryGetByTelegramUserIdAsync(long? telegramUserId)
         {
-            return identityContext.Users.FirstOrDefault(x => x.TelegramUserId == telegramUserId);
+            return await identityContext.Users.FirstOrDefaultAsync(x => x.TelegramUserId == telegramUserId);
         }
 
-        public User TryGetByName(string name)
+        public async Task<User> TryGetByNameAsync(string name)
         {
-            return identityContext.Users.FirstOrDefault(x => x.UserName == name);
+            return await identityContext.Users.FirstOrDefaultAsync(x => x.UserName == name);
         }
 
         /// <summary>
@@ -37,10 +38,10 @@ namespace OnlineShop.DB.Storages
         /// <param name="phone"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public bool UpdateTelegramUserId(string phone, long userId)
+        public async Task<bool> UpdateTelegramUserIdAsync(string phone, long userId)
         {
             var trimNumber = (string number) => number.StartsWith("+") ? number.Substring(1) : number;
-            var user = identityContext.Users.FirstOrDefault(x => (x.PhoneNumber.StartsWith("+") ? x.PhoneNumber.Substring(1) : x.PhoneNumber) == phone);
+            var user = await identityContext.Users.FirstOrDefaultAsync(x => (x.PhoneNumber.StartsWith("+") ? x.PhoneNumber.Substring(1) : x.PhoneNumber) == phone);
             if (user != null)
             {
                 user.TelegramUserId = userId;
@@ -49,11 +50,6 @@ namespace OnlineShop.DB.Storages
             }
 
             return false;
-        }
-
-        public void UpdateUser()
-        {
-            identityContext.SaveChanges();
         }
     }
 }
