@@ -12,5 +12,8 @@ namespace OnlineShop.DB.Interfaces
         Task<List<Order>> GetAllAsync();
         Task UpdateStatusAsync(Guid orderId, OrderStatuses newOrderStatus);
         Task<List<Order>> TryGetByUserIdAsync(string id);
+
+        event EventHandler<OrderStatusUpdatedEventArgs> OrderStatusUpdatedEvent;
+        event EventHandler<NewComfirmedOrderEventArgs> NewComfirmedOrderEvent;
     }
 }

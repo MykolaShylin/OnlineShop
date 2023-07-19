@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using OnlineShop.DB.Contexts;
 using OnlineShop.DB.Interfaces;
@@ -10,15 +11,31 @@ namespace OnlineShop.DB
     public class ClosedPurchasesDbStorage : IPurchases
     {
         private readonly DataBaseContext dataBaseContext;
+        public event EventHandler<OrderStatusUpdatedEventArgs> OrderStatusUpdatedEvent;
+        public event EventHandler<NewComfirmedOrderEventArgs> NewComfirmedOrderEvent;
+        private readonly UserManager<User> _userManager;
 
-        public ClosedPurchasesDbStorage(DataBaseContext dataBaseContext)
+        public ClosedPurchasesDbStorage(DataBaseContext dataBaseContext, UserManager<User> userManager)
         {
             this.dataBaseContext = dataBaseContext;
+            _userManager = userManager;
         }
         public async Task SaveAsync(Order order)
         {
             dataBaseContext.ClosedOrders.Add(order);
             await dataBaseContext.SaveChangesAsync();
+
+            var user = await _userManager.FindByIdAsync(order.deliveryInfo.CustomerId);
+            if (user.TelegramUserId != null)
+            {
+                NewComfirmedOrderEvent?.Invoke(
+                    this,
+                    new NewComfirmedOrderEventArgs()
+                    {
+                        User = user,
+                        Order = order
+                    });
+            }
         }
         public async Task<Order> TryGetByIdAsync(Guid id)
         {
@@ -36,8 +53,24 @@ namespace OnlineShop.DB
         public async Task UpdateStatusAsync(Guid orderId, OrderStatuses newOrderStatus)
         {
             var order = await TryGetByIdAsync(orderId);
+            var oldStatus = order.orderStatus;
             order.orderStatus = newOrderStatus;
             await dataBaseContext.SaveChangesAsync();
+
+            var user = await _userManager.FindByIdAsync(order.deliveryInfo.CustomerId);
+
+            if (user.TelegramUserId != null)
+            {
+                OrderStatusUpdatedEvent?.Invoke(
+                    this,
+                    new OrderStatusUpdatedEventArgs()
+                    {
+                        User = user,
+                        NewStatus = newOrderStatus,
+                        OldStatus = oldStatus,
+                        Order = order
+                    });
+            }
         }
     }
 }

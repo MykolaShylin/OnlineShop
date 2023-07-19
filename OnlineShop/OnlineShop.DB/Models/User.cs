@@ -17,6 +17,8 @@ namespace OnlineShop.DB.Models
         public string? NikName { get; set; }
         [AllowNull]
         public string? Avatar { get; set; } = null;
+
+        public long? TelegramUserId { get; set; }
         public List<ComparingProducts> ComparingProducts { get; set; } = new List<ComparingProducts>();
 
     }
