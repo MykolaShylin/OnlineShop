@@ -50,6 +50,13 @@ namespace OnlineShop.DB
             return await dataBaseContext.ClosedOrders.Include(x=>x.Items).ThenInclude(x=>x.Product).ThenInclude(x => x.Flavors).Include(x=>x.payInfo).Include(x=>x.deliveryInfo).Include(x => x.Items).ThenInclude(x => x.ProductInfo).ToListAsync();
         }  
 
+        public async Task<List<Order>> GetAllActiveByUserIdAsync(string id)
+        {
+            var order = await TryGetByUserIdAsync(id);
+            return order.Where(x => x.orderStatus == OrderStatuses.OnTheWay
+                || x.orderStatus == OrderStatuses.Created
+                || x.orderStatus == OrderStatuses.Delivered).ToList();
+        }
         public async Task UpdateStatusAsync(Guid orderId, OrderStatuses newOrderStatus)
         {
             var order = await TryGetByIdAsync(orderId);

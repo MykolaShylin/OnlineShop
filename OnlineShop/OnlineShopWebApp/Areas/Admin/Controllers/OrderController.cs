@@ -14,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using OnlineShopWebApp.Models;
 using System.Collections.Generic;
+using OnlineShopWebApp.Services;
 
 namespace OnlineShopWebApp.Areas.Admin.Controllers
 {
@@ -25,7 +26,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
         private readonly UserManager<User> _userManager;
         private readonly IMapper _mapping;
 
-        public OrderController(IPurchases closedPurchases, UserManager<User> userManager, IMapper mapping)
+        public OrderController(IPurchases closedPurchases, UserManager<User> userManager, IMapper mapping, TelegramService telegramService)
         {
             _closedPurchases = closedPurchases;
             _userManager = userManager;

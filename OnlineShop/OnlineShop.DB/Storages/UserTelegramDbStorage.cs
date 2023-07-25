@@ -1,21 +1,24 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using OnlineShop.DB.Contexts;
 using OnlineShop.DB.Models;
+using OnlineShop.DB.Models.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OnlineShop.DB.Storages
+namespace OnlineShop.DB
 {
-    public class UserTelegramDbStorage
+    public class UserTelegramDbStorage : ITelegramBot
     {
-        private readonly IdentityContext identityContext;
+        private readonly IdentityContext _userManager;
 
-        public UserTelegramDbStorage(IdentityContext identityContext)
+        public UserTelegramDbStorage(IdentityContext userManager)
         {
-            this.identityContext = identityContext;
+            _userManager = userManager;
         }
         /// <summary>
         /// Возвращает пользователя по телеграмЮзерАйди, если он есть в БД. 
@@ -24,14 +27,8 @@ namespace OnlineShop.DB.Storages
         /// <returns></returns>
         public async Task<User> TryGetByTelegramUserIdAsync(long? telegramUserId)
         {
-            return await identityContext.Users.FirstOrDefaultAsync(x => x.TelegramUserId == telegramUserId);
+            return await _userManager.Users.FirstOrDefaultAsync(x=> x.TelegramUserId == telegramUserId);
         }
-
-        public async Task<User> TryGetByNameAsync(string name)
-        {
-            return await identityContext.Users.FirstOrDefaultAsync(x => x.UserName == name);
-        }
-
         /// <summary>
         /// Метод добавляет в БД TelegramUserId по номеру телефона
         /// </summary>
@@ -40,12 +37,11 @@ namespace OnlineShop.DB.Storages
         /// <returns></returns>
         public async Task<bool> UpdateTelegramUserIdAsync(string phone, long userId)
         {
-            var trimNumber = (string number) => number.StartsWith("+") ? number.Substring(1) : number;
-            var user = await identityContext.Users.FirstOrDefaultAsync(x => (x.PhoneNumber.StartsWith("+") ? x.PhoneNumber.Substring(1) : x.PhoneNumber) == phone);
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.PhoneNumber.Contains(phone));
             if (user != null)
             {
                 user.TelegramUserId = userId;
-                identityContext.SaveChanges();
+                await _userManager.SaveChangesAsync();
                 return true;
             }
 

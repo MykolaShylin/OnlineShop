@@ -18,7 +18,7 @@ namespace OnlineShop.DB.Contexts
             var serName = "Шилин";
             var login = "Metall_Head";
             var nikName = "Metall_Head";
-            var phone = "+38(097)-528-86-99";
+            var phone = "+380975288699";
             var emailConfirmed = true;
 
             var adminRoleDesc = "Доступ ко всему функционалу сайта! Внимание, не предоставляйте эти права доступа людям, которым вы не доверяете, это может повлиять на работу сайта!";

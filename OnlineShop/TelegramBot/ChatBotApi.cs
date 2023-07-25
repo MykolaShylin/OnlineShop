@@ -6,12 +6,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static TelegramBot.ChatBotAPI;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 using Telegram.Bot;
 using Telegram.Bot.Types;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace TelegramBot
 {
@@ -32,14 +32,14 @@ namespace TelegramBot
         /// <param name="update"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update,  CancellationToken cancellationToken)
+        private async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
         {
             if (update.Type == UpdateType.Message)
-            {
+            {                
                 var message = update.Message;
 
                 if (message.Type == MessageType.Text || message.Type == MessageType.Contact)
-                {
+                {                    
                     var queueMessageModel = new QueueMessageModel()
                     {
                         MessageId = message?.MessageId ?? 0,
@@ -122,6 +122,7 @@ namespace TelegramBot
             factory.Password = "guest";
             factory.VirtualHost = "/";
             factory.HostName = "localhost";
+            factory.DispatchConsumersAsync = true;
 
             // this name will be shared by all connections instantiated by
             // this factory
@@ -144,7 +145,7 @@ namespace TelegramBot
                 rabbitChannelConsumer.QueueBind("dev-queue-to-telegram", "dev-ex-to-telegram", "", null);
             }
 
-            var consumer = new EventingBasicConsumer(rabbitChannelConsumer);
+            var consumer = new AsyncEventingBasicConsumer(rabbitChannelConsumer);
 
             consumer.Received += Consumer_Received;
 
@@ -158,13 +159,13 @@ namespace TelegramBot
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Consumer_Received(object sender, BasicDeliverEventArgs e)
+        private async Task Consumer_Received(object sender, BasicDeliverEventArgs e)
         {
             var json = Encoding.UTF8.GetString(e.Body.ToArray());
 
             var message = JsonConvert.DeserializeObject<QueueMessageModel>(json);
 
-            SendKeyboard(message.ChatId, message.MessageReceive);
+            await SendKeyboard(message.ChatId, message.MessageReceive);
 
             rabbitChannelConsumer.BasicAck(e.DeliveryTag, false);
         }
@@ -173,12 +174,12 @@ namespace TelegramBot
         /// Запрос на контакт, до этого пользователь был анонимный
         /// </summary>
         /// <param name="chatId"></param>
-        public async void SendContactRequest(long chatId)
+        public async Task SendContactRequest(long chatId)
         {
-            var button = KeyboardButton.WithRequestContact("Send contact");
+            var button = KeyboardButton.WithRequestContact("Отправить контакт");
             var keyboard = new ReplyKeyboardMarkup(button);
 
-            await bot.SendTextMessageAsync(chatId, "Please send contact", replyMarkup: keyboard);
+            await bot.SendTextMessageAsync(chatId, "Пожалуйста, отправьте свой контакт для авторизации", replyMarkup: keyboard);
         }
 
         /// <summary>
@@ -186,7 +187,7 @@ namespace TelegramBot
         /// </summary>
         /// <param name="chatId"></param>
         /// <param name="firstName"></param>
-        public async void SendWelcomeMessage(long chatId, string firstName)
+        public async Task SendWelcomeMessage(long chatId, string firstName)
         {
             await bot.SendTextMessageAsync(chatId, $"Добро пожаловать, {firstName}");
         }
@@ -196,7 +197,7 @@ namespace TelegramBot
         /// </summary>
         /// <param name="chatId"></param>
         /// <param name="text"></param>
-        public async void SendResponse(long chatId, string text)
+        public async Task SendResponse(long chatId, string text)
         {
             await bot.SendTextMessageAsync(chatId, text);
         }
@@ -206,11 +207,11 @@ namespace TelegramBot
         /// </summary>
         /// <param name="chatId"></param>
         /// <param name="text"></param>
-        public async void SendKeyboard(long chatId, string text)
+        public async Task SendKeyboard(long chatId, string text)
         {
             var keyboard = new ReplyKeyboardMarkup(new[]
             {
-                new KeyboardButton[] {"Список заказов", "Статус заказа"},
+                new KeyboardButton[] {"Список заказов", "Активные заказы"},
                 new KeyboardButton[] {"Наши контакты", "Спецпредложения"}
             });
 

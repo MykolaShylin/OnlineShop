@@ -25,7 +25,7 @@ namespace OnlineShopWebApp.Controllers
         private readonly EmailService _emailService;
         private readonly IMapper _mapping;
 
-        public OrderController(IBasketStorage baskets, IPurchases closedPurchases, UserManager<User> userManager, EmailService emailService, IMapper mapping, IProductsStorage products)
+        public OrderController(IBasketStorage baskets, IPurchases closedPurchases, UserManager<User> userManager, EmailService emailService, IMapper mapping, IProductsStorage products, TelegramService telegramService)
         {
             _baskets = baskets;
             _closedPurchases = closedPurchases;

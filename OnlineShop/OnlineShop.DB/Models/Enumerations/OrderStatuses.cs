@@ -12,7 +12,7 @@ namespace OnlineShop.DB.Models.Enumerations
         Canceled,
         [Display(Name = "Доставлен")]
         Delivered,
-        [Display(Name = "Получен покупателем")]
+        [Display(Name = "Закрыт")]
         Recived
     }
 }

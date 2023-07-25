@@ -20,5 +20,6 @@ namespace TelegramBot
         public MessageType MessageType { get; set; }
 
         public long ChatId { get; set; }
+
     }
 }

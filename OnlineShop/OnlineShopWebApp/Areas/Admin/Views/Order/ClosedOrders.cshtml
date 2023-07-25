@@ -25,7 +25,7 @@
                     <tr>
                         <td>@counter</td>
                         <td>@order.TotalCost</td>
-                        <td>@EnumHelper.GetDisplayName(order.orderStatus) </td>
+                        <td>@EnumHelper.GetDisplayName(order.orderStatus)</td>
                         <td>
                             <a asp-controller="Order" asp-action="CustomerOrder" asp-area="Admin" asp-route-id="@order.Id">@order.deliveryInfo.Name @order.deliveryInfo.SerName</a>
                         </td>

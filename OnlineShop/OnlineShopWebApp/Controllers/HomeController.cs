@@ -9,13 +9,14 @@ using OnlineShop.DB.Models;
 using OnlineShop.DB.Models.Interfaces;
 using OnlineShopWebApp.Models;
 using Microsoft.EntityFrameworkCore;
+using OnlineShopWebApp.Services;
 
 namespace OnlineShopWebApp.Controllers
 {
     public class HomeController : Controller
     {
 
-        public HomeController()
+        public HomeController(TelegramService telegramService)
         {
         }
 
