@@ -10,7 +10,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using OnlineShop.DB.Contexts;
 using OnlineShop.DB.Models;
+using OnlineShopWebApp.Services;
 using Serilog;
+using TelegramBot;
 
 namespace OnlineShopWebApp
 {
@@ -27,6 +29,8 @@ namespace OnlineShopWebApp
                 var userManager = services.GetRequiredService < UserManager<User>> ();
                 var roleManager = services.GetRequiredService < RoleManager<Role>> ();
                 IdentityInitializer.Initialize(userManager, roleManager);
+
+                var telegramManager = services.GetRequiredService<TelegramService>();
             }
             host.Run();
         }

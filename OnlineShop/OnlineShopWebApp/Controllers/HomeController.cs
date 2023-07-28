@@ -16,7 +16,7 @@ namespace OnlineShopWebApp.Controllers
     public class HomeController : Controller
     {
 
-        public HomeController(TelegramService telegramService)
+        public HomeController()
         {
         }
 
