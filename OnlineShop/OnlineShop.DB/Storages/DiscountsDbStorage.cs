@@ -31,7 +31,7 @@ namespace OnlineShop.DB.Storages
             return await dataBaseContext.Discounts.Include(x=>x.Products).FirstOrDefaultAsync(x=>x.Products.Any(z=>z.Id == productId));
         }
 
-        public async Task<List<Product>> GetNoDiscountProductsAsync()
+        public async Task<List<Product>> GetProductsWithOutDiscountAsync()
         {
             var discount = await GetZeroDiscountAsync();
             return discount.Products;
@@ -48,13 +48,15 @@ namespace OnlineShop.DB.Storages
 
         public async Task<List<Discount>> GetAllAsync()
         {
-            return await dataBaseContext.Discounts.Include(x => x.Products.Where(t => t.DiscountCost != 0)).ThenInclude(x => x.Flavors).Include(x => x.Products.Where(t=>t.DiscountCost != 0)).ThenInclude(x => x.Pictures).ToListAsync();
+            return await dataBaseContext.Discounts.Where(x=>x.DiscountPercent != 0).Include(x => x.Products).ThenInclude(x => x.Flavors).Include(x => x.Products).ThenInclude(x => x.Pictures).ToListAsync();
         }
 
-        public async Task<List<Discount>> GetAllByDiscountAsync(int discount)
+        public async Task<List<Product>> GetProductsWithDiscountsAsync()
         {
-            return await dataBaseContext.Discounts.Include(x => x.Products).ThenInclude(x => x.Flavors).Include(x => x.Products).ThenInclude(x => x.Pictures).Where(x=>x.DiscountPercent == discount).ToListAsync();
+            var discounts = await GetAllAsync();
+            return discounts.SelectMany(x => x.Products.Where(x => x.DiscountCost != x.Cost)).ToList();
         }
+
 
         public async Task ChangeDiscountAsync(Product product, int oldDiscountId, int newDiscountId, string description)
         {

@@ -113,10 +113,11 @@ namespace OnlineShopWebApp.Controllers
             return View(productsView);
         }
 
-        public async Task<IActionResult> SaleProduct(string prodName)
+        public async Task<IActionResult> SaleProducts()
         {
-            var productId = (await _products.TryGetByNameAsync(prodName)).Id;
-            return RedirectToAction(nameof(Index), new { prodId = productId});
+            var products = await _discounts.GetProductsWithDiscountsAsync();
+            var productsView = _mapping.Map<List<MainPageProductsViewModel>>(products);
+            return View(nameof(CategoryProducts), productsView);
         }
     }
 }

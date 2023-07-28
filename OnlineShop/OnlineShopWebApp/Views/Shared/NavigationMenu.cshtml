@@ -4,16 +4,7 @@
     <div class="col-8">
         <div class="row justify-content-between">
             <div class="col">
-                <div class="dropdown">
-                    <button onclick="this.blur()" class="btn btn-lg border-0 dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span style="color:white">АКЦИИ</span>
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="#">Товар 1</a>
-                        <a class="dropdown-item" href="#">Товар 2</a>
-                        <a class="dropdown-item" href="#">Товар 3</a>
-                    </div>
-                </div>
+                <a onclick="this.blur()" role="button" class="btn btn-lg border-0" asp-area="" asp-controller="Product" asp-action="SaleProducts"><span style="color:white">АКЦИИ</span></a>
             </div>
             <div class="col">
                 <div class="dropdown">

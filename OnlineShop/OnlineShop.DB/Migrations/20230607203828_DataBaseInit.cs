@@ -111,7 +111,7 @@ namespace OnlineShop.DB.Migrations
                     Cost = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     DiscountCost = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DiscountDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DiscountDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AmountInStock = table.Column<int>(type: "int", nullable: false),
                     Concurrency = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false),
                     DiscountId = table.Column<int>(type: "int", nullable: true)

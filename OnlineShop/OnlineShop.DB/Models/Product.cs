@@ -21,7 +21,7 @@ namespace OnlineShop.DB.Models
         public decimal DiscountCost { get; set; }
 
         public string Description { get; set; }
-        public string DiscountDescription { get; set; } = string.Empty;
+        public string? DiscountDescription { get; set; } =  string.Empty;
         public int AmountInStock { get; set; }
         public List<Flavor> Flavors { get; set; } = new List<Flavor>();
         public List<ProductPicture> Pictures { get; set; } = new List<ProductPicture>();

@@ -35,7 +35,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
 
         public async Task<IActionResult> NoDiscountProducts()
         {
-            var products = _mapping.Map<List<ProductViewModel>>((await _discounts.GetNoDiscountProductsAsync()));
+            var products = _mapping.Map<List<ProductViewModel>>((await _discounts.GetProductsWithOutDiscountAsync()));
             return View(products);
         }
 

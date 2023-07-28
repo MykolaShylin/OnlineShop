@@ -68,6 +68,7 @@ namespace OnlineShop.DB.Storages
         public async Task<List<Product>> GetAllAsync()
         {
             return await dataBaseContext.Products.Include(x => x.Flavors).Include(x => x.Pictures).ToListAsync();
+            
         }
 
         public async Task InitializeDefaultProductsAsync()

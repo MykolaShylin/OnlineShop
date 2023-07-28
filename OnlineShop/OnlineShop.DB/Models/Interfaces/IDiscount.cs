@@ -7,7 +7,6 @@ namespace OnlineShop.DB.Models.Interfaces
 {
     public interface IDiscount
     {
-        Task<List<Discount>> GetAllByDiscountAsync(int discount);
         Task ChangeDiscountAsync(Product product, int oldDiscountId, int newDiscountId, string description);
         Task RemoveDiscountAsync(Product product, int discountId);
         Task<List<Discount>> GetAllAsync();
@@ -15,7 +14,8 @@ namespace OnlineShop.DB.Models.Interfaces
         Task<Discount> TryGetByIdAsync(int discountId);
         Task<Discount> GetZeroDiscountAsync();
         Task<Discount> GetByProductIdAsync(int productId);
-        Task<List<Product>> GetNoDiscountProductsAsync();
+        Task<List<Product>> GetProductsWithOutDiscountAsync();
         decimal CalculateDiscount(decimal cost, int discountPercent);
+        Task<List<Product>> GetProductsWithDiscountsAsync();
     }
 }
