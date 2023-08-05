@@ -23,6 +23,10 @@ namespace OnlineShopWebApp.Models
         [Required(ErrorMessage = "Никнейм не указан")]
         [StringLength(30, MinimumLength = 3, ErrorMessage = "Допускается от 3 до 30 символов")]
         public string NikName { get; set; }
+
+        [Required(ErrorMessage = "Телефон не указан")]
+        [Phone]
+        [StringLength(13, MinimumLength = 13, ErrorMessage = "Номер должен начинаться с + и не иметь других знаков")]
         public string Phone { get; set; }
 
         [Required(ErrorMessage = "Email не указан")]
