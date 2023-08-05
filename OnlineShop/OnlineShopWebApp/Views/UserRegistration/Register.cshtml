@@ -30,7 +30,7 @@
                     <img src="/icons/user_icon.png" />
                 </div>
                 <div class="col-10 align-self-center pt-3">
-                    <input asp-for=NikName class="form-control" placeholder="Ввведите ваш никнейм">
+                    <input asp-for=NikName class="form-control" placeholder="Ваш никнейм (видят все пользователи)">
                 </div>                
                 <div class="col-10 offset-2 ">
                     <span asp-validation-for="NikName" style="color:red"></span>
@@ -39,7 +39,7 @@
                     <img src="/icons/login_icon.png" />
                 </div>
                 <div class="col-10 align-self-center pt-3">
-                    <input asp-for=Login class="form-control"  placeholder="Ввведите ваш логин">
+                    <input asp-for=Login class="form-control"  placeholder="Ваш логин (используется для входа)">
                 </div>
                 <div class="col-10 offset-2 ">
                     <span asp-validation-for="Login" style="color:red"></span>

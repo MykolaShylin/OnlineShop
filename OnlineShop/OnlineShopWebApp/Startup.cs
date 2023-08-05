@@ -32,6 +32,7 @@ using OnlineShopWebApp.Helpers;
 using OnlineShopWebApp.Services;
 using Serilog;
 using TelegramBot;
+using Twilio;
 
 namespace OnlineShopWebApp
 {
@@ -103,6 +104,14 @@ namespace OnlineShopWebApp
                     options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
                 });
 
+            var accountSid = Configuration["Twilio:AccountSID"];
+            var authToken = Configuration["Twilio:AuthToken"];
+
+            TwilioClient.Init(accountSid, authToken);
+
+            services.Configure<TwilioVerifySettings>(Configuration.GetSection("Twilio"));
+
+            services.AddScoped<TwilioVerifySettings>();
 
             services.AddControllersWithViews();
         }

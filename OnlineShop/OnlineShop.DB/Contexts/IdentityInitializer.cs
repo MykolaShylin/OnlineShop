@@ -12,12 +12,12 @@ namespace OnlineShop.DB.Contexts
     {
         public static void Initialize(UserManager<User> userManager, RoleManager<Role> roleManager)
         {
-            var email = "shylin.mykola@gmail.com";
-            var password = "shilin271169";
+            var email = "bullbody.ua@gmail.com";
+            var password = "1q2w3e4r";
             var userName = "Николай";
             var serName = "Шилин";
-            var login = "Metall_Head";
-            var nikName = "Metall_Head";
+            var login = "BullBody_Admin";
+            var nikName = "Admin";
             var phone = "+380975288699";
             var emailConfirmed = true;
 

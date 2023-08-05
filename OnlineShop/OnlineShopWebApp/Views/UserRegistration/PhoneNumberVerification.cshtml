@@ -1,0 +1,21 @@
+﻿@model PhoneVerificationViewModel
+
+@{
+    ViewData["Title"] = "Подтверждение номера телефона";
+}
+
+<h4>@ViewData["Title"]</h4>
+<div class="row">
+    <div class="col-8">
+        <form method="post">
+            <p>
+                Мы хотим подтвердить Ваш номер телефона отправив смс с кодом подтверждения по номеру @Model.PhoneNumber.
+            </p>
+            <input hidden="hidden" asp-for="UserId" value="@Model.UserId" />
+            <input hidden="hidden" asp-for="PhoneNumber" value="@Model.PhoneNumber" />
+            <input hidden="hidden" asp-for="ReturnUrl" value="@Model.ReturnUrl" />
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <button type="submit" asp-area="" asp-action="PhoneNumberVerification" asp-controller="UserRegistration" class="btn btn-primary">Отправить код подтверждения</button>
+        </form>
+    </div>
+</div>
