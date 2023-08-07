@@ -23,6 +23,8 @@ namespace OnlineShop.DB.Contexts
         public DbSet<ProductPicture> Pictures { get; set; }
         public DbSet<Discount> Discounts { get; set; }
 
+        public DbSet<GoogleMapShopInfo> ShopContacts { get; set; }
+
 
         public DataBaseContext(DbContextOptions<DataBaseContext> options) : base(options)
         {
@@ -38,6 +40,103 @@ namespace OnlineShop.DB.Contexts
             .HasColumnName("Concurrency");
 
             modelBuilder.Entity<Product>().HasMany(x=>x.Pictures).WithOne().OnDelete(DeleteBehavior.Cascade);
+
+            var shopContacts = new GoogleMapShopInfo[]
+            {
+                new GoogleMapShopInfo() 
+                {
+                    Id = 1,
+                    Name = "Магазин спортивного питания Bull Body",
+                    Adress = "пр. Мира 2/3",
+                    WorkingHours = "Пн-Пт 10:00−20:00\r\nСб-Вс 10:00−19:00",
+                    Phone = "(097) 526-96-88",
+                    GeoLat = "50.44319546254059",
+                    GeoLong= "30.623799652983227"
+                },
+                new GoogleMapShopInfo()
+                {
+                    Id = 2,
+                    Name = "Магазин спортивного питания Bull Body",
+                    Adress = "ул. Драгоманова, 2-Б",
+                    WorkingHours = "Пн-Пт 10:00−20:00\r\nСб-Вс 10:00−19:00",
+                    Phone = "(096) 579-14-83",
+                    GeoLat = "50.4177345001",
+                    GeoLong= "30.632090487314496"
+                },
+                new GoogleMapShopInfo()
+                {
+
+                    Id = 3,
+                    Name = "Магазин спортивного питания Bull Body",
+                    Adress = "пр. Оболонский, 7",
+                    WorkingHours = "Пн-Пт 10:00−20:00\r\nСб-Вс 10:00−19:00",
+                    Phone = "(096) 532-41-95",
+                    GeoLat = "50.504420827695476",
+                    GeoLong= "30.49735526833221"
+                },
+                new GoogleMapShopInfo()
+                {
+                    Id = 4,
+                    Name = "Магазин спортивного питания Bull Body",
+                    Adress = "пр. Воздухофлотский, 52",
+                    WorkingHours = "Пн-Пт 10:00−20:00\r\nСб-Вс 10:00−19:00",
+                    Phone = "(068) 113-22-25",
+                    GeoLat = "50.4240376432695",
+                    GeoLong= "30.457578810654578"
+                },
+                new GoogleMapShopInfo()
+                {
+                    Id = 5,
+                    Name = "Магазин спортивного питания Bull Body",
+                    Adress = "ул. Васильковская, 6",
+                    WorkingHours = "Пн-Пт 10:00−20:00\r\nСб-Вс 10:00−19:00",
+                    Phone = "(096) 657-44-73",
+                    GeoLat = "50.39705241725149",
+                    GeoLong= "30.505197383670733"
+                },
+                new GoogleMapShopInfo()
+                {
+                    Id = 6,
+                    Name = "Магазин спортивного питания Bull Body",
+                    Adress = "пр. Степана Бандеры, 20-Б",
+                    WorkingHours = "Пн-Пт 10:00−20:00\r\nСб-Вс 10:00−19:00",
+                    Phone = "(068) 536-97-06",
+                    GeoLat = "50.48824066713656",
+                    GeoLong= "30.506997268331233"
+                },
+                new GoogleMapShopInfo()
+                {
+                    Id = 7,
+                    Name = "Магазин спортивного питания Bull Body",
+                    Adress = "ул. Раисы Окипной, 3",
+                    WorkingHours = "Пн-Пт 10:00−20:00\r\nСб-Вс 10:00−19:00",
+                    Phone = "(073) 887-03-30",
+                    GeoLat = "50.44915822528278",
+                    GeoLong= "30.59671118367401"
+                },
+                new GoogleMapShopInfo()
+                {
+                    Id = 8,
+                    Name = "Магазин спортивного питания Bull Body",
+                    Adress = "ул. Княжий Затон, 9",
+                    WorkingHours = "Пн-Пт 10:00−20:00\r\nСб-Вс 10:00−19:00",
+                    Phone = "(098) 200-37-37",
+                    GeoLat = "50.402293318405434",
+                    GeoLong= "30.625064454834703"
+                },
+                new GoogleMapShopInfo()
+                {
+                    Id = 9,
+                    Name = "Магазин спортивного питания Bull Body",
+                    Adress = "пр. Победы, 136",
+                    WorkingHours = "Пн-Пт 10:00−20:00\r\nСб-Вс 10:00−19:00",
+                    Phone = "(073) 108-12-11",
+                    GeoLat = "50.456834616417034",
+                    GeoLong= "30.36545018367443"
+                },
+            };
+
+            modelBuilder.Entity<GoogleMapShopInfo>().HasData(shopContacts);
 
             //var DiscountsDb = new Discount[]
             //{
