@@ -48,21 +48,21 @@
 </div>
 <div id="map" style="width:100%;height:600px;"></div>
 
-<style>
-    .shopInfo {
-        height: 150px;
-        width: 250px;
-    }
-</style>
-
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script async
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDrW15Ei4rKVcMO_EAZMR-it-bl_BC-K7g&callback=initMap" defer>
 </script>
 
+<style>
+    .shopInfo {
+        height: 150px;
+        width: 400px;
+    }
+</style>
+
 <script type="text/javascript">
-    
+
     var map;
 
     async function initMap() {
@@ -77,55 +77,32 @@
             mapTypeId: google.maps.MapTypeId.G_NORMAL_MAP
         };
 
-        map = new google.maps.Map(document.getElementById("map"), mapOptions);
+        map = new google.maps.Map(document.getElementById("map"), mapOptions);        
 
-        var myLatlng = new google.maps.LatLng(50.44319546254059, 30.623799652983227);
+        $(function () {
+            $.getJSON('@Url.Action("GetContacts","Home")', function (data) {
+                $.each(data, function (index, data) {                   
+                    var marker = new google.maps.Marker({
+                        position: new google.maps.LatLng(data.geoLat, data.geoLong),
+                        map: map,
+                        title: data.Name
+                    });
+                    marker.setIcon('http://maps.google.com/mapfiles/ms/icons/blue-dot.png')
 
-        var marker = new google.maps.Marker({
-            position: myLatlng,
-            map: map,
-            title: 'Магазин спортивного питания Bull Body'
+                    var infowindow = new google.maps.InfoWindow({
+                        content: "<div class='shopInfo'><h4>" + data.name +
+                            "</h4><div><h6>Адрес: " + data.adress +
+                            "</h6></div><div><h6>Часы работы: " + data.workingHours +
+                            "</h6></div><div><h6>Телефон: " + data.phone + "</h6></div>"
+                    });
+
+                    google.maps.event.addListener(marker, 'click', function () {
+                        infowindow.open(map, marker);
+                    });
+                });
+            });
         });
-
-        marker.setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png')
     }
-
-    async function getInfo() {
-        const uri = '@Url.Action("GetContacts","Home")';
-        const response = await fetch(uri)
-            .then(res => {
-                if (!res.ok)
-                    throw (res.json());
-                return res;
-            });
-        return await response.json()
-    }
-
-    async function showOnMap(contacts) {
-        contacts.forEach(info => {
-            var marker = new google.maps.Marker({
-                position: new google.maps.LatLng(info.GeoLat, info.GeoLong),
-                map: map,
-                title: info.Name
-            });
-            marker.setIcon('http://maps.google.com/mapfiles/ms/icons/blue-dot.png')
-
-            var infowindow = new google.maps.InfoWindow({
-                content: "<div class='shopInfo'><h2>" + info.Name +
-                    "</h2><div><h4>Адрес: " + info.Adress +
-                    "</h4></div><div><h4>Часы работы: " + info.WorkingHours +
-                    "</h4></div><div><h4>Телефон: " + info.Phone
-            });
-
-            google.maps.event.addListener(marker, 'click', function () {
-                infowindow.open(map, marker);
-            });
-
-        });
-    }  
-
-    getInfo().then(contacts => showOnMap(contacts));
-
 </script>
 
 
