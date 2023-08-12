@@ -131,7 +131,7 @@ namespace OnlineShopWebApp.Controllers
             var products = await _products.GetAllAsync();
 
             var nameSortingProducts = products.Where(x=>x.Name.ToLower().Contains(searchingText.ToLower())).ToList();
-            var brandSortingProducts = products.Where(x => x.Brand.ToLower().Contains(searchingText.ToLower())).ToList();
+            var brandSortingProducts = products.Where(x => @EnumHelper.GetDisplayName(x.Brand).ToLower().Contains(searchingText.ToLower())).ToList();
             var categorySortingProducts = products.Where(x => @EnumHelper.GetDisplayName(x.Category).ToLower().Contains(searchingText.ToLower())).ToList();
 
             var sortingProducts = new List<Product>();

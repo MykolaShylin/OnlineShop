@@ -287,7 +287,7 @@ namespace OnlineShopWebApp.Services
 
             foreach(var item in e.Order.Items)
             {
-                sb.AppendLine($"{item.Product.Brand} - {item.Product.Name}");
+                sb.AppendLine($"{@EnumHelper.GetDisplayName(item.Product.Brand)} - {item.Product.Name}");
                 sb.AppendLine($"Количеств, шт: {item.Amount}");
                 if(item.ProductInfo.DiscountPercent == 0)
                 {

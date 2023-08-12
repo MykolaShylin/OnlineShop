@@ -74,12 +74,12 @@
                             </select>
                         </div>
                         <label for="brand" class="col-3 align-self-center col-form-label">Бренд продукта</label>
-                        <div class="col-9 mb-2">
-                            <input style="font-size:small" asp-for="Brand" class="form-control" id="brand" value="@Model.Brand">
-                        </div>
-                        <div class="col-12 mb-2">
-                            <span asp-validation-for="Brand" style="color:red"></span>
-                        </div>
+                        <div class="col-9 text-left pb-2">
+                            <select asp-for=Brand
+                                    asp-items="@Html.GetEnumSelectList<ProductBrands>()"
+                                    class="btn btn-light" style="font-size:small">
+                            </select>
+                        </div>                        
                         <label for="name" class="col-3 align-self-center col-form-label">Название продукта</label>
                         <div class="col-9 mb-2">
                             <input style="font-size:small" asp-for=Name class="form-control" id="name" value="@Model.Name">

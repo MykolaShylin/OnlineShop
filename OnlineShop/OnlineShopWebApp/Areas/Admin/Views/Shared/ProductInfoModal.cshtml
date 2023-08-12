@@ -58,11 +58,11 @@
                             </div>
                             <label for="category" class="col-2 col-form-label align-self-center pb-2">Категория продукта</label>
                             <div class="col-10 pb-2">
-                                <input readonly="readonly" type="text" name="category" class="form-control" id="category" value="@Model.Category">
+                                <input readonly="readonly" type="text" name="category" class="form-control" id="category" value="@EnumHelper.GetDisplayName(Model.Category)">
                             </div>
                             <label for="brand" class="col-2 align-self-center col-form-label">Бренд продукта</label>
                             <div class="col-10 pb-2">
-                                <input readonly="readonly" type="text" name="brand" class="form-control" id="brand" value="@Model.Brand">
+                                <input readonly="readonly" type="text" name="brand" class="form-control" id="brand" value="@EnumHelper.GetDisplayName(Model.Brand)">
                             </div>
                             <label for="name" class="col-2 align-self-center col-form-label">Название продукта</label>
                             <div class="col-10 pb-2">

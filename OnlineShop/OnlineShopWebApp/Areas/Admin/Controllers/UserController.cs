@@ -8,6 +8,7 @@ using OnlineShop.DB.Models;
 using OnlineShop.DB.Models.Interfaces;
 using OnlineShopWebApp.Helpers;
 using OnlineShopWebApp.Models;
+using OnlineShopWebApp.Services;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -17,17 +18,19 @@ using System.Threading.Tasks;
 namespace OnlineShopWebApp.Areas.Admin.Controllers
 {
     [Area(Constants.AdminRoleName)]
-    [Authorize(Roles = Constants.AdminRoleName)]
+    [Authorize(Roles = $"{Constants.AdminRoleName}, {Constants.ModeratorRoleName}")]
     public class UserController : Controller
     {
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<Role> _roleManager;
         private readonly IMapper _mapping;
-        public UserController(UserManager<User> userManager, RoleManager<Role> roleManager, IMapper mapping)
+        private readonly EmailService _emailService;
+        public UserController(UserManager<User> userManager, RoleManager<Role> roleManager, IMapper mapping, EmailService emailService)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _mapping = mapping;
+            _emailService = emailService;
         }
         public async Task<IActionResult> Users()
         {
@@ -82,8 +85,16 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
                 var result = await _userManager.CreateAsync(userDb, user.Password);
                 if (result.Succeeded)
                 {
-                    var newUser = await _userManager.FindByNameAsync(user.Login);
-                    await _userManager.AddToRoleAsync(newUser, Constants.UserRoleName);
+                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(userDb);
+                    var callbackUrl = Url.Action(
+                        "ConfirmEmail",
+                        "UserRegistration",
+                        values: new { userId = userDb.Id, code = code },
+                        protocol: HttpContext.Request.Scheme);
+
+                    await _emailService.SendEmailConfirmAsync(userDb.Email, callbackUrl);
+
+                    await _userManager.AddToRoleAsync(userDb, Constants.UserRoleName);
                     return RedirectToAction("Users");
                 }
                 else

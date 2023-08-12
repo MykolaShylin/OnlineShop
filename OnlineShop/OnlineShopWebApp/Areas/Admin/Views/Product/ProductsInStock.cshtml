@@ -40,7 +40,7 @@
                             ViewBag.ModalInfo = "productInfoModal" + counter;
                             <tr style="border-bottom-color:grey; border-bottom-style:solid; font-size:smaller;">
                                 <td>@EnumHelper.GetDisplayName(product.Category)</td>
-                                <td>@product.Brand</td>
+                                <td>@EnumHelper.GetDisplayName(product.Brand)</td>
                                 <td>
                                     <a href="#" data-toggle="modal" data-target="#@ViewBag.ModalInfo" style="display:block;">
                                         <span>@product.Name</span>

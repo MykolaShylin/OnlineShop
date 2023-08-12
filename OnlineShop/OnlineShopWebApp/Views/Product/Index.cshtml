@@ -46,7 +46,7 @@
     </div>
     <div class = "col-7 border-right border-left">
         <div class="card-header">
-            <h4 >@Model.Brand @Model.Name</h4>
+            <h4 >@EnumHelper.GetDisplayName(Model.Brand) @Model.Name</h4>
         </div>
         <div class = "card-body">
             <form method="post">

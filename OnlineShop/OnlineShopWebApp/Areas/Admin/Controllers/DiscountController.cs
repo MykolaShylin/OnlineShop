@@ -18,7 +18,7 @@ using AutoMapper;
 namespace OnlineShopWebApp.Areas.Admin.Controllers
 {
     [Area(Constants.AdminRoleName)]
-    [Authorize(Roles = Constants.AdminRoleName)]
+    [Authorize(Roles = $"{Constants.AdminRoleName}, {Constants.ModeratorRoleName}")]
     public class DiscountController : Controller
     {
         private readonly IProductsStorage _products;

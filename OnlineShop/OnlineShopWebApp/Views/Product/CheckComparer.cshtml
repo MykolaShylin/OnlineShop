@@ -10,7 +10,7 @@ else if (Model.Count == 1)
     <h3 style="color:coral">Нехватает продуктов для сравнения</h3>
     <div class="row">
         <div class="col-3 p-0 m-0" style="text-align:center">
-            <p><img style="width:300px" src="@Model.First().Product.Pictures.First().Path" /></p>
+            <p><img style="width:300px" src="@Model.First().Product.Picture.Path" /></p>
             <p>@Model.First().Product.Name</p>
             <a style="margin-top:10px" asp-area="" asp-controller="Product" asp-action="CategoryProducts"  asp-route-isAllListProducts="@true">Добавить продуктов</a><br>
             <a style="margin-top:10px" asp-area="" asp-controller="Product" asp-action="Deleting" asp-route-prodId="@Model.First().Id">Удалить</a>
@@ -47,7 +47,7 @@ else
                     </div>
                     <div class="card-body">
                         <h6 style="margin-top:20px;">@EnumHelper.GetDisplayName(@Model[i].Product.Category)</h6>
-                        <h6 style="margin-top:20px;">@Model[i].Product.Brand</h6>
+                        <h6 style="margin-top:20px;">@EnumHelper.GetDisplayName(@Model[i].Product.Brand)</h6>
                         <h6 style="margin-top:20px;">@Model[i].Product.Name</h6>
                         <h6 style="margin-top:20px;">@Model[i].Flavor.Name</h6>
                         <h6 style="margin-top:20px;">@Model[i].Product.Cost</h6>
@@ -65,7 +65,7 @@ else
                     </div>
                     <div class="card-body">
                         <h6 style="margin-top:20px;">@EnumHelper.GetDisplayName(@Model[i].Product.Category)</h6>
-                        <h6 style="margin-top:20px;">@Model[i].Product.Brand</h6>
+                        <h6 style="margin-top:20px;">@EnumHelper.GetDisplayName(@Model[i].Product.Brand)</h6>
                         <h6 style="margin-top:20px;">@Model[i].Product.Name</h6>
                         <h6 style="margin-top:20px;">@Model[i].Flavor.Name</h6>
                         <h6 style="margin-top:20px;">@Model[i].Product.Cost</h6>

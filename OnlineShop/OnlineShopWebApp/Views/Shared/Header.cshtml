@@ -17,10 +17,10 @@
                             <button asp-controller="Product" asp-action="SearchProducts" class="btn border-0" type="submit"><img src="/icons/search_icon.png" width="30" /></button>
                         </form>
                     </div>
-                    @if (User.IsInRole(Constants.AdminRoleName))
+                    @if (User.IsInRole(Constants.AdminRoleName) || User.IsInRole(Constants.ModeratorRoleName))
                     {
                         <div class="col-auto">
-                            <a asp-controller="Product" asp-action="ProductsInStock" asp-area="Admin" role="button" class="btn btn-outline-dark">Администратор</a>
+                            <a asp-controller="Order" asp-action="ClosedOrders" asp-area="Admin" role="button" class="btn btn-outline-dark">Администратор</a>
                         </div>
                     }
                     @if (!User.Identity.IsAuthenticated)

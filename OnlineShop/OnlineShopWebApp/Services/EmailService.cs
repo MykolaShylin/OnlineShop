@@ -1,6 +1,7 @@
 ﻿using MailKit.Net.Smtp;
 using MimeKit;
 using OnlineShop.DB.Models;
+using OnlineShopWebApp.Helpers;
 using OnlineShopWebApp.Models;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace OnlineShopWebApp.Services
             var orderDetail = string.Empty;
             foreach (var item in items)
             {
-                orderDetail += $"<h4>Название: {item.Product.Brand} - {item.Product.Name} - {item.Product.Flavors.First(x => x.Id == item.ProductInfo.FlavorId).Name}</h4>\r\n" +                                
+                orderDetail += $"<h4>Название: {@EnumHelper.GetDisplayName(item.Product.Brand)} - {item.Product.Name} - {item.Product.Flavors.First(x => x.Id == item.ProductInfo.FlavorId).Name}</h4>\r\n" +                                
                                 $"<h4>Количество: {item.Amount}</h4>\r\n" +
                                 $"<h4>Скидка: {item.ProductInfo.DiscountPercent}%</h4>\r\n" +
                                 $"<h4>Цена: {item.Product.DiscountCost}</h4>\r\n" +

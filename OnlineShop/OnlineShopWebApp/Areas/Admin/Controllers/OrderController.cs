@@ -19,7 +19,7 @@ using OnlineShopWebApp.Services;
 namespace OnlineShopWebApp.Areas.Admin.Controllers
 {
     [Area(Constants.AdminRoleName)]
-    [Authorize(Roles = Constants.AdminRoleName)]
+    [Authorize(Roles = $"{Constants.AdminRoleName}, {Constants.ModeratorRoleName}")]
     public class OrderController : Controller
     {
         private IPurchases _closedPurchases;

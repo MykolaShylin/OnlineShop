@@ -12,17 +12,18 @@ namespace OnlineShop.DB.Contexts
     {
         public static void Initialize(UserManager<User> userManager, RoleManager<Role> roleManager)
         {
-            var email = "shylin.mykola@gmail.com";
-            var password = "shilin271169";
+            var email = "bullbody.ua@gmail.com";
+            var password = "1q2w3e4r";
             var userName = "Николай";
             var serName = "Шилин";
-            var login = "Metall_Head";
-            var nikName = "Metall_Head";
+            var login = "BullBody_Admin";
+            var nikName = "Admin";
             var phone = "+380975288699";
             var emailConfirmed = true;
 
             var adminRoleDesc = "Доступ ко всему функционалу сайта! Внимание, не предоставляйте эти права доступа людям, которым вы не доверяете, это может повлиять на работу сайта!";
             var userRoleDesc = "Назначается всем новым зарегестрированным пользователям. Возможность только совершать покупки";
+            var moderatorRoleDesc = "Помощник админа! Доступ к оформлению заказов, редактированию пользователей и акциям";
 
             if (roleManager.FindByNameAsync(Constants.AdminRoleName).Result == null)
             {
@@ -41,6 +42,15 @@ namespace OnlineShop.DB.Contexts
                     Description = userRoleDesc
                 };
                 roleManager.CreateAsync(userRole).Wait();
+            }
+            if (roleManager.FindByNameAsync(Constants.ModeratorRoleName).Result == null)
+            {
+                var moderatorRole = new Role
+                {
+                    Name = Constants.ModeratorRoleName,
+                    Description = moderatorRoleDesc
+                };
+                roleManager.CreateAsync(moderatorRole).Wait();
             }
             if (userManager.FindByNameAsync(login).Result == null)
             {

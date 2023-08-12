@@ -15,7 +15,7 @@ namespace OnlineShop.DB.Models
         public int Id { get; set; }
         public ProductCategories Category { get; set; }
         public string Name { get; set; }
-        public string Brand { get; set; }
+        public ProductBrands Brand { get; set; }
         public decimal Cost { get; set; }
 
         public decimal DiscountCost { get; set; }

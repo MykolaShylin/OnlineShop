@@ -24,7 +24,7 @@ using System.Net.Http.Headers;
 namespace OnlineShopWebApp.Areas.Admin.Controllers
 {
     [Area(Constants.AdminRoleName)]
-    [Authorize(Roles = Constants.AdminRoleName)]
+    [Authorize(Roles = Constants.AdminRoleName)]    
     public class ProductController : Controller
     {
         private IProductsStorage _productsInStock;
@@ -44,7 +44,6 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
             _mapping = mapping;
             _discount = discount;
         }
-
         public async Task<IActionResult> ProductsInStock()
         {
             var existingProducts = _mapping.Map<List<ProductViewModel>>((await _productsInStock.GetAllAsync()));
@@ -60,7 +59,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
             {
                 ModelState.AddModelError("Name", "Продукт с таким названием уже существует");
             }
-            if (product.Name == product.Brand)
+            if (product.Name == @EnumHelper.GetDisplayName(product.Brand))
             {
                 ModelState.AddModelError("Name", "Название и бренд продукта не должны совпадать");
             }
@@ -91,7 +90,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
             var productView = await GetProductForViewAsync(product, flavors, pictures);
             ViewBag.Flavors = _mapping.Map<List<FlavorViewModel>>(await _flavors.GetAllAsync());
 
-            if (product.Name == product.Brand)
+            if (product.Name == @EnumHelper.GetDisplayName(product.Brand))
             {
                 ModelState.AddModelError("Name", "Название и бренд продукта не должны совпадать");
             }

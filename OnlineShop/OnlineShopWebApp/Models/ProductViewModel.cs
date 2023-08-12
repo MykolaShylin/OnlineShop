@@ -12,7 +12,7 @@ namespace OnlineShopWebApp.Models
 {
     public class ProductViewModel
     {
-        
+
         public int Id { get; set; }
         public ProductCategories Category { get; set; }
 
@@ -20,11 +20,9 @@ namespace OnlineShopWebApp.Models
         [StringLength(30, MinimumLength = 3, ErrorMessage = "Допускается от 3 до 30 символов")]
         public string Name { get; set; }
 
-        [Required(ErrorMessage = "Бренд не указан")]
-        [StringLength(30, MinimumLength = 3, ErrorMessage = "Допускается от 3 до 30 символов")]
-        public string Brand { get; set; }
+        public ProductBrands Brand { get; set; }
 
-        [Required(ErrorMessage = "Цена не указана")]        
+        [Required(ErrorMessage = "Цена не указана")]
         public decimal Cost { get; set; }
         public List<FlavorViewModel> Flavors { get; set; }
 

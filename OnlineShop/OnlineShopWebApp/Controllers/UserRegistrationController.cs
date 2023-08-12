@@ -55,6 +55,8 @@ namespace OnlineShopWebApp.Controllers
 
                     await _emailService.SendEmailConfirmAsync(userDb.Email, callbackUrl);
 
+                    await _userManager.AddToRoleAsync(userDb, Constants.UserRoleName);
+
                     await _signInManager.SignInAsync(userDb, false);
                     await _signInManager.PasswordSignInAsync(userDb.UserName, userDb.PasswordHash, true, false);
 
