@@ -4,26 +4,26 @@
         <div class="row align-items-center">
             <div class="col-3 no-gutters">
                 <div class="col-12">
-                    <a class="navbar-brand" asp-area="" asp-action="Index" asp-controller="Home">                        
+                    <a class="navbar-brand" asp-area="" asp-action="Index" asp-controller="Home">
                         <img class="img-fluid" src="~/icons/Main.png">
                     </a>
                 </div>
             </div>
             <div class="col-9">
                 <div class="row justify-content-center align-items-center">
-                    <div class="col-6 pl-0">
-                        <form class="form-inline pl-0">
-                            <input id="search" style="width:440px" class="form-control pl-0 pr-0" type="search" placeholder="Поиск">
-                            <button class="btn border-0 ml-2 p-0" type="submit"><img src="/icons/search_icon.png" width="30" /></button>
+                    <div class="col-auto">
+                        <form method="post" class="form-inline">
+                            <input name="name" style="width:440px" class="form-control" type="search" placeholder="Поиск">
+                            <button asp-controller="Product" asp-action="SearchProducts" class="btn border-0" type="submit"><img src="/icons/search_icon.png" width="30" /></button>
                         </form>
                     </div>
-                    @if(User.IsInRole(Constants.AdminRoleName))
+                    @if (User.IsInRole(Constants.AdminRoleName))
                     {
                         <div class="col-auto">
                             <a asp-controller="Product" asp-action="ProductsInStock" asp-area="Admin" role="button" class="btn btn-outline-dark">Администратор</a>
                         </div>
                     }
-                    @if(!User.Identity.IsAuthenticated)
+                    @if (!User.Identity.IsAuthenticated)
                     {
                         <div class="col-auto">
                             <a asp-controller="UserEntering" asp-action="Login" asp-area="" role="button" class="btn border-0"><img src="~/icons/user_mini_icon.png" width="30" />Войти</a>
@@ -42,7 +42,7 @@
                 </div>
             </div>
         </div>
-    </nav>    
+    </nav>
 </header>
 @await Html.PartialAsync("NavigationMenu")
 

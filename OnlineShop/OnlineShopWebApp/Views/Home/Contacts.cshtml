@@ -1,4 +1,6 @@
-﻿<div class="row">
+﻿@model List<GoogleMapShopInfoViewModel>
+
+<div class="row">
     <div class="col-12 pb-3">
         <div class="row">
             <div class="telephone-contacts col-4">
@@ -20,21 +22,17 @@
         <div class="row flex-column">
             <div class="col-4 lc_big">
                 Время работы офлайн магазинов:<br>
-                Пн-Пт 10:00−20:00<br>
-                Сб-Вс 10:00−19:00
+                @Model.First().WorkingHours
             </div>
             <div class="col-4 lc_medium">
                 Наши магазины в Киеве:<br />
-                пр. Мира 2/3 – (097) 526-96-88<br />
-                ул. Драгоманова, 2-Б – (096) 579-14-83<br />
-                пр. Оболонский, 7 – (096) 532-41-95<br />
-                пр. Воздухофлотский, 52 – (068) 113-22-25<br />
-                ул. Васильковская, 6 – (096) 657-44-73<br />
-                пр. Степана Бандеры, 20-Б – (068) 536-97-06<br />
-                ул. Раисы Окипной, 3 – (073) 887-03-30<br />
-                ул. Княжий Затон, 9 – (098) 200-37-37<br />
-                пр. Победы, 136 – (073) 108-12-11<br />
-                пр. Маяковского, 26-Д – (063) 881-95-10
+                @foreach (var info in Model)
+                {
+                    var contact = $"{info.Adress} - {info.Phone}";
+                    @contact
+
+                    <br />
+                }
             </div>
             <div class="col-4 lc_medium">
                 Наши магазины в других городах:<br />
@@ -48,5 +46,86 @@
         </div>
     </div>
 </div>
+<div id="map" style="width:100%;height:600px;"></div>
+
+<style>
+    .shopInfo {
+        height: 150px;
+        width: 250px;
+    }
+</style>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script async
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDrW15Ei4rKVcMO_EAZMR-it-bl_BC-K7g&callback=initMap" defer>
+</script>
+
+<script type="text/javascript">
+    
+    var map;
+
+    async function initMap() {
+
+        google.maps.visualRefresh = true;
+
+        var Kiev = new google.maps.LatLng(50.4501, 30.5234);
+
+        var mapOptions = {
+            zoom: 15,
+            center: Kiev,
+            mapTypeId: google.maps.MapTypeId.G_NORMAL_MAP
+        };
+
+        map = new google.maps.Map(document.getElementById("map"), mapOptions);
+
+        var myLatlng = new google.maps.LatLng(50.44319546254059, 30.623799652983227);
+
+        var marker = new google.maps.Marker({
+            position: myLatlng,
+            map: map,
+            title: 'Магазин спортивного питания Bull Body'
+        });
+
+        marker.setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png')
+    }
+
+    async function getInfo() {
+        const uri = '@Url.Action("GetContacts","Home")';
+        const response = await fetch(uri)
+            .then(res => {
+                if (!res.ok)
+                    throw (res.json());
+                return res;
+            });
+        return await response.json()
+    }
+
+    async function showOnMap(contacts) {
+        contacts.forEach(info => {
+            var marker = new google.maps.Marker({
+                position: new google.maps.LatLng(info.GeoLat, info.GeoLong),
+                map: map,
+                title: info.Name
+            });
+            marker.setIcon('http://maps.google.com/mapfiles/ms/icons/blue-dot.png')
+
+            var infowindow = new google.maps.InfoWindow({
+                content: "<div class='shopInfo'><h2>" + info.Name +
+                    "</h2><div><h4>Адрес: " + info.Adress +
+                    "</h4></div><div><h4>Часы работы: " + info.WorkingHours +
+                    "</h4></div><div><h4>Телефон: " + info.Phone
+            });
+
+            google.maps.event.addListener(marker, 'click', function () {
+                infowindow.open(map, marker);
+            });
+
+        });
+    }  
+
+    getInfo().then(contacts => showOnMap(contacts));
+
+</script>
 
 

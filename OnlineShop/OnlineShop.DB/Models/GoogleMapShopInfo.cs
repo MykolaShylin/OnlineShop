@@ -13,7 +13,7 @@ namespace OnlineShop.DB.Models
         public string Adress { get; set; }
         public string WorkingHours { get; set; }
         public string Phone { get; set; }
-        public string GeoLat { get; set; }
-        public string GeoLong { get; set; }
+        public double GeoLat { get; set; }
+        public double GeoLong { get; set; }
     }
 }

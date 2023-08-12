@@ -140,7 +140,7 @@ namespace OnlineShopWebApp.Controllers
                         await _userManager.AddToRoleAsync(user, Constants.UserRoleName);
                     }
 
-                    SendEmailConfirmAsync(user);
+                    await SendEmailConfirmAsync(user);
 
                     await _userManager.AddLoginAsync(user, info);
                     await _signInManager.SignInAsync(user, false);

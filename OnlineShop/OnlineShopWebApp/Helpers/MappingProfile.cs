@@ -12,6 +12,7 @@ namespace OnlineShopWebApp.Helpers
         public MappingProfile()
         {
             CreateMap<Flavor, FlavorViewModel>().ReverseMap();
+            CreateMap<GoogleMapShopInfo, GoogleMapShopInfoViewModel>().ReverseMap();
 
             CreateMap<ComparingProducts, ComparingProductsViewModel>().ReverseMap();
 

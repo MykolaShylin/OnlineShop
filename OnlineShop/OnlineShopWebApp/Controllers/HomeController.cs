@@ -10,14 +10,18 @@ using OnlineShop.DB.Models.Interfaces;
 using OnlineShopWebApp.Models;
 using Microsoft.EntityFrameworkCore;
 using OnlineShopWebApp.Services;
+using AutoMapper;
 
 namespace OnlineShopWebApp.Controllers
 {
     public class HomeController : Controller
     {
-
-        public HomeController()
+        private readonly IGoogleMap _googleMapContacts;
+        private readonly IMapper _mapping;
+        public HomeController(IGoogleMap googleMapContacts = null, IMapper mapping = null)
         {
+            _googleMapContacts = googleMapContacts;
+            _mapping = mapping;
         }
 
         public IActionResult Index(string defaultPassword)
@@ -32,8 +36,18 @@ namespace OnlineShopWebApp.Controllers
         }
 
         public IActionResult Contacts()
-        {            
-            return View();
+        {
+            var contacts = _googleMapContacts.GetAll();
+            var viewModel = _mapping.Map<List<GoogleMapShopInfoViewModel>>(contacts);
+            return View(viewModel);
+        }
+
+        [HttpGet]
+        public JsonResult GetContacts()
+        {
+            var contacts = _googleMapContacts.GetAll();
+
+            return Json(contacts);
         }
     }
 }

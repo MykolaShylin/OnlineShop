@@ -71,7 +71,8 @@ namespace OnlineShopWebApp
             services.AddScoped<IBasketStorage, BasketDbStorage>();
             services.AddScoped<IProductComparer, ComparingProductsDbStorage>();
             services.AddScoped<IProductComparer, ComparingProductsDbStorage>();
-            services.AddScoped<IDiscount, DiscountsDbStorage>();            
+            services.AddScoped<IDiscount, DiscountsDbStorage>();
+            services.AddScoped<IGoogleMap, ShopContactsDbStorage>();
 
             services.AddAutoMapper(typeof(MappingProfile));
 

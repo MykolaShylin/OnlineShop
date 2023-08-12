@@ -100,10 +100,15 @@ namespace OnlineShopWebApp.Controllers
             ViewBag.UserId = userId;
             return View(comparingView);
         }
-        public async Task<IActionResult> CategoryProducts(bool isAllListProducts, ProductCategories category)
+        public async Task<IActionResult> CategoryProducts(bool isAllListProducts, ProductCategories category, List<MainPageProductsViewModel> searchingProducts)
         {
             var products = await _products.GetAllAsync();
             var productsView = _mapping.Map<List<MainPageProductsViewModel>>(products);
+
+            if(searchingProducts.Count> 0)
+            {
+                return View(searchingProducts);
+            }
 
             if (!isAllListProducts)
             {
@@ -117,6 +122,25 @@ namespace OnlineShopWebApp.Controllers
         {
             var products = await _discounts.GetProductsWithDiscountsAsync();
             var productsView = _mapping.Map<List<MainPageProductsViewModel>>(products);
+            return View(nameof(CategoryProducts), productsView);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SearchProducts(string searchingText)
+        {
+            var products = await _products.GetAllAsync();
+
+            var nameSortingProducts = products.Where(x=>x.Name.ToLower().Contains(searchingText.ToLower())).ToList();
+            var brandSortingProducts = products.Where(x => x.Brand.ToLower().Contains(searchingText.ToLower())).ToList();
+            var categorySortingProducts = products.Where(x => @EnumHelper.GetDisplayName(x.Category).ToLower().Contains(searchingText.ToLower())).ToList();
+
+            var sortingProducts = new List<Product>();
+            sortingProducts.AddRange(brandSortingProducts);
+            sortingProducts.AddRange(nameSortingProducts);
+            sortingProducts.AddRange(categorySortingProducts);
+
+            var productsView = _mapping.Map<List<MainPageProductsViewModel>>(sortingProducts);
+
             return View(nameof(CategoryProducts), productsView);
         }
     }
