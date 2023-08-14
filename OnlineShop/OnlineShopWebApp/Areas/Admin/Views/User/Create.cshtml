@@ -37,7 +37,7 @@
                                 <h6>Никнейм</h6>
                             </td>
                             <td>
-                                <input asp-for="NikName" class="form-control" placeholder="Введите никнейм" />
+                                <input asp-for="NikName" class="form-control" placeholder="Никнейм (виден всем пользователям)" />
                             </td>
                             <td style="vertical-align:middle">
                                 <span asp-validation-for="NikName" style="color:red"></span>
@@ -48,7 +48,7 @@
                                 <h6>Логин</h6>
                             </td>
                             <td>
-                                <input asp-for="Login" class="form-control" placeholder="Введите логин" />
+                                <input asp-for="Login" class="form-control" placeholder="Логин (используется для входа)" />
                             </td>
                             <td style="vertical-align:middle">
                                 <span asp-validation-for="Login" style="color:red"></span>
@@ -102,9 +102,7 @@
                 </div>
                 <div class="card-footer" style="text-align:right">
                     <div class="row">
-                        <div class="col-6 float-left">
-                            <button class="btn btn-success btn-block" type="submit" asp-area="Admin" asp-controller="User" asp-action="Create">Сохранить</button>
-                        </div>
+                        <button class="btn btn-success btn-block" type="submit" asp-area="Admin" asp-controller="User" asp-action="Create">Создать</button>
                     </div>
                 </div>
             </div>

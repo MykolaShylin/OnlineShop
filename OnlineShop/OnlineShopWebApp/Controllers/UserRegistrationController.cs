@@ -58,7 +58,6 @@ namespace OnlineShopWebApp.Controllers
                     await _userManager.AddToRoleAsync(userDb, Constants.UserRoleName);
 
                     await _signInManager.SignInAsync(userDb, false);
-                    await _signInManager.PasswordSignInAsync(userDb.UserName, userDb.PasswordHash, true, false);
 
                     return View("EmailConfirm",returnUrl);
                 }
@@ -90,6 +89,7 @@ namespace OnlineShopWebApp.Controllers
             var result = await _userManager.ConfirmEmailAsync(user, code);
             if (result.Succeeded)
             {
+                await _signInManager.PasswordSignInAsync(user.UserName, user.PasswordHash, true, false);
                 return returnUrl == null ? RedirectToAction("Index", "Home") : Redirect(returnUrl);
             }  
             else

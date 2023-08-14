@@ -25,12 +25,14 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
         private readonly RoleManager<Role> _roleManager;
         private readonly IMapper _mapping;
         private readonly EmailService _emailService;
-        public UserController(UserManager<User> userManager, RoleManager<Role> roleManager, IMapper mapping, EmailService emailService)
+        private readonly SignInManager<User> _signInManager;
+        public UserController(UserManager<User> userManager, RoleManager<Role> roleManager, IMapper mapping, EmailService emailService, SignInManager<User> signInManager)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _mapping = mapping;
             _emailService = emailService;
+            _signInManager = signInManager;
         }
         public async Task<IActionResult> Users()
         {
@@ -93,6 +95,8 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
                         protocol: HttpContext.Request.Scheme);
 
                     await _emailService.SendEmailConfirmAsync(userDb.Email, callbackUrl);
+
+                    await _signInManager.SignInAsync(userDb, false);
 
                     await _userManager.AddToRoleAsync(userDb, Constants.UserRoleName);
                     return RedirectToAction("Users");
