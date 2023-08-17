@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Ajax.Utilities;
+using Microsoft.EntityFrameworkCore;
 using OnlineShop.DB.Contexts;
 using OnlineShop.DB.Migrations;
 using OnlineShop.DB.Models;
@@ -57,9 +58,14 @@ namespace OnlineShop.DB.Storages
         {
             return await dataBaseContext.Products.Include(x => x.Flavors).Include(x => x.Pictures).FirstOrDefaultAsync(prod => prod.Id == id);
         }
-        public async Task<List<Product>> TryGetByCategoryAsync(ProductCategories category)
+        public async Task<List<Product>> TryGetByCategoryAsync(ProductCategories categorie)
         {
-            return await dataBaseContext.Products.Include(x => x.Flavors).Include(x => x.Pictures).Where(prod => prod.Category == category).ToListAsync();
+            return await dataBaseContext.Products.Include(x => x.Flavors).Include(x => x.Pictures).Where(x=> categorie == x.Category).ToListAsync();
+        }
+
+        public async Task<List<Product>> TryGetByBrandAsync(ProductBrands brand)
+        {
+            return await dataBaseContext.Products.Include(x => x.Flavors).Include(x => x.Pictures).Where(prod => prod.Brand == brand).ToListAsync();
         }
         public async Task<Product> TryGetByNameAsync(string name)
         {

@@ -21,7 +21,7 @@
 
 .freephone {
     font-size: 23px;
-    font-weight:bold;
+    font-weight: bold;
 }
 
 .grafic-contacts {
@@ -32,9 +32,10 @@
     margin-top: 10px;
     font-weight: bold
 }
+
 .grafic-time {
     font-size: 25px;
-    display:block
+    display: block
 }
 
 .wordb {
@@ -90,4 +91,58 @@
     box-shadow: 1px 2px 5px rgba(0,0,0,.31);
     border: solid 1px #cbc9c9;
 }
+
+.rating-area {
+    overflow: hidden;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+}
+
+    .rating-area:not(:checked) > input {
+        display: none;
+    }
+
+    .rating-area:not(:checked) > label {
+        float: right;
+        width: 42px;
+        padding: 0;
+        cursor: pointer;
+        font-size: 32px;
+        line-height: 32px;
+        color: lightgrey;
+        text-shadow: 1px 1px #bbb;
+    }
+
+        .rating-area:not(:checked) > label:before {
+            content: '★';
+        }
+
+    .rating-area > input:checked ~ label {
+        color: gold;
+        text-shadow: 1px 1px #c60;
+    }
+
+    .rating-area:not(:checked) > label:hover,
+    .rating-area:not(:checked) > label:hover ~ label {
+        color: gold;
+    }
+
+    .rating-area > input:checked + label:hover,
+    .rating-area > input:checked + label:hover ~ label,
+    .rating-area > input:checked ~ label:hover,
+    .rating-area > input:checked ~ label:hover ~ label,
+    .rating-area > label:hover ~ input:checked ~ label {
+        color: gold;
+        text-shadow: 1px 1px goldenrod;
+    }
+
+.rate-area > label:active {
+    position: relative;
+}
+
+.checked {
+    color: orange;
+}
+
 

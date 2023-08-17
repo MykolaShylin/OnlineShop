@@ -49,15 +49,7 @@ namespace OnlineShopWebApp.Controllers
                 return View(productView);
             }
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
-
-        [Authorize]
-        public async Task<IActionResult> AddFeedback(int productId)
-        {
-            var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            var newFeedback = new AddFeedbackModel() { ProductId = productId, UserId = user.Id };
-            return View(newFeedback);
-        }
+        }    
 
 
         public async Task<IActionResult> DeleteFeedbackAsync(int feedbackId, int productId)
@@ -69,6 +61,7 @@ namespace OnlineShopWebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> AddFeedbackAsync(AddFeedbackModel feedbackModel)
         {
+            feedbackModel.UserId = (await _userManager.FindByNameAsync(feedbackModel.Login)).Id;
 
             await _feedbackApiClient.AddAsync(feedbackModel);
             return RedirectToAction(nameof(Index), new { prodId = feedbackModel.ProductId });
@@ -116,6 +109,13 @@ namespace OnlineShopWebApp.Controllers
                 productsView = _mapping.Map<List<MainPageProductsViewModel>>(products);
             }            
             return View(productsView);
+        }
+        public async Task<IActionResult> BrandProducts(ProductBrands brand)
+        {
+            var products = await _products.TryGetByBrandAsync(brand);
+            var productsView = _mapping.Map<List<MainPageProductsViewModel>>(products);
+            
+            return View(nameof(CategoryProducts), productsView);
         }
 
         public async Task<IActionResult> SaleProducts()

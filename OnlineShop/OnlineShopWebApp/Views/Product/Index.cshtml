@@ -230,52 +230,66 @@
             </div>
         </div>
      </div>
-            <div class="col-12 mt-2">
+
+    <div class="col-12 mt-2">
         <div class="card">
-            <div class="card-header">
-                <ul class="nav nav-tabs card-header-tabs">
-                    <li class="nav-item">
+            <div class="card-header border-dark">
+                <ul class="nav nav-tabs border-0">
+                    <li class="nav-item nav-pills mr-2">
                         <a class="nav-link active" data-toggle="tab" href="#nutritions">Состав</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" data-toggle="tab" href="#feedbacks">Отзывы</a>
                     </li>
+                    <li class="nav-item align-self-center offset-8">
+                        @if(User.Identity.IsAuthenticated)
+                        {
+                            <a class="btn btn-outline-success" role="button" href="#addProductModal">Оставить отзыв</a>
+                            @await Html.PartialAsync("AddFeedbackModal", new AddFeedbackModel { ProductId = Model.Id , Login = User.Identity.Name})
+                        }
+                        else
+                        {
+                            <a class="btn btn-outline-success" role="button" asp-controller="UserEntering" asp-action="Login">Оставить отзыв</a>
+                        }
+                    </li>
                 </ul>
             </div>
-            <div class="tab-pane fade" id="nutritions">                   
-                </div>
-            <div class="tab-pane fade" id="feedbacks">
-                    <table class="table table-borderless table-responsive table-sm overflow-auto">
-                        <a class="btn btn-outline-danger mt-2" role="button" style="float:right" asp-area="" asp-controller="Product" asp-action="AddFeedback" asp-route-productId = "@Model.Id">Оставить отзыв</a>
-                        @foreach(var feedback in Model.Feedbacks)
-                        {
-                            <tr>
-                                <td>Имя</td>
-                                <td>@feedback.UserName</td>
-                                @if(User.Identity.IsAuthenticated && @feedback.Login == User.Identity.Name)
+            <div class="tab-content">            
+                <div class="tab-pane fade show active p-4" id="nutritions"></div>
+                <div class="tab-pane fade" id="feedbacks">
+                    @foreach(var feedback in Model.Feedbacks)
+                    {
+                        <div class="card mt-3 border-warning">
+                            <div class="card-header">
+                                <span class="font-weight-bold" style="font-size:larger">@feedback.UserName</span>
+                                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+                                @for(int i = 1; i <= feedback.Grade; i++)
                                 {
-                                    <td rowspan="4" class="text-center" style="vertical-align:middle">
-                                        <a class="text-primary"  asp-area="" asp-controller="Product" asp-action="DeleteFeedback" asp-route-feedbackId="@feedback.Id" asp-route-productId="@Model.Id">Удалить отзыв</a>
-                                    </td>
+                                    if(i<=feedback.Grade)
+                                    {
+                                        <span class="fa fa-star checked"></span>
+                                    }
+                                    else
+                                    {
+                                        <span class="fa fa-star"></span>
+                                    }
                                 }
-                            </tr>                            
-                            <tr>
-                                <td>Дата</td>
-                                <td>@feedback.CreateDate.Date</td>
-                            </tr>
-                            <tr>
-                                <td>Оценка</td>
-                                <td>@feedback.Grade</td>
-                            </tr>
-                            <tr class="mb-2 border-bottom border-warning">
-                                <td>Отзыв</td>
-                                <td>
-                                    <p style="width:900px">@feedback.Text</p>
-                                </td>
-                            </tr>
-                        }                    
-                    </table>
+                                <span style="float:right">@feedback.CreateDate</span>
+                            </div>
+                            <div class="card-body">                                
+                                <p class="w-75" style="font-weight:300">@feedback.Text</p>
+                                @if(feedback.Login == User.Identity.Name || User.IsInRole(Constants.AdminRoleName))
+                                {
+                                     <a class="text-primary" style="float:right" asp-area="" asp-controller="Product" asp-action="DeleteFeedback" asp-route-feedbackId="@feedback.Id" asp-route-productId="@Model.Id">Удалить отзыв</a>
+                                }
+                            </div>
+                        </div>
+                    }
                 </div>
-                </div>
-                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+
+                            

@@ -12,10 +12,11 @@ namespace OnlineShop.DB.Models.Interfaces
         Task<List<Product>> GetAllAsync();
         Task DeleteAsync(Product product);
         Task EditAsync(Product product);
-        Task<List<Product>> TryGetByCategoryAsync(ProductCategories category);
+        Task<List<Product>> TryGetByCategoryAsync(ProductCategories categories);
         Task<Product> TryGetByNameAsync(string name);
         Task InitializeDefaultProductsAsync();
         Task ClearAllAsync();
         Task ReduceAmountInStock(List<BasketItem> items);
+        Task<List<Product>> TryGetByBrandAsync(ProductBrands brand);
     }
 }

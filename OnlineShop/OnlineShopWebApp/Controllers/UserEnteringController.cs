@@ -33,7 +33,6 @@ namespace OnlineShopWebApp.Controllers
                 returnUrl = $"/Product/CategoryProducts?isAllListProducts={true}";
             }
 
-
             var logInViewModel = new LogInViewModel()
             {
                 ReturnUrl = returnUrl,
