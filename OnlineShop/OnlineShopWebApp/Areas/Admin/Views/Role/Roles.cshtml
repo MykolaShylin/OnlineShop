@@ -16,7 +16,7 @@
                             var deleteModal = "deleteRoleModal" + (1 + i);
                             var editModal = "editRoleModal" + (1 + i);
                             <tr>
-                                <td data-toggle="tooltip" data-placement="top" title="@Model[i].Description">@Model[i].Name</td>
+                                <td class="" style="vertical-align:middle" data-toggle="tooltip" data-placement="top" title="@Model[i].Description">@Model[i].Name</td>
                                 <td style="text-align:end">
                                     <a href="#" data-toggle="modal" data-target="#@deleteModal" style="display:block;">
                                         <span class="btn btn-dark" role="button">Удалить</span>
@@ -87,7 +87,6 @@
                                         </div>
                                     </div>
                                 </td>
-                                }
                             </tr>
                         }
                     </table>

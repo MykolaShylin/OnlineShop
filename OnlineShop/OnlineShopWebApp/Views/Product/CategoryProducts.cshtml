@@ -5,7 +5,7 @@
     @foreach (var product in Model)
     {        
         <div class="col-3 p-1">
-            <div class="card h-100 shadow-lg border-secondary">
+            <div class="card h-100 shadow-lg" style="border-color:aqua; font-family:Bahnschrift">
                 <div class="card-header bg-white" style="border:none;">
                     <a asp-area="" asp-controller="Product" asp-action="index" asp-route-prodId="@product.Id"><img class="card-img-top" src="@product.Picture.Path"></a>
                 </div>
@@ -19,9 +19,7 @@
                     {
                         if (product.Cost == product.DiscountCost)
                         {
-                            <h4 style="float:left; color:chartreuse">₴@product.Cost</h4>
-
-                            <br>
+                            <h4 style="float:left; color:teal">@product.Cost<span class="h5">₴</span></h4>
                         }
                         else
                         {

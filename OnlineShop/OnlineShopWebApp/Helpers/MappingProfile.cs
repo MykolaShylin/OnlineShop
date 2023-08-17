@@ -2,6 +2,7 @@
 using OnlineShop.DB.Models;
 using OnlineShopWebApp.FeedbackApi.Models;
 using OnlineShopWebApp.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -51,11 +52,15 @@ namespace OnlineShopWebApp.Helpers
 
             CreateMap<Product, ProductViewModel>()
                 .ForMember(x => x.DiscountDescription, opt => opt.MapFrom(x => x.DiscountDescription ?? string.Empty))
+                .ForMember(x => x.Cost, opt => opt.MapFrom(x => Math.Truncate(x.Cost)))
+                .ForMember(x => x.DiscountCost, opt => opt.MapFrom(x => Math.Truncate(x.DiscountCost)))
                 .ReverseMap()
                 .ForPath(x => x.DiscountDescription, opt => opt.MapFrom(x => x.DiscountDescription ?? string.Empty));
 
             CreateMap<Product, MainPageProductsViewModel>()
                 .ForMember(x => x.Flavor, opt => opt.MapFrom(x => x.Flavors.First()))
+                .ForMember(x => x.Cost, opt => opt.MapFrom(x => Math.Truncate(x.Cost)))
+                .ForMember(x => x.DiscountCost, opt => opt.MapFrom(x => Math.Truncate(x.DiscountCost)))
                 .ReverseMap();
 
             CreateMap<Discount, DiscountViewModel>().ReverseMap();
@@ -64,7 +69,9 @@ namespace OnlineShopWebApp.Helpers
 
             CreateMap<Basket, BasketViewModel>().ReverseMap();
 
-            CreateMap<Order, OrderViewModel>().ReverseMap();
+            CreateMap<Order, OrderViewModel>()
+                .AfterMap((src, dest) => dest.deliveryInfo.CustomerId = dest.deliveryInfo.CustomerId.ToString().Substring(0, 10))
+                .ReverseMap();
         }
     }
 }

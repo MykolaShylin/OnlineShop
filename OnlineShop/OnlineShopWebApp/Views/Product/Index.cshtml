@@ -249,7 +249,8 @@
                         }
                         else
                         {
-                            <a class="btn btn-outline-success" role="button" asp-controller="UserEntering" asp-action="Login">Оставить отзыв</a>
+                            var returnUr = Url.Action("Product", "Index", new { prodId = Model.Id });
+                            <a class="btn btn-outline-success" role="button" asp-controller="UserEntering" asp-action="Login" asp-route-returnUrl="returnUr">Оставить отзыв</a>
                         }
                     </li>
                 </ul>
