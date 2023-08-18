@@ -1,20 +1,20 @@
-﻿<div class="col-2 border-right border-primary">
+﻿<div class="col-3">
     <table class="table table-hover table-bordered">
         @if (User.IsInRole(Constants.ModeratorRoleName))
         {
             <tr>
                 <td class="p-0">
-                    <a class="btn btn-block text-left btn-sm" asp-controller="Order" asp-action="closedorders" asp-area="Admin">Заказы</a>
+                    <a class="btn btn-block text-left" asp-controller="Order" asp-action="closedorders" asp-area="Admin">Заказы</a>
                 </td>
             </tr>
             <tr>
                 <td class="p-0">
-                    <a class="btn btn-block text-left btn-sm" asp-controller="Discount" asp-action="DiscountProducts" asp-area="Admin">Настройка скидок</a>
+                    <a class="btn btn-block text-left" asp-controller="Discount" asp-action="DiscountProducts" asp-area="Admin">Настройка скидок</a>
                 </td>
             </tr>
             <tr>
                 <td class="p-0">
-                    <a class="btn btn-block text-left btn-sm" asp-controller="User" asp-action="users" asp-area="Admin">Пользователи</a>
+                    <a class="btn btn-block text-left" asp-controller="User" asp-action="users" asp-area="Admin">Пользователи</a>
                 </td>
             </tr>
         }
@@ -22,27 +22,27 @@
         {
             <tr>
                 <td class="p-0">
-                    <a class="btn btn-block text-left btn-sm" asp-controller="Order" asp-action="closedorders" asp-area="Admin">Заказы</a>
+                    <a class="btn btn-block text-left" asp-controller="Order" asp-action="closedorders" asp-area="Admin">Заказы</a>
                 </td>
             </tr>
             <tr>
                 <td class="p-0">
-                    <a class="btn btn-block text-left btn-sm" asp-controller="Product" asp-action="ProductsInStock" asp-area="Admin">Продукты на складе</a>
+                    <a class="btn btn-block text-left" asp-controller="Product" asp-action="ProductsInStock" asp-area="Admin">Продукты на складе</a>
                 </td>
             </tr>
             <tr>
                 <td class="p-0">
-                    <a class="btn btn-block text-left btn-sm" asp-controller="Discount" asp-action="DiscountProducts" asp-area="Admin">Настройка скидок</a>
+                    <a class="btn btn-block text-left" asp-controller="Discount" asp-action="DiscountProducts" asp-area="Admin">Настройка скидок</a>
                 </td>
             </tr>
             <tr>
                 <td class="p-0">
-                    <a class="btn btn-block text-left btn-sm" asp-controller="Role" asp-action="roles" asp-area="Admin">Роли</a>
+                    <a class="btn btn-block text-left" asp-controller="Role" asp-action="roles" asp-area="Admin">Роли</a>
                 </td>
             </tr>
             <tr>
                 <td class="p-0">
-                    <a class="btn btn-block text-left btn-sm" asp-controller="User" asp-action="users" asp-area="Admin">Пользователи</a>
+                    <a class="btn btn-block text-left" asp-controller="User" asp-action="users" asp-area="Admin">Пользователи</a>
                 </td>
             </tr>
         }        

@@ -20,7 +20,7 @@
             <div class="carousel-inner">
                 @foreach (var picturePath in Model.Pictures)
                 {
-                    if (picturePath.Path.IndexOf(Model.Pictures.First().Path) == 0)
+                    if (picturePath.Path.IndexOf(Model.Picture.Path) == 0)
                     {
                         <div class="carousel-item active">
                             <img class="d-block w-100" src="@picturePath.Path" alt="слайд">
@@ -51,7 +51,7 @@
         <div class = "card-body">
             <form method="post">
                 <p>@Model.Description</p>
-                <p><mark style="background-color:aliceblue; padding:5px; border-radius:5px">Вкусы:</mark><br />
+                <p><mark style="background-color:bisque; padding:5px; border-radius:5px">Вкусы:</mark><br />
                     
                         @for(int i = 0; i < Model.Flavors.Count; i++)
                         {
@@ -91,10 +91,10 @@
                         <h5>Причина: <span class="alert-danger">@Model.DiscountDescription</span></h5><br />
                         <h5 style = "color:royalblue; font-size: 25px">Цена со скидкой:<span style = "color:red; font-size: 50px"> @Model.DiscountCost грн</span></h5><br />
                     }
-                    <div class="btn-group ">
-                    <button class="btn btn-outline-success" type="submit" style="margin-right:20px" asp-area="" asp-controller="Basket" asp-action="Buying">Добавить в корзину</button>
-                    <button class="btn btn-outline-info" style="margin-right:20px" asp-controller="Product" asp-action="Comparing">Добавить к сравнению</button>
-                    <a class="btn btn-outline-dark" style="float:right" asp-area="" asp-controller="Product" asp-action="CategoryProducts" asp-route-isAllListProducts="@true" role = "button">Продолжить покупки </a>
+                    <div class="btn-group">
+                        <button class="btn btn-outline-success" type="submit" style="margin-right:20px" asp-area="" asp-controller="Basket" asp-action="Buying">Добавить в корзину</button>
+                        <button class="btn btn-outline-info" style="margin-right:20px" asp-controller="Product" asp-action="Comparing">Добавить к сравнению</button>
+                        <a class="btn btn-outline-dark" style="float:right" asp-area="" asp-controller="Product" asp-action="CategoryProducts" asp-route-isAllListProducts="@true" role = "button">Продолжить покупки </a>
                     </div>
                 }
                 else
@@ -256,7 +256,9 @@
                 </ul>
             </div>
             <div class="tab-content">            
-                <div class="tab-pane fade show active p-4" id="nutritions"></div>
+                <div class="tab-pane fade show active p-4" id="nutritions">
+                    <img class="d-block w-50" src="@Model.Picture.NutritionPath" alt="состав"/>
+                </div>
                 <div class="tab-pane fade" id="feedbacks">
                     @foreach(var feedback in Model.Feedbacks)
                     {

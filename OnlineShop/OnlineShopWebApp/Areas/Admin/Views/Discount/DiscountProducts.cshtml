@@ -2,7 +2,7 @@
 
 <div class="row">
     @await Html.PartialAsync("AdminMenu")
-    <div class="col-10">
+    <div class="col-9">
         @if (Model.All(x => x.Products == null) || Model.All(x => x.Products.Count == 0))
         {
             <h3>Продуктов со скидками не обнаружено!<a asp-area="Admin" asp-controller="Discount" asp-action="NoDiscountProducts"> Добавить?</a></h3>
@@ -10,22 +10,21 @@
         else
         {
             <div class="row">
-                <div class="col-auto">
-                    <a class="btn btn-outline-info btn-sm" asp-area="Admin" asp-controller="Discount" asp-action="NoDiscountProducts">Добавить скидки</a>
-                    </div>
-                <div class="col-auto">
-                    <div class="dropdown">
-                        <button class="btn btn-outline-success btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Отсортировать
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            @foreach (var discount in Model)
-                            {
-                                <a class="dropdown-item" asp-area="Admin" asp-controller="Discount" asp-action="SortedDiscounts" asp-route-discountId="@discount.Id">@discount.DiscountPercent%</a>
-
-                            }
+                <div class="col-auto mb-3">
+                    <div class="btn-group">                        
+                        <div class="dropdown">
+                            <a class="btn btn-outline-info btn-sm mr-3" asp-area="Admin" asp-controller="Discount" asp-action="NoDiscountProducts">Добавить скидки</a>
+                            <button class="btn btn-outline-success btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Отсортировать
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                @foreach (var discount in Model)
+                                {
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="Discount" asp-action="SortedDiscounts" asp-route-discountId="@discount.Id">@discount.DiscountPercent%</a>
+                                }
+                            </div>
                         </div>
-                    </div>
+                    </div>                   
                 </div>
             </div>
             <h3>Сортировка по критерию: Все скидки</h3>
@@ -36,7 +35,7 @@
                         <th>Название</th>
                         <th>Описание акции</th>
                         <th>Скидка, %</th>
-                        <th>Цена со скидкой, грн</th>
+                        <th>Цена, грн</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -57,7 +56,6 @@
                                     <td style="vertical-align:middle">@discount.DiscountPercent</td>
                                     <td style="vertical-align:middle">@product.DiscountCost</td>
                                 </tr>
-
                             }
                         }
                     }

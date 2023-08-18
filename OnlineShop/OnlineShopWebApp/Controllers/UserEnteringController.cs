@@ -123,7 +123,6 @@ namespace OnlineShopWebApp.Controllers
                 {
                     var user = await _userManager.FindByEmailAsync(email);
                     var defaultPassword = string.Empty;
-                    var isNewUser = false;
                     if (user == null)
                     {
                         user = new User
@@ -134,20 +133,15 @@ namespace OnlineShopWebApp.Controllers
                             PhoneNumber = info.Principal.FindFirstValue(ClaimTypes.MobilePhone)
                         };
                         defaultPassword = Guid.NewGuid().ToString().Substring(0, 10);
-                        isNewUser = true;
                         await _userManager.CreateAsync(user, defaultPassword);
                         await _userManager.AddToRoleAsync(user, Constants.UserRoleName);
                     }
 
-                    await SendEmailConfirmAsync(user);
+                    await SendEmailConfirmAsync(user, defaultPassword);
 
                     await _userManager.AddLoginAsync(user, info);
                     await _signInManager.SignInAsync(user, false);
-
-                    if (isNewUser)
-                    {
-                        return Redirect($"/Home/Index?defaultPassword={defaultPassword}");
-                    }
+                    
                     return LocalRedirect(returnUrl);
                 }
 
@@ -157,13 +151,13 @@ namespace OnlineShopWebApp.Controllers
                 return View("Error");
             }
         }
-        private async Task SendEmailConfirmAsync(User user)
+        private async Task SendEmailConfirmAsync(User user, string defaultPassword)
         {
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             var callbackUrl = Url.Action(
                 "ConfirmEmail",
                 "UserRegistration",
-                new { userId = user.Id, code = code },
+                new { userId = user.Id, code = code, defaultPassword = defaultPassword },
                 protocol: HttpContext.Request.Scheme);
 
             await _emailService.SendEmailConfirmAsync(user.Email, callbackUrl);

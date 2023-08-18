@@ -106,7 +106,14 @@ namespace OnlineShop.DB.Storages
                         Name = "100% Whey Protein Professional",
                         Cost = 2750,
                         Description = "100% Whey Protein Professional – высококачественный ультраизолированый концентрат из сывороточного белка и сывороточного изолята.100% Whey Protein Professional - имеет очень большое разнообразие вкусов, и среди них, Вы точно найдете свой любимый. Кроме этого, протеин хорошо смешивается и растворяется с водой и молоком.",
-                        Pictures = new List<ProductPicture>(){new ProductPicture {Path="/prod_pictures/Protein/ON_Gold_Standart_100_Whey.png" } },
+                        Pictures = new List<ProductPicture>()
+                        {
+                            new ProductPicture
+                            { 
+                                Path="/prod_pictures/Protein/ON_Gold_Standart_100_Whey.png",
+                                NutritionPath = "/prod_pictures/Nutritions/ON-Whey-Gold-Standard-nutr.jpg"
+                            } 
+                        },
                         AmountInStock = 100
                     },
 
@@ -117,7 +124,14 @@ namespace OnlineShop.DB.Storages
                         Name = "100% Whey Gold Standard",
                         Cost = 2500,
                         Description = "Cамый продаваемый в мире сывороточный протеин. Каждая порция Gold Standard 100% Whey содержит 24 грамма быстроусваиваемого сывороточного протеина с минимальным содержанием жира, лактозы и других ненужных веществ.",
-                        Pictures = new List < ProductPicture >(){new ProductPicture {Path="/prod_pictures/Protein/SN_100_Whey_Professionall.png" } },
+                        Pictures = new List < ProductPicture >()
+                        {
+                            new ProductPicture 
+                            {
+                                Path="/prod_pictures/Protein/SN_100_Whey_Professionall.png",
+                                NutritionPath = "/prod_pictures/Nutritions/SN-Whey-Protein-Professional-nutr.jpg"
+                            }
+                        },
                         AmountInStock = 100
                     },
 
@@ -128,7 +142,14 @@ namespace OnlineShop.DB.Storages
                         Name = "100% Whey Isolate",
                         Cost = 3500,
                         Description = "100% Whey Isolate от Scitec Nutrition, высококачественный сывороточный изолят, дополнительно обогащен гидролизатом белка. Компании Scitec, удалось создать действительно качественный продукт с высочайшей степенью очищения и великолепным вкусом, при полном отсутствии сахара, жиров и лактозы. Благодаря прохождению многоуровневой очистки, имеет болей высокое содержание белка нежели сывороточные концентрата.",
-                        Pictures = new List < ProductPicture >(){new ProductPicture {Path= "/prod_pictures/Protein/SN_100_Whey_Isolate.png" } },
+                        Pictures = new List < ProductPicture >()
+                        {
+                            new ProductPicture 
+                            {
+                                Path= "/prod_pictures/Protein/SN_100_Whey_Isolate.png",
+                                NutritionPath = "/prod_pictures/Nutritions/SN-Whey-Isolate-nutr.jpg"
+                            }
+                        },
                         AmountInStock = 30
                     },
 
@@ -139,7 +160,14 @@ namespace OnlineShop.DB.Storages
                         Name = "Zero One",
                         Cost = 65,
                         Description = "Протеиновые батончики торговой марки Sporter - созданы для удобного и вкусного перекуса в течение дня или после изнурительной тренировки.Нежная текстура батончика и низкое содержание сахара позволяет заменить им десерт и поддерживать диету не отказывая себе в сладком.",
-                        Pictures = new List < ProductPicture >(){new ProductPicture {Path ="/prod_pictures/Bars/Sporter_ZeroOne.png" } },
+                        Pictures = new List < ProductPicture >()
+                        {
+                            new ProductPicture
+                            {
+                                Path ="/prod_pictures/Bars/Sporter_ZeroOne.png",
+                                NutritionPath = "/prod_pictures/Nutritions/Sporter-Zero-One-Nutr.png"
+                            } 
+                        },
                         AmountInStock = 100
                     },
 
@@ -150,7 +178,14 @@ namespace OnlineShop.DB.Storages
                         Name = "AMINOx",
                         Cost = 900,
                         Description = "ВСАА поддерживают рост мышечной массы и предотвращают мышечное истощение. Именно такой эффект необходим во время периода интенсивных тренировок. Amino X марки BSN - это первые шипучие растворимые аминокислоты для выносливости и восстановления.",
-                        Pictures = new List < ProductPicture >(){new ProductPicture {Path ="/prod_pictures/BCAA/BSN_AMINOx.png" } },
+                        Pictures = new List < ProductPicture >()
+                        {
+                            new ProductPicture 
+                            {
+                                Path ="/prod_pictures/BCAA/BSN_AMINOx.png",
+                                NutritionPath = "/prod_pictures/Nutritions/bsn-amino-x-nutr.jpg"
+                            } 
+                        },
                         AmountInStock = 100
                     },
 
@@ -161,7 +196,14 @@ namespace OnlineShop.DB.Storages
                         Name = "MST Creatine Kick",
                         Cost = 250,
                         Description = "MST® CreatineKick 7 in 1 – это многокомпонентный быстро усвояемый креатин в инновационной формуле, объединяет несколько видов креатина в одном продукте. Он соединяет свойства и преимущества различных видов креатина в одну смесь. Содержит 7 видов креатина.",
-                        Pictures = new List < ProductPicture >(){new ProductPicture {Path = "/prod_pictures/creatine/MST_CREATINE_KICK.png" } },
+                        Pictures = new List < ProductPicture >()                        
+                        {
+                            new ProductPicture 
+                            {
+                                Path = "/prod_pictures/creatine/MST_CREATINE_KICK.png",
+                                NutritionPath = "/prod_pictures/Nutritions/MST-Kreatine-Kick-nutr.jpg"
+                            }
+                        },
                         AmountInStock = 25
                     },
 
@@ -172,7 +214,14 @@ namespace OnlineShop.DB.Storages
                         Name = "Citruline Malate",
                         Cost = 400,
                         Description = "Биологически активная добавка, которая в себе содержит цитруллин и яблочную кислоту – малат, усиливающую воздействие аминокислоты на организм и способствует ее усвоению. В момент, когда организм после усиленного режима тренировок нуждается в восстановлении, когда есть ощущения недостатка энергии и потери сил, то прием препарата Citrulline Malate окажет благотворное воздействие и наполнит энергией для дальнейших спортивных достижений.",
-                        Pictures = new List < ProductPicture >(){ new ProductPicture {Path= "/prod_pictures/citruline/BioTechUsa_Citr_Mal.png"  } },
+                        Pictures = new List < ProductPicture >()
+                        { 
+                            new ProductPicture 
+                            {
+                                Path= "/prod_pictures/citruline/BioTechUsa_Citr_Mal.png" ,
+                                NutritionPath = "/prod_pictures/Nutritions/BioTechUSA-Citruline-Malate-nutr.jpg"
+                            }
+                        },
                         AmountInStock = 70
                     },
                     new Product
@@ -182,7 +231,14 @@ namespace OnlineShop.DB.Storages
                         Name = "Super Mass Gainer",
                         Cost = 1700,
                         Description = "Dymatize Super Mass Gainer – то, что нужно для супер-компенсации мышечной системы у людей с очень быстрым метаболизмом и недобором веса. Максимальное количество быстрых углеводов и минимальное содержание протеинов позволит быстро набрать вес. Смесь содержит насыщенные жиры – они выступают строительным материалом для мужских гормонов – а вместе с ним начнут расти мышцы.",
-                        Pictures = new List < ProductPicture > () { new ProductPicture {Path="/prod_pictures/geiner/Dymatize_Super_Mass.png" } },
+                        Pictures = new List < ProductPicture > () 
+                        { 
+                            new ProductPicture 
+                            {
+                                Path="/prod_pictures/geiner/Dymatize_Super_Mass.png",
+                                NutritionPath = "/prod_pictures/Nutritions/Dymatize-Super-Mass-nutr.jpeg"
+                            } 
+                        },
                         AmountInStock = 60
                     },
                     new Product
@@ -192,7 +248,14 @@ namespace OnlineShop.DB.Storages
                         Name = "R1 Creatine",
                         Cost = 420,
                         Description = "Креатин R1 представляет собой самую популярную и эффективную добавку для повышения производительности в наиболее изученной форме (моногидрат). Креатин участвует в энергетическом обмене в мышечных и нервных клетках, поэтому дополнительный прием этой добавки особенно необходим в период интенсивных нагрузок. Более того, наш порошок моногидрата креатина микронизирован, для максимально быстрого и полного усвоения.",
-                        Pictures = new List < ProductPicture >() {new ProductPicture {Path="/prod_pictures/creatine/Rule1_R1_Creatine.png" } },
+                        Pictures = new List < ProductPicture >() 
+                        {
+                            new ProductPicture 
+                            {
+                                Path="/prod_pictures/creatine/Rule1_R1_Creatine.png" ,
+                                NutritionPath = "/prod_pictures/Nutritions/rule-1-creatine-nutr.jpg"
+                            } 
+                        },
                         AmountInStock = 55
                     },
             };

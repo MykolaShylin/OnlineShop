@@ -29,8 +29,8 @@ namespace OnlineShop.DB.Models.Enumerations
         [Display(Name = "Витамины для женщин")]
         WomenVitamins,
         [Display(Name = "Мультивитамины")]
-        Multivitamins
-
-
+        Multivitamins,
+        [Display(Name = "Все товары")]
+        None
     }
 }

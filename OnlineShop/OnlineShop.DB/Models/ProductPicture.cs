@@ -15,5 +15,7 @@ namespace OnlineShop.DB.Models
         public int Id { get; set; }
 
         public string Path { get; set; }
+
+        public string NutritionPath { get; set; }
     }
 }

@@ -44,11 +44,16 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
             _mapping = mapping;
             _discount = discount;
         }
-        public async Task<IActionResult> ProductsInStock()
+        public async Task<IActionResult> ProductsInStock(ProductCategories category = ProductCategories.None)
         {
             var existingProducts = _mapping.Map<List<ProductViewModel>>((await _productsInStock.GetAllAsync()));
             var existingFlavors = _mapping.Map<List<FlavorViewModel>>(await _flavors.GetAllAsync());
+            if(category != ProductCategories.None)
+            {
+                existingProducts = _mapping.Map<List<ProductViewModel>>(await _productsInStock.TryGetByCategoryAsync(category));
+            }
             ViewBag.Flavors = existingFlavors;
+            ViewBag.Category = category;
             return View(existingProducts);
         }
 
@@ -278,7 +283,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
             var imagesDb = new List<ProductPicture>();
             foreach (var name in fileName)
             {
-                var pictureDb = new ProductPicture { Path = GetProductImagePath(product.Category) + name };
+                var pictureDb = new ProductPicture { Path = GetProductImagePath(product.Category) + name, NutritionPath = product.Picture.NutritionPath };
                 await _pictures.SaveAsync(pictureDb);
                 var newPicture = await _pictures.TryGetByPathAsync(pictureDb.Path);
                 imagesDb.Add(newPicture);
@@ -302,21 +307,21 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
             switch (categori)
             {
                 case ProductCategories.Protein:
-                    return "/prod_pictures/Protein/";
+                    return $"/prod_pictures/{ProductCategories.Protein}/";
                 case ProductCategories.ProteinBar:
-                    return "/prod_pictures/Bars/";
+                    return $"/prod_pictures/{ProductCategories.ProteinBar}/";
                 case ProductCategories.Aminoacid:
-                    return "/prod_pictures/Aminoacid/";
+                    return $"/prod_pictures/{ProductCategories.Aminoacid}/";
                 case ProductCategories.Creatine:
-                    return "/prod_pictures/creatine/";
+                    return $"/prod_pictures/{ProductCategories.Creatine}/";
                 case ProductCategories.BCAA:
-                    return "/prod_pictures/BCAA/";
+                    return $"/prod_pictures/{ProductCategories.BCAA}/";
                 case ProductCategories.Gainer:
-                    return "/prod_pictures/geiner/";
+                    return $"/prod_pictures/{ProductCategories.Gainer}/";
                 case ProductCategories.Citruline:
-                    return "/prod_pictures/citruline/";
+                    return $"/prod_pictures/{ProductCategories.Citruline}/";
                 case ProductCategories.FatBurner:
-                    return "/prod_pictures/FatBurner/";
+                    return $"/prod_pictures/{ProductCategories.FatBurner}/";
                 default:
                     return string.Empty;
             }

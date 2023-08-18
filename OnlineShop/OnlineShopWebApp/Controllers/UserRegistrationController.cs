@@ -75,7 +75,7 @@ namespace OnlineShopWebApp.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> ConfirmEmail(string userId, string code, string returnUrl)
+        public async Task<IActionResult> ConfirmEmail(string userId, string code, string returnUrl, string defaultPassword)
         {
             if (userId == null || code == null)
             {
@@ -90,6 +90,7 @@ namespace OnlineShopWebApp.Controllers
             if (result.Succeeded)
             {
                 await _signInManager.PasswordSignInAsync(user.UserName, user.PasswordHash, true, false);
+                await _emailService.SendRegistrationConfirmMessageAsync(user.Email, defaultPassword);
                 return returnUrl == null ? RedirectToAction("Index", "Home") : Redirect(returnUrl);
             }  
             else

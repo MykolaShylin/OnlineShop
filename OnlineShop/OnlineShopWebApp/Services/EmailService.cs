@@ -39,15 +39,7 @@ namespace OnlineShopWebApp.Services
             }
             .ToMessageBody();
 
-
-            using (var client = new SmtpClient())
-            {
-                await client.ConnectAsync("smtp.gmail.com", 465, true);
-                await client.AuthenticateAsync("bullbody.ua@gmail.com", "wwduretiamqmywuf");
-                await client.SendAsync(emailMessage);
-
-                await client.DisconnectAsync(true);
-            }
+            await SendMessage(emailMessage);
         }
 
         public async Task SendEmailConfirmAsync(string email, string callbackUrl)
@@ -65,15 +57,27 @@ namespace OnlineShopWebApp.Services
             }
             .ToMessageBody();
 
+            await SendMessage(emailMessage);
+        }
 
-            using (var client = new SmtpClient())
+        public async Task SendRegistrationConfirmMessageAsync(string email, string password)
+        {
+            using var emailMessage = new MimeMessage();
+
+            emailMessage.From.Add(new MailboxAddress("Bull Body, Администрация сайта", "bullbody.ua@gmail.com"));
+            emailMessage.To.Add(new MailboxAddress("", email));
+            emailMessage.Subject = "Успешная регистрация";
+
+
+            emailMessage.Body = new BodyBuilder()
             {
-                await client.ConnectAsync("smtp.gmail.com", 465, true);
-                await client.AuthenticateAsync("bullbody.ua@gmail.com", "wwduretiamqmywuf");
-                await client.SendAsync(emailMessage);
-
-                await client.DisconnectAsync(true);
+                HtmlBody = password == null ? $"<h3>Поздравляем, вы успешно зарегестрировались на нашем сайте</h3>" :
+                $"<h3>Поздравляем, вы успешно зарегестрировались на нашем сайте</h3><br/>" +
+                $"<h3>Ваш временный пароль - <span class='h2' style='color:red'>{password}</span> - пожалуйста, смените его в своем личном кабинете</h3>"
             }
+            .ToMessageBody();
+
+            await SendMessage(emailMessage);
         }
 
         public async Task SendEmailResetPasswordAsync(string email, string callbackUrl)
@@ -91,12 +95,16 @@ namespace OnlineShopWebApp.Services
             }
             .ToMessageBody();
 
+            await SendMessage(emailMessage);
+        }
 
+        public async Task SendMessage(MimeMessage message)
+        {
             using (var client = new SmtpClient())
             {
                 await client.ConnectAsync("smtp.gmail.com", 465, true);
                 await client.AuthenticateAsync("bullbody.ua@gmail.com", "wwduretiamqmywuf");
-                await client.SendAsync(emailMessage);
+                await client.SendAsync(message);
 
                 await client.DisconnectAsync(true);
             }

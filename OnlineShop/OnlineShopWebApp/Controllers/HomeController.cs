@@ -24,9 +24,8 @@ namespace OnlineShopWebApp.Controllers
             _mapping = mapping;
         }
 
-        public IActionResult Index(string defaultPassword)
+        public IActionResult Index()
         {
-            ViewBag.DefaultPassword = defaultPassword;
             return View();            
         }
 
