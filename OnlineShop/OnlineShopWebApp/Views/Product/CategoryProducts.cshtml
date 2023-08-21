@@ -1,37 +1,222 @@
 ﻿@model List<MainPageProductsViewModel>
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <div class="row no-gutters">
+    @if(Model.Count == 0)
+    {
+        <h3>Скидок и акций пока нет</h3>
+    }
     @foreach (var product in Model)
-    {        
+    {
         <div class="col-3 p-1">
             <div class="card h-100 shadow-lg" style="border-color:aqua; font-family:Bahnschrift">
-                <div class="card-header bg-white" style="border:none;">
+                <div class="card-header bg-white h-100" style="border:none;">
                     <a asp-area="" asp-controller="Product" asp-action="index" asp-route-prodId="@product.Id"><img class="card-img-top" src="@product.Picture.Path"></a>
                 </div>
-                <div class="card-body">
-                    <a style="color:dimgray; float:left" asp-area="" asp-controller="product" asp-action="index" asp-route-prodId="@product.Id">
-                        <h5 class="card-subtitle">@product.Name</h5>
+                <div class="card-body pt-0">                    
+                    @{
+                        var percent = (int)((product.Rating - Math.Truncate(product.Rating)) * 100);
+                        var starSize = 25;
+                    }
+                    <svg width="0" height="0" viewBox="0 0 @starSize @starSize">
+                        <defs>
+                            <mask id="half">
+                                <rect x="0" y="0" width="@starSize" height="@starSize" fill="white" />
+                                <rect x="@percent%" y="0" width="@starSize" height="@starSize" fill="black" />
+                            </mask>
+
+                            <symbol viewBox="0 0 32 32" id="star">
+                                <path d="M31.547 12a.848.848 0 00-.677-.577l-9.427-1.376-4.224-8.532a.847.847 0 00-1.516 0l-4.218 8.534-9.427 1.355a.847.847 0 00-.467 1.467l6.823 6.664-1.612 9.375a.847.847 0 001.23.893l8.428-4.434 8.432 4.432a.847.847 0 001.229-.894l-1.615-9.373 6.822-6.665a.845.845 0 00.214-.869z" />
+                            </symbol>
+                        </defs>
+                    </svg>
+                    <p class="m-0">
+                        @switch (product.Rating)
+                        {
+                            case 0:
+                                <svg class="c-icon " width="@starSize" height="@starSize">
+                                    <use xlink:href="#star"></use>
+                                    <use href="#star" fill="none" stroke="grey"></use>
+                                </svg>
+                                <svg class="c-icon " width="@starSize" height="@starSize">
+                                    <use xlink:href="#star"></use>
+                                    <use href="#star" fill="none" stroke="grey"></use>
+                                </svg>
+                                <svg class="c-icon " width="@starSize" height="@starSize">
+                                    <use xlink:href="#star"></use>
+                                    <use href="#star" fill="none" stroke="grey"></use>
+                                </svg>
+                                <svg class="c-icon " width="@starSize" height="@starSize">
+                                    <use xlink:href="#star"></use>
+                                    <use href="#star" fill="none" stroke="grey"></use>
+                                </svg>
+                                <svg class="c-icon " width="@starSize" height="@starSize">
+                                    <use xlink:href="#star"></use>
+                                    <use href="#star" fill="none" stroke="grey"></use>
+                                </svg>
+                            break;
+                            case < 1:
+                                <svg class="c-icon active" width="@starSize" height="@starSize">
+                                    <use xlink:href="#star" mask="url(#half)"></use>
+                                    <use href="#star" fill="none" stroke="grey"></use>
+                                </svg>
+                                <svg class="c-icon" width="@starSize" height="@starSize">
+                                    <use xlink:href="#star"></use>
+                                    <use href="#star" fill="none" stroke="grey"></use>
+                                </svg>
+                                <svg class="c-icon" width="@starSize" height="@starSize">
+                                    <use xlink:href="#star"></use>
+                                    <use href="#star" fill="none" stroke="grey"></use>
+                                </svg>
+                                <svg class="c-icon" width="@starSize" height="@starSize">
+                                    <use xlink:href="#star"></use>
+                                    <use href="#star" fill="none" stroke="grey"></use>
+                                </svg>
+                                <svg class="c-icon" width="@starSize" height="@starSize">
+                                    <use xlink:href="#star"></use>
+                                    <use href="#star" fill="none" stroke="grey"></use>
+                                </svg>
+                                break;
+
+                            case < 2:
+                                <svg class="c-icon active" width="@starSize" height="@starSize">
+                                    <use xlink:href="#star"></use>
+                                    <use href="#star" fill="none" stroke="grey"></use>
+                                </svg>
+                                <svg class="c-icon active" width="@starSize" height="@starSize">
+                                    <use xlink:href="#star" mask="url(#half)"></use>
+                                    <use href="#star" fill="none" stroke="grey"></use>
+                                </svg>
+                                <svg class="c-icon" width="@starSize" height="@starSize">
+                                    <use xlink:href="#star"></use>
+                                    <use href="#star" fill="none" stroke="grey"></use>
+                                </svg>
+                                <svg class="c-icon" width="@starSize" height="@starSize">
+                                    <use xlink:href="#star"></use>
+                                    <use href="#star" fill="none" stroke="grey"></use>
+                                </svg>
+                                <svg class="c-icon" width="@starSize" height="@starSize">
+                                    <use xlink:href="#star"></use>
+                                    <use href="#star" fill="none" stroke="grey"></use>
+                                </svg>
+                                break;
+
+                            case < 3:
+                                <svg class="c-icon active" width="@starSize" height="@starSize">
+                                    <use xlink:href="#star"></use>
+                                    <use href="#star" fill="none" stroke="grey"></use>
+                                </svg>
+                                <svg class="c-icon active" width="@starSize" height="@starSize">
+                                    <use xlink:href="#star"></use>
+                                    <use href="#star" fill="none" stroke="grey"></use>
+                                </svg>
+                                <svg class="c-icon active" width="@starSize" height="@starSize">
+                                    <use xlink:href="#star" mask="url(#half)"></use>
+                                    <use href="#star" fill="none" stroke="grey"></use>
+                                </svg>
+                                <svg class="c-icon" width="@starSize" height="@starSize">
+                                    <use xlink:href="#star"></use>
+                                    <use href="#star" fill="none" stroke="grey"></use>
+                                </svg>
+                                <svg class="c-icon" width="@starSize" height="@starSize">
+                                    <use xlink:href="#star"></use>
+                                    <use href="#star" fill="none" stroke="grey"></use>
+                                </svg>
+                                break;
+
+                            case < 4:
+                                <svg class="c-icon active" width="@starSize" height="@starSize">
+                                    <use xlink:href="#star"></use>
+                                    <use href="#star" fill="none" stroke="black"></use>
+                                </svg>
+                                <svg class="c-icon active" width="@starSize" height="@starSize">
+                                    <use xlink:href="#star"></use>
+                                    <use href="#star" fill="none" stroke="black"></use>
+                                </svg>
+                                <svg class="c-icon active" width="@starSize" height="@starSize">
+                                    <use xlink:href="#star"></use>
+                                    <use href="#star" fill="none" stroke="black"></use>
+                                </svg>
+                                <svg class="c-icon active" width="@starSize" height="@starSize">
+                                    <use xlink:href="#star" mask="url(#half)"></use>
+                                    <use href="#star" fill="none" stroke="black"></use>
+                                </svg>
+                                <svg class="c-icon" width="@starSize" height="@starSize">
+                                    <use xlink:href="#star"></use>
+                                    <use href="#star" fill="none" stroke="black"></use>
+                                </svg>
+                                break;
+
+                            case < 5:
+                                <svg class="c-icon active" width="@starSize" height="@starSize">
+                                    <use xlink:href="#star"></use>
+                                    <use href="#star" fill="none" stroke="grey"></use>
+                                </svg>
+                                <svg class="c-icon active" width="@starSize" height="@starSize">
+                                    <use xlink:href="#star"></use>
+                                    <use href="#star" fill="none" stroke="grey"></use>
+                                </svg>
+                                <svg class="c-icon active" width="@starSize" height="@starSize">
+                                    <use xlink:href="#star"></use>
+                                    <use href="#star" fill="none" stroke="grey"></use>
+                                </svg>
+                                <svg class="c-icon active" width="@starSize" height="@starSize">
+                                    <use xlink:href="#star"></use>
+                                    <use href="#star" fill="none" stroke="grey"></use>
+                                </svg>
+                                <svg class="c-icon active" width="@starSize" height="@starSize">
+                                    <use xlink:href="#star" mask="url(#half)"></use>
+                                    <use href="#star" fill="none" stroke="grey"></use>
+                                </svg>
+                                break;
+
+                            case < 6:
+                                <svg class="c-icon active" width="@starSize" height="@starSize">
+                                    <use xlink:href="#star"></use>
+                                    <use href="#star" fill="none" stroke="grey"></use>
+                                </svg>
+                                <svg class="c-icon active" width="@starSize" height="@starSize">
+                                    <use xlink:href="#star"></use>
+                                    <use href="#star" fill="none" stroke="grey"></use>
+                                </svg>
+                                <svg class="c-icon active" width="@starSize" height="@starSize">
+                                    <use xlink:href="#star"></use>
+                                    <use href="#star" fill="none" stroke="grey"></use>
+                                </svg>
+                                <svg class="c-icon active" width="@starSize" height="@starSize">
+                                    <use xlink:href="#star"></use>
+                                    <use href="#star" fill="none" stroke="grey"></use>
+                                </svg>
+                                <svg class="c-icon active" width="@starSize" height="@starSize">
+                                    <use xlink:href="#star"></use>
+                                    <use href="#star" fill="none" stroke="grey"></use>
+                                </svg>
+                                break;
+                        }
+                    </p>
+                    <a class="mt-3" style="color:dimgray; float:left" asp-area="" asp-controller="product" asp-action="index" asp-route-prodId="@product.Id">
+                        <h6 class="card-subtitle">@product.Name</h6>
                     </a>
                 </div>
                 <div class="card-footer bg-light" style="border:none">
-                    @if(product.AmountInStock > 0)
+                    @if (product.AmountInStock > 0)
                     {
                         if (product.Cost == product.DiscountCost)
                         {
-                            <h4 style="float:left; color:teal">@product.Cost<span class="h5">₴</span></h4>
+                            <h4 class="col-12 p-0" style="float:left; color:teal">@product.Cost<span class="h5">₴</span></h4>
                         }
                         else
                         {
-                            <h4 style="float:left; color:chartreuse;">₴@product.DiscountCost</h4>
-                            <h5 style="float:left; color:dimgrey; text-decoration-line:line-through; text-decoration-color:red">₴@product.Cost</h5>
+                            <h4 class="mr-1" style="float:left; color:chartreuse;">@product.DiscountCost<span class="h5">₴</span></h4>
+                            <h5 style="float:left; color:teal; text-decoration-line:line-through; text-decoration-color:red">@product.Cost<span class="h6">₴</span></h5>
                         }
                         <a class="btn btn-dark" asp-area="" asp-controller="Basket" asp-action="Buying" asp-route-prodId="@product.Id" asp-route-flavorId="@product.Flavor.Id" asp-route-amount="1" role="button">Добавить в корзину</a>
                     }
                     else
                     {
                         <h4 style="color:goldenrod">Нет в наличии</h4>
-                        <a class="btn btn-dark disabled"  asp-area="" asp-controller="Basket" asp-action="Buying" asp-route-prodId="@product.Id" asp-route-flavorId="@product.Flavor.Id" asp-route-amount="1" role="button">Добавить в корзину</a>
+                        <a class="btn btn-dark disabled" asp-area="" asp-controller="Basket" asp-action="Buying" asp-route-prodId="@product.Id" asp-route-flavorId="@product.Flavor.Id" asp-route-amount="1" role="button">Добавить в корзину</a>
                     }
                 </div>
             </div>

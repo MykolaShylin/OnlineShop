@@ -24,6 +24,10 @@ namespace OnlineShop.DB.Models.Enumerations
         [Display(Name = "Dymatize")]
         Dymatize,
         [Display(Name = "Rule1")]
-        Rule1
+        Rule1,
+        [Display(Name = "TREC")]
+        TREC,
+        [Display(Name = "GO ON Nutrition")]
+        GO_ON
     }
 }

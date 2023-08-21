@@ -244,20 +244,20 @@
                     <li class="nav-item align-self-center offset-8">
                         @if(User.Identity.IsAuthenticated)
                         {
-                            <a class="btn btn-outline-success" role="button" href="#addProductModal">Оставить отзыв</a>
-                            @await Html.PartialAsync("AddFeedbackModal", new AddFeedbackModel { ProductId = Model.Id , Login = User.Identity.Name})
+                            <a class="btn btn-outline-success" data-toggle="modal" data-target="#addFeedbackModal" style="display:block" href="#">Оставить отзыв</a>
+                            @await Html.PartialAsync("AddFeedbackModal", new AddFeedbackModel { ProductId = Model.Id , Login = User.Identity.Name})                                                      
                         }
                         else
                         {
-                            var returnUr = Url.Action("Product", "Index", new { prodId = Model.Id });
-                            <a class="btn btn-outline-success" role="button" asp-controller="UserEntering" asp-action="Login" asp-route-returnUrl="returnUr">Оставить отзыв</a>
+                            var returnUrl = Url.Action("Product", "Index", new { prodId = Model.Id });
+                            <a class="btn btn-outline-success" role="button" asp-controller="UserEntering" asp-action="Login" asp-route-returnUrl="@returnUrl">Оставить отзыв</a>
                         }
                     </li>
                 </ul>
             </div>
             <div class="tab-content">            
                 <div class="tab-pane fade show active p-4" id="nutritions">
-                    <img class="d-block w-50" src="@Model.Picture.NutritionPath" alt="состав"/>
+                    <img class="d-block w-50" src="@Model.Picture.NutritionPath" alt="состав еще не добавлен"/>
                 </div>
                 <div class="tab-pane fade" id="feedbacks">
                     @foreach(var feedback in Model.Feedbacks)

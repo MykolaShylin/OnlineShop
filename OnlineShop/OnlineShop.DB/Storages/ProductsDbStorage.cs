@@ -77,6 +77,25 @@ namespace OnlineShop.DB.Storages
             
         }
 
+        public async Task ClearAllAsync()
+        {
+            dataBaseContext.Flavors.RemoveRange(dataBaseContext.Flavors);
+            dataBaseContext.Products.RemoveRange(dataBaseContext.Products);
+            dataBaseContext.Pictures.RemoveRange(dataBaseContext.Pictures);
+            dataBaseContext.Discounts.RemoveRange(dataBaseContext.Discounts);
+            await dataBaseContext.SaveChangesAsync();
+        }
+
+        public async Task ReduceAmountInStock(List<BasketItem> items)
+        {
+            foreach (var item in items)
+            {
+                var product = await TryGetByIdAsync(item.Product.Id);
+                product.AmountInStock = item.Amount > product.AmountInStock ? 0 : product.AmountInStock - item.Amount;
+            }
+            dataBaseContext.SaveChanges();
+        }
+
         public async Task InitializeDefaultProductsAsync()
         {
             var FlavorsDb = new Flavor[]
@@ -92,7 +111,8 @@ namespace OnlineShop.DB.Storages
                     new Flavor { Name = "Ананас"},
                     new Flavor {  Name = "Лимон"},
                     new Flavor {  Name = "Арбуз"},
-                    new Flavor {  Name = "Без вкуса" }
+                    new Flavor {  Name = "Без вкуса" },
+                    new Flavor {  Name = "Печенье-крем" }
             };
 
             dataBaseContext.Flavors.AddRange(FlavorsDb);
@@ -103,9 +123,9 @@ namespace OnlineShop.DB.Storages
                     {
                         Category = ProductCategories.Protein,
                         Brand = ProductBrands.Optimum_Nutrition,
-                        Name = "100% Whey Protein Professional",
+                        Name = "100% Whey Gold Standard",
                         Cost = 2750,
-                        Description = "100% Whey Protein Professional – высококачественный ультраизолированый концентрат из сывороточного белка и сывороточного изолята.100% Whey Protein Professional - имеет очень большое разнообразие вкусов, и среди них, Вы точно найдете свой любимый. Кроме этого, протеин хорошо смешивается и растворяется с водой и молоком.",
+                        Description = "Cамый продаваемый в мире сывороточный протеин. Каждая порция Gold Standard 100% Whey содержит 24 грамма быстроусваиваемого сывороточного протеина с минимальным содержанием жира, лактозы и других ненужных веществ.",
                         Pictures = new List<ProductPicture>()
                         {
                             new ProductPicture
@@ -121,9 +141,9 @@ namespace OnlineShop.DB.Storages
                     {
                         Category = ProductCategories.Protein,
                         Brand = ProductBrands.Scitec_Nutrition,
-                        Name = "100% Whey Gold Standard",
+                        Name = "100% Whey Protein Professional",
                         Cost = 2500,
-                        Description = "Cамый продаваемый в мире сывороточный протеин. Каждая порция Gold Standard 100% Whey содержит 24 грамма быстроусваиваемого сывороточного протеина с минимальным содержанием жира, лактозы и других ненужных веществ.",
+                        Description = "100% Whey Protein Professional – высококачественный ультраизолированый концентрат из сывороточного белка и сывороточного изолята.100% Whey Protein Professional - имеет очень большое разнообразие вкусов, и среди них, Вы точно найдете свой любимый. Кроме этого, протеин хорошо смешивается и растворяется с водой и молоком.",
                         Pictures = new List < ProductPicture >()
                         {
                             new ProductPicture 
@@ -164,7 +184,7 @@ namespace OnlineShop.DB.Storages
                         {
                             new ProductPicture
                             {
-                                Path ="/prod_pictures/Bars/Sporter_ZeroOne.png",
+                                Path ="/prod_pictures/ProteinBar/Sporter_ZeroOne.png",
                                 NutritionPath = "/prod_pictures/Nutritions/Sporter-Zero-One-Nutr.png"
                             } 
                         },
@@ -258,6 +278,74 @@ namespace OnlineShop.DB.Storages
                         },
                         AmountInStock = 55
                     },
+                    new Product
+                    {
+                        Category = ProductCategories.FatBurner,
+                        Brand = ProductBrands.TREC,
+                        Name = "Gold Core Line Clenburexin",
+                        Cost = 600,
+                        Description = "Trec Nutrition Gold Core Line Clenburexin - тщательно подобранная комбинация натуральных растительных термогеников, витаминов и кофеина. Обнаруживает термогенноеокисление жиров + увеличивает экскрецию воды из организма, и, как вы знаете: удержание воды является одной из основных причин увеличения индекса массы тела. Формула Trec Nutrition Gold Core Line Clenburexin основана на растительных экстрактах, которые «разгоняют» наш метаболизм и стимулируют действие. Формула препарата оказывает большое влияние на регуляцию аппетита в течение дня, способствуя тем самым поддержанию дефицита калорий при снижении веса.",
+                        Pictures = new List < ProductPicture >()
+                        {
+                            new ProductPicture
+                            {
+                                Path="/prod_pictures/FatBurner/TREC-Fat-Burner.png" ,
+                                NutritionPath = "/prod_pictures/Nutritions/TREC-Clenburexin-nutr.png"
+                            }
+                        },
+                        AmountInStock = 120
+                    },
+                    new Product
+                    {
+                        Category = ProductCategories.ProteinBar,
+                        Brand = ProductBrands.GO_ON,
+                        Name = "Protein Bar 50%",
+                        Cost = 55,
+                        Description = "GO ON NUTRITION Protein Bar 50% - протеиновый батончик со вкусом сливок и печенья с добавлением хлопьев какао. Он обеспечивает целых 20 г белка и всего 161 ккал, поэтому является отличной альтернативой калорийным вредным сладостям. Отличается высоким содержанием белка, который способствует наращиванию мышечной массы и ускоряет регенерацию после тренировки. Будет отличным и вкусным перекусом до или после тренировки как ценный источник энергии. Идеальный выбор для людей, которые заботятся о правильном количестве потребляемого белка, для спортсменов и людей, ведущих активный образ жизни.",
+                        Pictures = new List < ProductPicture >()
+                        {
+                            new ProductPicture
+                            {
+                                Path="/prod_pictures/ProteinBar/GO_ON_Prot50.png" ,
+                                NutritionPath = "/prod_pictures/Nutritions/GO-ON-Protein-Bar-50%-nutr.png"
+                            }
+                        },
+                        AmountInStock = 90
+                    },
+                    new Product
+                    {
+                        Category = ProductCategories.BCAA,
+                        Brand = ProductBrands.Biotech_USA,
+                        Name = "BCAA Flash ZERO",
+                        Cost = 1000,
+                        Description = "BioTech (USA) BCAA Flash ZERO –  уникальная пищевая добавка для профессиональных бодибилдеров и новичков, призванная обеспечить прирост мускулатуры и ее правильное развитие, снизить катаболические проявления. В основе продукта – не только аминокислоты разветвленной цепи ВСАА фармацевтического качества, но и глютамин и витамин В6, необходимые для роста мускулов, здоровья соединительной ткани и опорно-двигательного аппарата.\r\n\r\nПри регулярном употреблении – продукт активизирует метаболические процессы, налаживает нормальную гидратацию тканей, облегчает процесс потери веса процесс похудения. Стимулирует регенерацию хрящевой ткани. ",
+                        Pictures = new List < ProductPicture >()
+                        {
+                            new ProductPicture
+                            {
+                                Path="/prod_pictures/BCAA/BioTechUSA-BCAA-Zero.png" ,
+                                NutritionPath = "/prod_pictures/Nutritions/bcaa-flash-biotech-nutr.jpg"
+                            }
+                        },
+                        AmountInStock = 90
+                    },
+                    new Product
+                    {
+                        Category = ProductCategories.Caseine,
+                        Brand = ProductBrands.Dymatize,
+                        Name = "Elite Casein Protein Powder",
+                        Cost = 2400,
+                        Description = "Казеин — это уникальный протеин, получаемый из молока, который достаточно медленно расщепляется в системе пищеварения, что помогает улучшить усваиваемость и обеспечить медленное высвобождение используемых для роста мышц аминокислот. Поэтому если ваша цель — нарастить мышцы или предотвратить распад мышечного протеина в промежутках между приемами пищи или во время сна, то Dymatize Elite Casein Protein Powder является отличным выбором.\r\n\r\nПри производстве комплекса Elite Casein используется процесс перекрестной микрофильтрации, который помогает сохранить натуральное состояние казеина, важного протеина, участвующего в процессе роста мышечной массы.",
+                        Pictures = new List < ProductPicture >()
+                        {
+                            new ProductPicture
+                            {
+                                Path="/prod_pictures/Caseint/Dymatize_Elite_Casein.png" ,
+                                NutritionPath = "/prod_pictures/Nutritions/Dymatize-Elite-Casein-nutr.jpg"
+                            }
+                        },
+                        AmountInStock = 75
+                    },
             };
 
             dataBaseContext.Products.AddRange(ProductsDb);
@@ -271,6 +359,10 @@ namespace OnlineShop.DB.Storages
             ProductsDb[6].Flavors.AddRange(new List<Flavor> { FlavorsDb[7], FlavorsDb[8], FlavorsDb[9], FlavorsDb[10], FlavorsDb[11] });
             ProductsDb[7].Flavors.AddRange(new List<Flavor> { FlavorsDb[1], FlavorsDb[2], FlavorsDb[4], FlavorsDb[5], FlavorsDb[6] });
             ProductsDb[8].Flavors.AddRange(new List<Flavor> { FlavorsDb[11] });
+            ProductsDb[9].Flavors.AddRange(new List<Flavor> { FlavorsDb[11] });
+            ProductsDb[10].Flavors.AddRange(new List<Flavor> { FlavorsDb[12] });
+            ProductsDb[11].Flavors.AddRange(new List<Flavor> { FlavorsDb[8], FlavorsDb[9], FlavorsDb[11] });
+            ProductsDb[12].Flavors.AddRange(new List<Flavor> { FlavorsDb[0], FlavorsDb[1], FlavorsDb[2], FlavorsDb[3] });
 
             var DiscountsDb = new Discount[]
             {
@@ -295,25 +387,6 @@ namespace OnlineShop.DB.Storages
             await dataBaseContext.Discounts.ForEachAsync(x=>x.Products.ForEach(q => q.DiscountCost = decimal.Ceiling(((q.Cost * 100) * (100 - x.DiscountPercent) / 100) / 100)));
 
             await dataBaseContext.SaveChangesAsync();
-        }
-
-        public async Task ClearAllAsync()
-        {
-            dataBaseContext.Flavors.RemoveRange(dataBaseContext.Flavors);
-            dataBaseContext.Products.RemoveRange(dataBaseContext.Products);
-            dataBaseContext.Pictures.RemoveRange(dataBaseContext.Pictures);
-            dataBaseContext.Discounts.RemoveRange(dataBaseContext.Discounts);
-            await dataBaseContext.SaveChangesAsync();
-        }
-
-        public async Task ReduceAmountInStock(List<BasketItem> items)
-        {
-            foreach(var item in items)
-            {
-                var product = await TryGetByIdAsync(item.Product.Id);
-                product.AmountInStock = item.Amount > product.AmountInStock ? 0 : product.AmountInStock - item.Amount;
-            }
-            dataBaseContext.SaveChanges();
-        }
+        }        
     }
 }

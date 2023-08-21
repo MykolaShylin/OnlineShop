@@ -19,5 +19,7 @@ namespace OnlineShopWebApp.Models
         public List<ProductPicture> Pictures { get; set; }
 
         public ProductPicture Picture => Pictures?.Count > 0 ? Pictures[0] : null;
+
+        public double Rating { get; set; }
     }
 }

@@ -145,4 +145,19 @@
     color: orange;
 }
 
+.c-icon {
+    --star-active: #fece3c;
+    --star-inactive: #ffffff;
+    fill: var(--star-inactive);
+    width: var(--size, 25px);
+    height: var(--size, 25px);
+}
+
+    .c-icon.active {
+        fill: var(--star-active);
+    }
+
+
+   
+
 

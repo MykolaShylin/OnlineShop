@@ -96,9 +96,14 @@ namespace OnlineShopWebApp.Controllers
         public async Task<IActionResult> CategoryProducts(bool isAllListProducts, ProductCategories category, List<MainPageProductsViewModel> searchingProducts)
         {
             var products = await _products.GetAllAsync();
+            
             var productsView = _mapping.Map<List<MainPageProductsViewModel>>(products);
+            foreach(var product in productsView)
+            {
+                product.Rating = await _feedbackApiClient.GetProductRetingAsync(product.Id);
+            }
 
-            if(searchingProducts.Count> 0)
+            if (searchingProducts.Count> 0)
             {
                 return View(searchingProducts);
             }
@@ -128,6 +133,11 @@ namespace OnlineShopWebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> SearchProducts(string searchingText)
         {
+            if(searchingText.ToLower() == "акции")
+            {
+                return RedirectToAction(nameof(SaleProducts));
+            }    
+
             var products = await _products.GetAllAsync();
 
             var nameSortingProducts = products.Where(x=>x.Name.ToLower().Contains(searchingText.ToLower())).ToList();

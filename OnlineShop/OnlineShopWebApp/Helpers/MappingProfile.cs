@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using OnlineShop.DB.Models;
+using OnlineShopWebApp.FeedbackApi;
 using OnlineShopWebApp.FeedbackApi.Models;
 using OnlineShopWebApp.Models;
 using System;
@@ -9,9 +10,10 @@ using System.Linq;
 namespace OnlineShopWebApp.Helpers
 {
     public class MappingProfile : Profile
-    {
+    {        
         public MappingProfile()
-        {
+        {            
+
             CreateMap<Flavor, FlavorViewModel>().ReverseMap();
             CreateMap<GoogleMapShopInfo, GoogleMapShopInfoViewModel>().ReverseMap();
 
@@ -71,7 +73,7 @@ namespace OnlineShopWebApp.Helpers
 
             CreateMap<Order, OrderViewModel>()
                 .AfterMap((src, dest) => dest.deliveryInfo.CustomerId = dest.deliveryInfo.CustomerId.ToString().Substring(0, 10))
-                .ReverseMap();
+                .ReverseMap();            
         }
     }
 }

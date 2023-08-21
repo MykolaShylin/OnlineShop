@@ -283,7 +283,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
             var imagesDb = new List<ProductPicture>();
             foreach (var name in fileName)
             {
-                var pictureDb = new ProductPicture { Path = GetProductImagePath(product.Category) + name, NutritionPath = product.Picture.NutritionPath };
+                var pictureDb = new ProductPicture { Path = GetProductImagePath(product.Category) + name, NutritionPath = string.Empty };
                 await _pictures.SaveAsync(pictureDb);
                 var newPicture = await _pictures.TryGetByPathAsync(pictureDb.Path);
                 imagesDb.Add(newPicture);
@@ -302,9 +302,9 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
             };
 
         }
-        private string GetProductImagePath(ProductCategories categori)
+        private string GetProductImagePath(ProductCategories category)
         {
-            switch (categori)
+            switch (category)
             {
                 case ProductCategories.Protein:
                     return $"/prod_pictures/{ProductCategories.Protein}/";

@@ -6,6 +6,8 @@ namespace OnlineShop.DB.Models.Enumerations
     {
         [Display(Name = "Протеин")]
         Protein,
+        [Display(Name = "Казеин")]
+        Caseine,
         [Display(Name = "Протеиновые батончики")]
         ProteinBar,
         [Display(Name = "Аминокислоты")]
