@@ -12,14 +12,31 @@ namespace OnlineShop.DB.Contexts
     {
         public static void Initialize(UserManager<User> userManager, RoleManager<Role> roleManager)
         {
-            var email = "bullbody.ua@gmail.com";
-            var password = "1q2w3e4r";
-            var userName = "Николай";
-            var serName = "Шилин";
-            var login = "BullBody_Admin";
-            var nikName = "Admin";
-            var phone = "+380975288699";
-            var emailConfirmed = true;
+            var admin = new User
+            {
+                UserName = "BullBody_Admin",
+                RealName = "Николай",
+                SerName = "Шилин",
+                Email = "bullbody.ua@gmail.com",
+                PhoneNumber = "+380975288699",
+                Avatar = null,
+                NikName = "Admin",
+                EmailConfirmed = true,
+            };
+
+            var moderator = new User
+            {
+                UserName = "BullBody_Moder",
+                RealName = "Николай",
+                SerName = "Шилин",
+                Email = "shylin.mykola@gmail.com",
+                PhoneNumber = "+380975288699",
+                Avatar = null,
+                NikName = "Moderator",
+                EmailConfirmed = true,
+            };
+
+            var adminPassword = "1q2w3e4r";
 
             var adminRoleDesc = "Доступ ко всему функционалу сайта! Внимание, не предоставляйте эти права доступа людям, которым вы не доверяете, это может повлиять на работу сайта!";
             var userRoleDesc = "Назначается всем новым зарегестрированным пользователям. Возможность только совершать покупки";
@@ -52,25 +69,22 @@ namespace OnlineShop.DB.Contexts
                 };
                 roleManager.CreateAsync(moderatorRole).Wait();
             }
-            if (userManager.FindByNameAsync(login).Result == null)
-            {
-                var admin = new User
-                {
-                    UserName = login,
-                    RealName = userName,                    
-                    SerName= serName,
-                    Email = email, 
-                    PhoneNumber = phone,
-                    Avatar = null,
-                    NikName = nikName,
-                    EmailConfirmed= emailConfirmed,
-                };
-                var result = userManager.CreateAsync(admin, password).Result;
+            if (userManager.FindByNameAsync(admin.UserName).Result == null)
+            {                
+                var result = userManager.CreateAsync(admin, adminPassword).Result;
                 if (result.Succeeded)
                 {
                     userManager.AddToRoleAsync(admin, Constants.AdminRoleName).Wait();
                 }
             }
+            //if (userManager.FindByNameAsync(moderator.UserName).Result == null)
+            //{
+            //    var result = userManager.CreateAsync(moderator, adminPassword).Result;
+            //    if (result.Succeeded)
+            //    {
+            //        userManager.AddToRoleAsync(admin, Constants.ModeratorRoleName).Wait();
+            //    }
+            //}
         }
     }
 }

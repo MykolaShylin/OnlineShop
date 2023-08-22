@@ -122,7 +122,6 @@ namespace OnlineShopWebApp.Controllers
                 if (email != null)
                 {
                     var user = await _userManager.FindByEmailAsync(email);
-                    var defaultPassword = string.Empty;
                     if (user == null)
                     {
                         user = new User
@@ -132,13 +131,12 @@ namespace OnlineShopWebApp.Controllers
                             RealName = info.Principal.FindFirstValue(ClaimTypes.Name),
                             PhoneNumber = info.Principal.FindFirstValue(ClaimTypes.MobilePhone)
                         };
-                        defaultPassword = Guid.NewGuid().ToString().Substring(0, 10);
+                        var defaultPassword = Guid.NewGuid().ToString().Substring(0, 10);
                         await _userManager.CreateAsync(user, defaultPassword);
                         await _userManager.AddToRoleAsync(user, Constants.UserRoleName);
+
+                        await SendEmailConfirmAsync(user, defaultPassword);                        
                     }
-
-                    await SendEmailConfirmAsync(user, defaultPassword);
-
                     await _userManager.AddLoginAsync(user, info);
                     await _signInManager.SignInAsync(user, false);
                     

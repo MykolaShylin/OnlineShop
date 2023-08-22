@@ -37,7 +37,7 @@ namespace OnlineShopWebApp.Helpers
 
             CreateMap<User, UserViewModel>()
                 .ForMember(x => x.Name, opt => opt.MapFrom(x => x.RealName.Split().Count() > 1 ? x.RealName.Split().First() : x.RealName))
-                .ForMember(x => x.SerName, opt => opt.MapFrom(x => x.SerName ?? x.RealName.Split().Last()))
+                .ForMember(x => x.SerName, opt => opt.MapFrom(x => x.SerName))
                 .ForMember(x => x.Login, opt => opt.MapFrom(x => x.UserName))
                 .ForMember(x => x.Phone, opt => opt.MapFrom(x => x.PhoneNumber))
                 .ReverseMap()
