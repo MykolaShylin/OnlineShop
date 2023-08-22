@@ -36,7 +36,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\prod_pictures\ProteinBar\" />
     <Folder Include="wwwroot\prod_pictures\BCAA\" />
     <Folder Include="wwwroot\prod_pictures\FatBurner\" />
     <Folder Include="wwwroot\prod_pictures\Aminoacid\" />

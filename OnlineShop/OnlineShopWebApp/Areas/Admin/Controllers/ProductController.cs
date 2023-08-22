@@ -24,7 +24,7 @@ using System.Net.Http.Headers;
 namespace OnlineShopWebApp.Areas.Admin.Controllers
 {
     [Area(Constants.AdminRoleName)]
-    [Authorize(Roles = Constants.AdminRoleName)]    
+    [Authorize(Roles = Constants.AdminRoleName)]
     public class ProductController : Controller
     {
         private IProductsStorage _productsInStock;
@@ -48,7 +48,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
         {
             var existingProducts = _mapping.Map<List<ProductViewModel>>((await _productsInStock.GetAllAsync()));
             var existingFlavors = _mapping.Map<List<FlavorViewModel>>(await _flavors.GetAllAsync());
-            if(category != ProductCategories.None)
+            if (category != ProductCategories.None)
             {
                 existingProducts = _mapping.Map<List<ProductViewModel>>(await _productsInStock.TryGetByCategoryAsync(category));
             }
@@ -304,27 +304,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
         }
         private string GetProductImagePath(ProductCategories category)
         {
-            switch (category)
-            {
-                case ProductCategories.Protein:
-                    return $"/prod_pictures/{ProductCategories.Protein}/";
-                case ProductCategories.ProteinBar:
-                    return $"/prod_pictures/{ProductCategories.ProteinBar}/";
-                case ProductCategories.Aminoacid:
-                    return $"/prod_pictures/{ProductCategories.Aminoacid}/";
-                case ProductCategories.Creatine:
-                    return $"/prod_pictures/{ProductCategories.Creatine}/";
-                case ProductCategories.BCAA:
-                    return $"/prod_pictures/{ProductCategories.BCAA}/";
-                case ProductCategories.Gainer:
-                    return $"/prod_pictures/{ProductCategories.Gainer}/";
-                case ProductCategories.Citruline:
-                    return $"/prod_pictures/{ProductCategories.Citruline}/";
-                case ProductCategories.FatBurner:
-                    return $"/prod_pictures/{ProductCategories.FatBurner}/";
-                default:
-                    return string.Empty;
-            }
+            return $"/prod_pictures/{category}/";
         }
     }
 }

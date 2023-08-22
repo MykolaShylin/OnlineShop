@@ -12,27 +12,37 @@
                         <span style="color:white">СПОРТ</span>
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" asp-area="" asp-controller="Product" asp-action="CategoryProducts"  asp-route-isAllListProducts="@true">Все товары</a>
-                        <a class="dropdown-item" asp-area="" asp-controller="Product" asp-action="CategoryProducts"  asp-route-category="@ProductCategories.Protein">Протеин</a>
-                        <a class="dropdown-item" asp-area="" asp-controller="Product" asp-action="CategoryProducts"  asp-route-category="@ProductCategories.ProteinBar">Протеиновые батончики</a>                        
-                        <a class="dropdown-item" asp-area="" asp-controller="Product" asp-action="CategoryProducts" asp-route-category="@ProductCategories.Gainer">Гейнеры</a>
-                        <a class="dropdown-item" asp-area="" asp-controller="Product" asp-action="CategoryProducts" asp-route-category="@ProductCategories.FatBurner">Жиросжигатели</a>
-                        <a class="dropdown-item" asp-area="" asp-controller="Product" asp-action="CategoryProducts" asp-route-category="@ProductCategories.Citruline">Цитрулин</a>
-                        <a class="dropdown-item" asp-area="" asp-controller="Product" asp-action="CategoryProducts" asp-route-category="@ProductCategories.Creatine">Креатин</a>
-                        <a class="dropdown-item" asp-area="" asp-controller="Product" asp-action="CategoryProducts" asp-route-category="@ProductCategories.BCAA">BCAA</a>
-                        <a class="dropdown-item" asp-area="" asp-controller="Product" asp-action="CategoryProducts" asp-route-category="@ProductCategories.Aminoacid">Аминокислоты</a>
+                        @foreach (var category in Enum.GetValues(typeof(ProductCategories)).Cast<ProductCategories>().ToList())
+                        {
+                            if(category == ProductCategories.None)
+                            {
+                                <a class="dropdown-item" asp-area="" asp-controller="Product" asp-action="CategoryProducts" asp-route-isAllListProducts="@true">Все товары</a>
+                            }
+                            else if (category.ToString().Contains("Sport"))
+                            {
+                                <a class="dropdown-item" asp-area="" asp-controller="Product" asp-action="CategoryProducts" asp-route-category="@category">@EnumHelper.GetDisplayName(category)</a>
+                            }                            
+                        }
                     </div>
                 </div>
             </div>
             <div class="col">
                 <div class="dropdown">
                     <button onclick="this.blur()" class="btn btn-lg border-0 dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span style="color:white">ДОБАВКИ</span>
+                        <span style="color:white">ЗДОРОВЫЕ ПЕРЕКУСЫ</span>
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="#">Товар 1</a>
-                        <a class="dropdown-item" href="#">Товар 2</a>
-                        <a class="dropdown-item" href="#">Товар 3</a>
+                        @foreach (var category in Enum.GetValues(typeof(ProductCategories)).Cast<ProductCategories>().ToList())
+                        {
+                            if (category == ProductCategories.None)
+                            {
+                                <a class="dropdown-item" asp-area="" asp-controller="Product" asp-action="CategoryProducts" asp-route-isAllListProducts="@true">Все товары</a>
+                            }
+                            else if (category.ToString().Contains("HealthyFood"))
+                            {
+                                <a class="dropdown-item" asp-area="" asp-controller="Product" asp-action="CategoryProducts" asp-route-category="@category">@EnumHelper.GetDisplayName(category)</a>
+                            }
+                        }
                     </div>
                 </div>
             </div>
@@ -51,7 +61,7 @@
             <div class="col">
                 <div class="dropdown">
                     <button onclick="this.blur()" class="btn btn-lg border-0 dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span style="color:white">ЗДОРОВЬЕ</span>
+                        <span style="color:white">Добавки</span>
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         <a class="dropdown-item" href="#">Товар 1</a>

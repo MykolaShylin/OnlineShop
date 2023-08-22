@@ -27,6 +27,18 @@ namespace OnlineShop.DB.Models.Enumerations
         Rule1,
         [Display(Name = "TREC")]
         TREC,
+        [Display(Name = "ALL Nutrition")]
+        ALL_Nutrition,
+        [Display(Name = "NUTREND")]
+        Nutrend,
+        [Display(Name = "BPI SPORTS")]
+        BPI,
+        [Display(Name = "Olimp")]
+        Olimp,
+        [Display(Name = "REDCON1")]
+        REDCON,
+        [Display(Name = "Iron Maxx")]
+        IronMaxx,
         [Display(Name = "GO ON Nutrition")]
         GO_ON
     }

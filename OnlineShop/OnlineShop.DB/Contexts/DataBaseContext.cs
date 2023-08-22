@@ -173,11 +173,11 @@ namespace OnlineShop.DB.Contexts
             //    new Product
             //    {
             //        Id = 1,
-            //        Category = ProductCategories.Protein,
+            //        Category = ProductCategories.Sport_Protein,
             //        Brand = "Optimum Nutrition",
-            //        Name = "100% Whey Protein Professional",
+            //        Name = "100% Whey Sport_Protein Professional",
             //        Cost = 2750,
-            //        Description = "100% Whey Protein Professional – высококачественный ультраизолированый концентрат из сывороточного белка и сывороточного изолята.100% Whey Protein Professional - имеет очень большое разнообразие вкусов, и среди них, Вы точно найдете свой любимый. Кроме этого, протеин хорошо смешивается и растворяется с водой и молоком.",
+            //        Description = "100% Whey Sport_Protein Professional – высококачественный ультраизолированый концентрат из сывороточного белка и сывороточного изолята.100% Whey Sport_Protein Professional - имеет очень большое разнообразие вкусов, и среди них, Вы точно найдете свой любимый. Кроме этого, протеин хорошо смешивается и растворяется с водой и молоком.",
             //        Pictures = "/prod_pictures/whey_protein/ON Gold Standart.png",
             //        AmountInStock = 100
 
@@ -186,7 +186,7 @@ namespace OnlineShop.DB.Contexts
             //    new Product
             //    {
             //        Id = 2,
-            //        Category = ProductCategories.Protein,
+            //        Category = ProductCategories.Sport_Protein,
             //        Brand = "Scitec Nutrition",
             //        Name = "100% Whey Gold Standard",
             //        Cost = 2500,
@@ -198,7 +198,7 @@ namespace OnlineShop.DB.Contexts
             //    new Product
             //    {
             //        Id = 3,
-            //        Category = ProductCategories.Protein,
+            //        Category = ProductCategories.Sport_Protein,
             //        Brand = "Scitec Nutrition",
             //        Name = "100% Whey Isolate",
             //        Cost = 3500,
@@ -210,7 +210,7 @@ namespace OnlineShop.DB.Contexts
             //    new Product
             //    {
             //        Id = 4,
-            //        Category = ProductCategories.ProteinBar,
+            //        Category = ProductCategories.Sport_ProteinBar,
             //        Brand = "Sporter",
             //        Name = "Zero One",
             //        Cost = 65,
@@ -222,21 +222,21 @@ namespace OnlineShop.DB.Contexts
             //    new Product
             //    {
             //        Id = 5,
-            //        Category = ProductCategories.BCAA,
+            //        Category = ProductCategories.Sport_BCAA,
             //        Brand = "BSN",
             //        Name = "AMINOx",
             //        Cost = 900,
             //        Description = "ВСАА поддерживают рост мышечной массы и предотвращают мышечное истощение. Именно такой эффект необходим во время периода интенсивных тренировок. Amino X марки BSN - это первые шипучие растворимые аминокислоты для выносливости и восстановления.",
-            //        Pictures = "/prod_pictures/BCAA/BSNx.png",
+            //        Pictures = "/prod_pictures/Sport_BCAA/BSNx.png",
             //        AmountInStock = 100
             //    },
 
             //    new Product
             //    {
             //        Id = 6,
-            //        Category = ProductCategories.Creatine,
+            //        Category = ProductCategories.Sport_Creatine,
             //        Brand = "MST",
-            //        Name = "MST Creatine Kick",
+            //        Name = "MST Sport_Creatine Kick",
             //        Cost = 250,
             //        Description = "MST® CreatineKick 7 in 1 – это многокомпонентный быстро усвояемый креатин в инновационной формуле, объединяет несколько видов креатина в одном продукте. Он соединяет свойства и преимущества различных видов креатина в одну смесь. Содержит 7 видов креатина.",
             //        Pictures = "/prod_pictures/creatine/MST-CREATINE-KICK.png",
@@ -246,9 +246,9 @@ namespace OnlineShop.DB.Contexts
             //    new Product
             //    {
             //        Id = 7,
-            //        Category = ProductCategories.Citruline,
+            //        Category = ProductCategories.Sport_Citruline,
             //        Brand = "Biotech USA",
-            //        Name = "Citruline Malate",
+            //        Name = "Sport_Citruline Malate",
             //        Cost = 400,
             //        Description = "Биологически активная добавка, которая в себе содержит цитруллин и яблочную кислоту – малат, усиливающую воздействие аминокислоты на организм и способствует ее усвоению. В момент, когда организм после усиленного режима тренировок нуждается в восстановлении, когда есть ощущения недостатка энергии и потери сил, то прием препарата Citrulline Malate окажет благотворное воздействие и наполнит энергией для дальнейших спортивных достижений.",
             //        Pictures = "/prod_pictures/citruline/BioTechUsa_Citr_mal.png",
@@ -258,11 +258,11 @@ namespace OnlineShop.DB.Contexts
             //    new Product
             //    {
             //        Id = 8,
-            //        Category = ProductCategories.Gainer,
+            //        Category = ProductCategories.Sport_Gainer,
             //        Brand = "Dymatize",
-            //        Name = "Super Mass Gainer",
+            //        Name = "Super Mass Sport_Gainer",
             //        Cost = 1700,
-            //        Description = "Dymatize Super Mass Gainer – то, что нужно для супер-компенсации мышечной системы у людей с очень быстрым метаболизмом и недобором веса. Максимальное количество быстрых углеводов и минимальное содержание протеинов позволит быстро набрать вес. Смесь содержит насыщенные жиры – они выступают строительным материалом для мужских гормонов – а вместе с ним начнут расти мышцы.",
+            //        Description = "Dymatize Super Mass Sport_Gainer – то, что нужно для супер-компенсации мышечной системы у людей с очень быстрым метаболизмом и недобором веса. Максимальное количество быстрых углеводов и минимальное содержание протеинов позволит быстро набрать вес. Смесь содержит насыщенные жиры – они выступают строительным материалом для мужских гормонов – а вместе с ним начнут расти мышцы.",
             //        Pictures = "/prod_pictures/geiner/Dymatize_Super_Mass.png",
             //        AmountInStock = 60
             //    }
