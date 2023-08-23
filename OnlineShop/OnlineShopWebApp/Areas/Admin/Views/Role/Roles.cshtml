@@ -13,30 +13,9 @@
                     <table class="table mb-0">
                         @for (int i = 0; i < Model.Count; i++)
                         {
-                            var deleteModal = "deleteRoleModal" + (1 + i);
                             var editModal = "editRoleModal" + (1 + i);
                             <tr>
                                 <td class="" style="vertical-align:middle" data-toggle="tooltip" data-placement="top" title="@Model[i].Description">@Model[i].Name</td>
-                                <td style="text-align:end">
-                                    <a href="#" data-toggle="modal" data-target="#@deleteModal" style="display:block;">
-                                        <span class="btn btn-dark" role="button">Удалить</span>
-                                    </a>
-                                    <div id="@deleteModal" class="modal fade">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h4 class="modal-title">Подтверждение</h4>
-                                                    <button class="close" type="button" data-dismiss="modal">×</button>
-                                                </div>
-                                                <div class="modal-body text-left">Вы уверены, что хотите удалить эту роль? Пользователям, которым была присвоена данная роль, присвоится роль по умолчанию!</div>
-                                                <div class="modal-footer">
-                                                        <a asp-area="Admin" asp-controller="Role" asp-action="DeleteRole" asp-route-id="@Model[i].Id" role="button" class="btn btn-default">Удалить</a>
-                                                    <button class="btn btn-default float-right" type="button" data-dismiss="modal">Закрыть</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
                                 <td style="text-align:end">
                                     <a href="#" data-toggle="modal" data-target="#@editModal" style="display:block;">
                                         <span class="btn btn-success" role="button">Изменить</span>
@@ -58,14 +37,7 @@
                                                                 </div>
                                                                 <label for="name" class="col-3 align-self-center col-form-label">Название</label>
                                                                 <div class="col-9 pb-2">
-                                                                    @if (Model[i].Name.ToLower() == "admin" || Model[i].Name.ToLower() == "user")
-                                                                    {
-                                                                        <input style="font-size:12px" type="text" name="roleModel.name" readonly="readonly" class="form-control bg-transparent border-0" id="name" value="@Model[i].Name">
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        <input style="font-size:12px" type="text" name="roleModel.name" class="form-control" id="name" value="@Model[i].Name">
-                                                                    }
+                                                                    <input style="font-size:12px" type="text" name="roleModel.name" readonly="readonly" class="form-control bg-transparent border-0" id="name" value="@Model[i].Name">
                                                                 </div>
                                                                 <div class="col-12 text-center">
                                                                     <span asp-validation-for="@Model[i].Name"></span>

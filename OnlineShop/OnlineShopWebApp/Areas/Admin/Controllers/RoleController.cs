@@ -40,7 +40,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
         {
             var role = await _roleManager.FindByIdAsync(id);
             await _roleManager.DeleteAsync(role);
-            return RedirectToAction("Roles");
+            return RedirectToAction(nameof(Roles));
         }
 
         [HttpPost]
@@ -50,12 +50,11 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
             {
                 var role = await _roleManager.FindByIdAsync(roleModel.Id);
 
-                role.Name= roleModel.Name;
                 role.Description = roleModel.Description;
 
                 await _roleManager.UpdateAsync(role);
             }
-            return RedirectToAction($"Roles");
+            return RedirectToAction(nameof(Roles));
         }
 
         public async Task<IActionResult> ChangeUserRole(string userId)
