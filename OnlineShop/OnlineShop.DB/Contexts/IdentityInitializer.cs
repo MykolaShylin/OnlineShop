@@ -82,7 +82,7 @@ namespace OnlineShop.DB.Contexts
             //    var result = userManager.CreateAsync(moderator, adminPassword).Result;
             //    if (result.Succeeded)
             //    {
-            //        userManager.AddToRoleAsync(admin, Constants.ModeratorRoleName).Wait();
+            //        userManager.AddToRoleAsync(moderator, Constants.ModeratorRoleName).Wait();
             //    }
             //}
         }

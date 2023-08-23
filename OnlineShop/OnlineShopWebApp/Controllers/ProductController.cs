@@ -97,22 +97,23 @@ namespace OnlineShopWebApp.Controllers
         {
             var products = await _products.GetAllAsync();
             
-            var productsView = _mapping.Map<List<MainPageProductsViewModel>>(products);
-            foreach(var product in productsView)
-            {
-                product.Rating = await _feedbackApiClient.GetProductRetingAsync(product.Id);
-            }
-
-            if (searchingProducts.Count> 0)
-            {
-                return View(searchingProducts);
-            }
+            var productsView = _mapping.Map<List<MainPageProductsViewModel>>(products);                       
 
             if (!isAllListProducts)
             {
                 products = await _products.TryGetByCategoryAsync(category);
                 productsView = _mapping.Map<List<MainPageProductsViewModel>>(products);
-            }            
+            }
+
+            foreach (var product in productsView)
+            {
+                product.Rating = await _feedbackApiClient.GetProductRetingAsync(product.Id);
+            }
+
+            if (searchingProducts.Count > 0)
+            {
+                return View(searchingProducts);
+            }
             return View(productsView);
         }
         public async Task<IActionResult> BrandProducts(ProductBrands brand)

@@ -4,10 +4,10 @@
 <div class="row">
     @await Html.PartialAsync("AdminMenu")
     <div class="col-9">
-        <h2>Редактор товара</h2>
+        <h3>Редактор товара</h3>
         <form role="form" method="post" enctype="multipart/form-data">
             <div class="row">
-                <div class="col-4 text-center">
+                <div class="col-3 text-center">
                     <div class="col-12 border-right">
                         <div id="productSlides" class="carousel slide" data-ride="carousel">
                             <ol class="carousel-indicators">
@@ -59,42 +59,42 @@
                         <input name="pictures" value="@picture.Path" hidden="hidden" class="form-control">
                     }
                 </div>
-                <div class="col-8">
+                <div class="col-9 pl-0">
                     <div class="text-danger" style="font-size:small" asp-validation-summary="ModelOnly"></div>
                     <input hidden="hidden" asp-for="Feedbacks" value="@Model.Feedbacks" />
                     <input hidden="hidden" asp-for="Concurrency" value="@Convert.ToBase64String(Model.Concurrency)" />
                     <input hidden="hidden" asp-for="DiscountCost" value="@Convert.ToInt32(Model.DiscountCost)" />
                     <input hidden="hidden" asp-for="DiscountDescription" value="@Model.DiscountDescription" />
                     <div style="font-size:small" class="form-group row">
-                        <label for="category" class="col-3 col-form-label align-self-center pb-2">Категория продукта</label>
+                        <label for="category" class="col-3 col-form-label align-self-center pb-2">Категория</label>
                         <div class="col-9 text-left pb-2">
                             <select asp-for=Category
                                     asp-items="@Html.GetEnumSelectList<ProductCategories>()"
                                     class="btn btn-light" style="font-size:small">
                             </select>
                         </div>
-                        <label for="brand" class="col-3 align-self-center col-form-label">Бренд продукта</label>
+                        <label for="brand" class="col-3 align-self-center col-form-label">Бренд</label>
                         <div class="col-9 text-left pb-2">
                             <select asp-for=Brand
                                     asp-items="@Html.GetEnumSelectList<ProductBrands>()"
                                     class="btn btn-light" style="font-size:small">
                             </select>
                         </div>                        
-                        <label for="name" class="col-3 align-self-center col-form-label">Название продукта</label>
+                        <label for="name" class="col-3 align-self-center col-form-label">Название</label>
                         <div class="col-9 mb-2">
                             <input style="font-size:small" asp-for=Name class="form-control" id="name" value="@Model.Name">
                         </div>
                         <div class="col-12 mb-2">
                             <span asp-validation-for="Name" style="color:red"></span>
                         </div>
-                        <label for="description" class="col-3 col-form-label align-self-center">Описание продукта</label>
+                        <label for="description" class="col-3 col-form-label align-self-center">Описание</label>
                         <div class="col-9 mb-2">
                             <textarea style="height:100px; font-size:small" asp-for=Description class="form-control" id="description">@Model.Description</textarea>
                         </div>
                         <div class="col-12 mb-2">
                             <span asp-validation-for="Description" style="color:red"></span>
                         </div>
-                        <label for="cost" class="col-3 align-self-center col-form-label">Цена продукта, грн</label>
+                        <label for="cost" class="col-3 align-self-center col-form-label">Цена, грн</label>
                         <div class="col-9 mb-2">
                             <input style="font-size:small" type="number" asp-for=Cost class="form-control" id="cost" value="@Convert.ToInt32(Model.Cost)">
                         </div>

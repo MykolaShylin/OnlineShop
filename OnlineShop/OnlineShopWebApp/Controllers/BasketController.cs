@@ -43,12 +43,12 @@ namespace OnlineShopWebApp.Controllers
             var basketView = _mapping.Map<BasketViewModel>(basket);
             return View(basketView);
         }
-        public async Task<IActionResult> Buying(int prodId, int flavorId, int amount)
+        public async Task<IActionResult> Buying(int productId, int flavorId, int amount)
         {            
-            var product = await _products.TryGetByIdAsync(prodId);
+            var product = await _products.TryGetByIdAsync(productId);
             var userId = (await _userManager.FindByNameAsync(User.Identity.Name)).Id;
-            var discount = (await _discounts.GetByProductIdAsync(prodId)).DiscountPercent;
-            var productInfo = new ChoosingProductInfo { ProductId = prodId, FlavorId = flavorId, Cost = product.Cost, DiscountPercent = discount };
+            var discount = (await _discounts.GetByProductIdAsync(productId)).DiscountPercent;
+            var productInfo = new ChoosingProductInfo { ProductId = productId, FlavorId = flavorId, Cost = product.Cost, DiscountPercent = discount };
             await _baskets.AddAsync(userId, product, productInfo, amount);
             return RedirectToAction(nameof(CheckOut));
         }            

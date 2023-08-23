@@ -36,7 +36,7 @@
                     }
                     <td>@basketItem.TotalAmount</td>
                     <td>
-                        <a class="btn btn-sm btn-outline-success" asp-area="" asp-controller="Basket" asp-action="Buying" asp-route-prodId="@basketItem.Product.Id" asp-route-flavorId="@basketItem.ProductInfo.FlavorId" asp-route-amount="@basketItem.Amount" role="button">+</a>
+                        <a class="btn btn-sm btn-outline-success" asp-area="" asp-controller="Basket" asp-action="Buying" asp-route-productId="@basketItem.Product.Id" asp-route-flavorId="@basketItem.ProductInfo.FlavorId" asp-route-amount="@basketItem.Amount" role="button">+</a>
                     </td>
                     <td>
                         <a class="btn btn-sm btn-outline-danger" asp-area="" asp-controller="Basket" asp-action="Deleting" asp-route-prodId="@basketItem.Product.Id" asp-route-flavorId="@basketItem.ProductInfo.FlavorId" asp-route-amount="@basketItem.Amount" role="button">-</a>

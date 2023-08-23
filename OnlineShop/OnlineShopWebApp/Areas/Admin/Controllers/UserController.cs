@@ -89,17 +89,18 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
                 {
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(userDb);
                     var callbackUrl = Url.Action(
-                        "ConfirmEmail",
-                        "UserRegistration",
+                        nameof(ConfirmEmail),
+                        "User",
                         values: new { userId = userDb.Id, code = code },
                         protocol: HttpContext.Request.Scheme);
 
                     await _emailService.SendEmailConfirmAsync(userDb.Email, callbackUrl);
 
-                    await _signInManager.SignInAsync(userDb, false);
-
+                    //userDb.EmailConfirmed= true;
+                    //await _userManager.UpdateAsync(userDb);
                     await _userManager.AddToRoleAsync(userDb, Constants.UserRoleName);
-                    return RedirectToAction("Users");
+                    
+                    return RedirectToAction(nameof(Users));
                 }
                 else
                 {
@@ -198,6 +199,33 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
                 }                
             }
             return View(user);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> ConfirmEmail(string userId, string code)
+        {
+            if (userId == null || code == null)
+            {
+                return View("EmailConfirmError");
+            }
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return View("EmailConfirmError");
+            }
+            var result = await _userManager.ConfirmEmailAsync(user, code);
+            if (result.Succeeded)
+            {
+                await _signInManager.SignInAsync(user, false);
+                await _signInManager.PasswordSignInAsync(user.UserName, user.PasswordHash, true, false);
+                await _emailService.SendRegistrationConfirmMessageAsync(user.Email, null);
+                return Redirect("/Home/Index");
+            }
+            else
+            {
+                return View("EmailConfirmError");
+            }
         }
 
     }

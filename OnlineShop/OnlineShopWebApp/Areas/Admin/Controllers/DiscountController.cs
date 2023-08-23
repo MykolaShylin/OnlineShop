@@ -109,7 +109,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
                 var product = await _products.TryGetByIdAsync(productId);
                 await _discounts.ChangeDiscountAsync(product, oldDiscountId, newDiscountId, discountDescription);
             }
-            return Redirect($"ProductDiscountInfo?productId={productId}&discountId={newDiscountId}");
+            return RedirectToAction(nameof(ProductDiscountInfo), new {productId=productId, discountId=newDiscountId});
         }
     }
 }
