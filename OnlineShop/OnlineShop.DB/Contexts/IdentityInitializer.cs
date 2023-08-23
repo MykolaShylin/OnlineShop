@@ -77,14 +77,14 @@ namespace OnlineShop.DB.Contexts
                     userManager.AddToRoleAsync(admin, Constants.AdminRoleName).Wait();
                 }
             }
-            //if (userManager.FindByNameAsync(moderator.UserName).Result == null)
-            //{
-            //    var result = userManager.CreateAsync(moderator, adminPassword).Result;
-            //    if (result.Succeeded)
-            //    {
-            //        userManager.AddToRoleAsync(moderator, Constants.ModeratorRoleName).Wait();
-            //    }
-            //}
+            if (userManager.FindByNameAsync(moderator.UserName).Result == null)
+            {
+                var result = userManager.CreateAsync(moderator, adminPassword).Result;
+                if (result.Succeeded)
+                {
+                    userManager.AddToRoleAsync(moderator, Constants.ModeratorRoleName).Wait();
+                }
+            }
         }
     }
 }
