@@ -90,7 +90,6 @@ namespace OnlineShopWebApp.Controllers
             var userId = (await _userManager.FindByNameAsync(User.Identity.Name)).Id;
             var comparingProducts = await _comparingProducts.GetAllAsync(userId);
             var comparingView = _mapping.Map<List<ComparingProductsViewModel>>(comparingProducts);
-            ViewBag.UserId = userId;
             return View(comparingView);
         }
         public async Task<IActionResult> CategoryProducts(bool isAllListProducts, ProductCategories category, List<MainPageProductsViewModel> searchingProducts)
@@ -150,7 +149,7 @@ namespace OnlineShopWebApp.Controllers
             sortingProducts.AddRange(nameSortingProducts);
             sortingProducts.AddRange(categorySortingProducts);
 
-            var productsView = _mapping.Map<List<MainPageProductsViewModel>>(sortingProducts);
+            var productsView = _mapping.Map<List<MainPageProductsViewModel>>(sortingProducts.Distinct());
 
             return View(nameof(CategoryProducts), productsView);
         }

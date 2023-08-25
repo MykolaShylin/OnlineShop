@@ -25,6 +25,7 @@ namespace OnlineShopWebApp.Models
         [Required(ErrorMessage = "Цена не указана")]
         public decimal Cost { get; set; }
         public List<FlavorViewModel> Flavors { get; set; }
+        public FlavorViewModel Flavor { get; set; }
 
         [Required(ErrorMessage = "Описание не добавлено")]
         [StringLength(2000, MinimumLength = 20, ErrorMessage = "Допускается от 20 до 2000 символов")]

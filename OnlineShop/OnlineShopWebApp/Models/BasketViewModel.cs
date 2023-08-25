@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OnlineShop.DB.Models;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -8,7 +9,7 @@ namespace OnlineShopWebApp.Models
     public class BasketViewModel
     {
         public Guid Id { get; set; }
-        public string CustomerId { get; set; }
+        public UserViewModel Customer { get; set; }
 
         public List<BasketItemViewModel> Items { get; set; }
 

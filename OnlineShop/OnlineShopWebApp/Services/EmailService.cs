@@ -23,7 +23,7 @@ namespace OnlineShopWebApp.Services
             var orderDetail = string.Empty;
             foreach (var item in items)
             {
-                orderDetail += $"<h4>Название: {@EnumHelper.GetDisplayName(item.Product.Brand)} - {item.Product.Name} - {item.Product.Flavors.First(x => x.Id == item.ProductInfo.FlavorId).Name}</h4>\r\n" +                                
+                orderDetail += $"<h4>Название: {@EnumHelper.GetDisplayName(item.Product.Brand)} - {item.Product.Name} - {item.Product.Flavor.Name}</h4>\r\n" +                                
                                 $"<h4>Количество: {item.Amount}</h4>\r\n" +
                                 $"<h4>Скидка: {item.ProductInfo.DiscountPercent}%</h4>\r\n" +
                                 $"<h4>Цена: {item.Product.DiscountCost}</h4>\r\n" +

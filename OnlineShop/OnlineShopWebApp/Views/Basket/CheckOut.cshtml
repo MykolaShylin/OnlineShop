@@ -23,7 +23,7 @@
             {
                 <tr style="text-align:center">
                     <td>@basketItem.Product.Name</td>
-                    <td>@basketItem.Product.Flavors.First(x=>x.Id == basketItem.ProductInfo.FlavorId).Name</td>
+                    <td>@basketItem.Product.Flavor.Name</td>
                     <td>@basketItem.Amount</td>
                     <td>@basketItem.Product.Cost</td>
                     @if (basketItem.Product.Cost == basketItem.Product.DiscountCost)

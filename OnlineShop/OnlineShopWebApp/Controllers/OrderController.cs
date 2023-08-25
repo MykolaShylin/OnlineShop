@@ -12,6 +12,8 @@ using Microsoft.EntityFrameworkCore;
 using OnlineShopWebApp.Services;
 using AutoMapper;
 using System;
+using Org.BouncyCastle.Bcpg;
+using System.Linq;
 
 namespace OnlineShopWebApp.Controllers
 {
@@ -54,7 +56,13 @@ namespace OnlineShopWebApp.Controllers
                 opt.BeforeMap((src, dest) => src.OrderDateTime = DateTime.UtcNow.ToString());
             });
 
-            await _emailService.SendOrderConfirmEmailAsync(user.Email, _mapping.Map<List<BasketItemViewModel>>(basketItems));
+            var basketItemsView = _mapping.Map<List<BasketItemViewModel>>(basketItems);
+            foreach(var item in basketItemsView)
+            {
+                item.Product.Flavor = item.Product.Flavors.First(x => x.Id == item.ProductInfo.FlavorId);
+            }
+
+            await _emailService.SendOrderConfirmEmailAsync(user.Email, basketItemsView);
 
             await _products.ReduceAmountInStock(orderDb.Items);
             await _closedPurchases.SaveAsync(orderDb);

@@ -29,7 +29,7 @@ namespace OnlineShopWebApp.FeedbackApi
 
         public async Task<double> GetProductRetingAsync(int productId)
         {
-            return (await GetFeedbacksAsync(productId)).Count() == 0 ? 0 : Math.Round((await GetFeedbacksAsync(productId)).Select(x => x.Grade).Average(), 1);
+            return (await GetFeedbacksAsync(productId)).Count() == 0 ? 0 : Math.Round((await GetFeedbacksAsync(productId)).Select(x => x.Grade).Average(), 2);
             
         }
 

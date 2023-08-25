@@ -64,8 +64,17 @@ namespace OnlineShopWebApp.Controllers
             var userId = (await _userManager.FindByNameAsync(User.Identity.Name)).Id;
             var customer = await _userManager.FindByNameAsync(User.Identity.Name);
             var basket = await _baskets.TryGetExistingByUserIdAsync(userId);
-            var basketView = _mapping.Map<BasketViewModel>(basket);
-            ViewBag.Customer = _mapping.Map<UserViewModel>(customer);
+            var basketView = _mapping.Map<Basket, BasketViewModel>(basket, opt =>
+            {
+                opt.AfterMap((src, dest) =>
+                {
+                    dest.Customer = _mapping.Map<UserViewModel>(customer);
+                    foreach (var item in dest.Items)
+                    {
+                        item.Product.Flavor = item.Product.Flavors.First(x => x.Id == item.ProductInfo.FlavorId);
+                    }
+                });          
+            });
             return View(basketView);
         }
 

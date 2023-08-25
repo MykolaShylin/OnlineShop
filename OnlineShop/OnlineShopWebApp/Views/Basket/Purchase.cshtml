@@ -1,6 +1,5 @@
 ﻿@model BasketViewModel
 
-
 <form role="form" method="post">
     <div class="row">
         <div class="col-8">
@@ -8,90 +7,61 @@
             <table class="col-10">
                 @foreach (var basketItem in Model.Items)
                 {
-                    @if (basketItem.Product.Cost == basketItem.Product.DiscountCost)
+                    <tr>
+                        <td rowspan="4"><img src="@basketItem.Product.Picture.Path" width="150"></td>
+                        <td>
+                            <label for="productname">Название:</label>
+                            <input id="productname" class="border-0 bg-white w-75" value="@basketItem.Product.Name" readonly="readonly" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="productflawor">Вкус:</label>
+                            <input id="productflawor" class="border-0 bg-white" value="@basketItem.Product.Flavor.Name" readonly="readonly" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="productamount">Количество:</label>
+                            <input id="productamount" class="border-0 bg-white" value="@basketItem.Amount" readonly="readonly" />
+                        </td>
+                    </tr>
+                    @if (basketItem.Product.Cost != basketItem.Product.DiscountCost)
                     {
-                        <tr>
-                            <td rowspan="4"><img src="@basketItem.Product.Picture.Path" width="150"></td>
-                            <td>
-                                <label for="productname">Название:</label>
-                                <input id="productname" class="border-0 bg-white w-75" value="@basketItem.Product.Name" readonly="readonly" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label for="productflawor">Вкус:</label>
-                                <input id="productflawor" class="border-0 bg-white" value="@basketItem.Product.Flavors.First(x=>x.Id == basketItem.ProductInfo.FlavorId).Name" readonly="readonly" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label for="productamount">Количество:</label>
-                                <input id="productamount" class="border-0 bg-white" value="@basketItem.Amount" readonly="readonly" />
-                            </td>
-                        </tr>
-                        <tr style="border-bottom:solid">
-                            <td>
-                                <label for="productcost">Цена:</label>
-                                <input id="productcost" class="border-0 bg-white" value="@basketItem.TotalAmount" readonly="readonly" />
-                            </td>
-                        </tr>
-                    }
-                    else
-                    {
-                        <tr>
-                            <td rowspan="5"><img src="@basketItem.Product.Picture.Path" width="150"></td>
-                            <td>
-                                <label for="productname">Название:</label>
-                                <input id="productname" class="border-0 bg-white w-75" value="@basketItem.Product.Name" readonly="readonly" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label for="productflawor">Вкус:</label>
-                                <input id="productflawor" class="border-0 bg-white" value="@basketItem.Product.Flavors.First(x=>x.Id == basketItem.ProductInfo.FlavorId).Name" readonly="readonly" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label for="productamount">Количество:</label>
-                                <input id="productamount" class="border-0 bg-white" value="@basketItem.Amount" readonly="readonly" />
-                            </td>
-                        </tr>
                         <tr>
                             <td>
                                 <label for="discount">Скидка:</label>
                                 <input id="discount" style="color:olivedrab" class="border-0 bg-white" value="@basketItem.ProductInfo.DiscountPercent% - @basketItem.Product.DiscountDescription" readonly="readonly" />
                             </td>
                         </tr>
-                        <tr style="border-bottom:solid">
-                            <td>
-                                <label for="productcost">Цена:</label>
-                                <input id="productcost" class="border-0 bg-white" value="@basketItem.TotalAmount" readonly="readonly" />
-                            </td>
-                        </tr>
                     }
-
+                    <tr style="border-bottom:solid">
+                        <td>
+                            <label for="productcost">Цена:</label>
+                            <input id="productcost" class="border-0 bg-white" value="@basketItem.TotalAmount" readonly="readonly" />
+                        </td>
+                    </tr>
                 }
             </table>
             <div class="form-group invisible">
-                <input name="deliveryinfo.customerid" type="text" class="form-control" value="@ViewBag.Customer.Id" readonly="readonly" />
+                <input name="deliveryinfo.customerid" type="text" class="form-control" value="@Model.Customer.Id" readonly="readonly" />
             </div>
             <h2>Контактные данные</h2>
             <div class="form-group">
                 <label for="name">Имя</label>
-                <input name="deliveryinfo.name" type="text" class="form-control" id="name" value="@ViewBag.Customer.Name" placeholder="Введите ваше имя" required />
+                <input name="deliveryinfo.name" type="text" class="form-control" id="name" value="@Model.Customer.Name" placeholder="Введите ваше имя" required />
             </div>
             <div class="form-group">
                 <label for="sername">Фамилия</label>
-                <input name="deliveryinfo.sername" type="text" class="form-control" required id="sername" value="@ViewBag.Customer.SerName" placeholder="Введите вашу фамилию" />
+                <input name="deliveryinfo.sername" type="text" class="form-control" required id="sername" value="@Model.Customer.SerName" placeholder="Введите вашу фамилию" />
             </div>
             <div class="form-group">
                 <label for="tel">Номер телефона</label>
-                <input name="deliveryinfo.phone" type="tel" class="form-control" id="tel" required value="@ViewBag.Customer.Phone" placeholder="Введите ваш номер" />
+                <input name="deliveryinfo.phone" type="tel" class="form-control" id="tel" required value="@Model.Customer.Phone" placeholder="Введите ваш номер" />
             </div>
             <div class="form-group">
                 <label for="email">Email</label>
-                <input name="deliveryinfo.email" type="email" class="form-control" id="email" value="@ViewBag.Customer.Email" placeholder="Введите вашу почту" />
+                <input name="deliveryinfo.email" type="email" class="form-control" id="email" value="@Model.Customer.Email" placeholder="Введите вашу почту" />
             </div>
             <div class="form-group">
                 <label for="city">Город доставки</label>
@@ -164,7 +134,7 @@
                         <input style="background-color:white; color:coral; font-size:35px; border:none; font-weight:500" name="ordersum" readonly="readonly" value="@Model.Cost грн" />
                     </div>
                     <div style="text-align:center;" class="col-12 pt-3">
-                        <a href="/basket/checkout?userId=@ViewBag.Customer.Id" style="font-weight:200; border-bottom-style:dotted">РЕДАКТИРОВАТЬ ЗАКАЗ</a><br />
+                        <a href="/basket/checkout?userId=@Model.Customer.Id" style="font-weight:200; border-bottom-style:dotted">РЕДАКТИРОВАТЬ ЗАКАЗ</a><br />
                         <button class="btn btn-warning btn-block" style="margin-top:10px" type="submit" asp-area="" asp-controller="Order" asp-action="Ordering">Оформить заказ</button>
                     </div>
                 </div>
