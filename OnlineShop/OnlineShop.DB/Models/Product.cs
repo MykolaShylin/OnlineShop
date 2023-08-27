@@ -25,7 +25,8 @@ namespace OnlineShop.DB.Models
         public int AmountInStock { get; set; }
         public List<Flavor> Flavors { get; set; } = new List<Flavor>();
         public List<ProductPicture> Pictures { get; set; } = new List<ProductPicture>();
-        public List<BasketItem> BasketItems { get; set; } = new List<BasketItem>();
+        public List<BasketItem> BasketItems { get; set; } = new List<BasketItem>();        
+        public List<FavoriteProduct> FavoriteProducts { get; set; } = new List<FavoriteProduct>();
 
         [Timestamp]
         public byte[] Concurrency { get; set; }

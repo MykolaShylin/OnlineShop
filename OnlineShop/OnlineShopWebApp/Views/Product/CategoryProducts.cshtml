@@ -3,9 +3,9 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <div class="row no-gutters">
-    @if(Model.Count == 0)
+    @if (Model.Count == 0)
     {
-        <h3>Скидок и акций пока нет</h3>
+        <h3>Список пуст</h3>
     }
     @foreach (var product in Model)
     {
@@ -15,7 +15,7 @@
                 <div class="card-header bg-white h-100" style="border:none;">
                     <a asp-area="" asp-controller="Product" asp-action="index" asp-route-prodId="@product.Id"><img class="card-img-top" src="@product.Picture.Path"></a>
                 </div>
-                <div class="card-body pt-0">                     
+                <div class="card-body pt-0">
                     @{
                         var starSize = 25;
                     }
@@ -54,7 +54,7 @@
                                     <use xlink:href="#star"></use>
                                     <use href="#star" fill="none" stroke="grey"></use>
                                 </svg>
-                            break;
+                                break;
                             case < 1:
                                 <svg class="c-icon active" width="@starSize" height="@starSize">
                                     <use xlink:href="#star" mask="url(#@maskId)"></use>
@@ -216,6 +216,14 @@
                     {
                         <h4 style="color:goldenrod">Нет в наличии</h4>
                         <a class="btn btn-dark disabled" asp-area="" asp-controller="Basket" asp-action="Buying" asp-route-productId="@product.Id" asp-route-flavorId="@product.Flavor.Id" asp-route-amount="1" role="button">Добавить в корзину</a>
+                    }
+                    @if(product.isInFavorites)
+                    {
+                        <p class="float-right m-0" title="Товар уже в списке желаемого"><img style="width:40px" src="/icons/in_favorite_icon.png"/></p>
+                    }
+                    else
+                    {
+                        <a class="float-right" title="В избранное" asp-area="" asp-controller="Product" asp-action="AddFavorite" asp-route-productId="@product.Id"><img style="width:40px" src="/icons/favorite_main_icon.png" /></a>
                     }
                 </div>
             </div>

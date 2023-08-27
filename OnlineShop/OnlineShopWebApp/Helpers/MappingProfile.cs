@@ -53,6 +53,7 @@ namespace OnlineShopWebApp.Helpers
                 .ForMember(x => x.Phone, opt => opt.MapFrom(x => x.PhoneNumber));
 
             CreateMap<Product, ProductViewModel>()
+                .ForMember(x => x.Flavor, opt => opt.MapFrom(x => x.Flavors.First()))
                 .ForMember(x => x.DiscountDescription, opt => opt.MapFrom(x => x.DiscountDescription ?? string.Empty))
                 .ForMember(x => x.Cost, opt => opt.MapFrom(x => Math.Truncate(x.Cost)))
                 .ForMember(x => x.DiscountCost, opt => opt.MapFrom(x => Math.Truncate(x.DiscountCost)))
@@ -70,6 +71,8 @@ namespace OnlineShopWebApp.Helpers
             CreateMap<BasketItem, BasketItemViewModel>().ReverseMap();
 
             CreateMap<Basket, BasketViewModel>().ReverseMap();
+
+            CreateMap<FavoriteProduct, FavoriteProductViewModel>().ReverseMap();
 
             CreateMap<Order, OrderViewModel>()
                 .AfterMap((src, dest) => dest.deliveryInfo.CustomerId = dest.deliveryInfo.CustomerId.ToString().Substring(0, 10))

@@ -21,7 +21,7 @@ namespace OnlineShopWebApp.FeedbackApi
             _httpClient = _httpClientFactory.CreateClient("FeedbackApi");
         }
 
-        public async Task<List<Feedback>> GetFeedbacksAsync(int productId) 
+        public async Task<List<Feedback>> GetFeedbacksAsync(int productId)
         {
             var feedbacks = await _httpClient.GetFromJsonAsync<List<Feedback>>($"/Feedback/GetAllByProductId?productId={productId}");
             return feedbacks;
@@ -30,7 +30,7 @@ namespace OnlineShopWebApp.FeedbackApi
         public async Task<double> GetProductRetingAsync(int productId)
         {
             return (await GetFeedbacksAsync(productId)).Count() == 0 ? 0 : Math.Round((await GetFeedbacksAsync(productId)).Select(x => x.Grade).Average(), 2);
-            
+
         }
 
         public async Task AddAsync(AddFeedbackModel newFeedback)

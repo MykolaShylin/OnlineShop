@@ -15,7 +15,7 @@ namespace OnlineShopWebApp.FeedbackApi.Models
 
         [Required(ErrorMessage = "Отзыв не написан")]
         public string Text { get; set; }
-        
+
         public int Grade { get; set; }
     }
 }

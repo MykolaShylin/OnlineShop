@@ -1,0 +1,10 @@
+﻿@model int
+
+@if (Model > 0)
+{
+    <a asp-area="" asp-controller="Product" asp-action="Favorites" style="color:darkgrey"><img src="/icons/favorite_header_icon.png" width="40"><span style="color:darkmagenta">@Model</span></a>
+}
+else
+{
+    <a asp-area="" asp-controller="Product" asp-action="Favorites"><img src="/icons/favorite_header_icon.png" width="40"></a>
+}

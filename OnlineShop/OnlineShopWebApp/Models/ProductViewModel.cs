@@ -38,6 +38,7 @@ namespace OnlineShopWebApp.Models
 
         [Required(ErrorMessage = "Количество не указано")]
         public int AmountInStock { get; set; }
+        public bool isInFavorites { get; set; } = false;
 
         public List<IFormFile> UploadedFile { get; set; }
 

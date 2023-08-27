@@ -3,7 +3,7 @@ using System;
 
 namespace OnlineShopWebApp.FeedbackApi.Models
 {
-    
+
     public class Feedback
     {
         public int Id { get; set; }

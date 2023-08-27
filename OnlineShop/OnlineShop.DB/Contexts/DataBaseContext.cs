@@ -22,7 +22,7 @@ namespace OnlineShop.DB.Contexts
         public DbSet<Order> ClosedOrders { get; set; }
         public DbSet<ProductPicture> Pictures { get; set; }
         public DbSet<Discount> Discounts { get; set; }
-
+        public DbSet<FavoriteProduct> FavoriteProduct { get; set; }
         public DbSet<GoogleMapShopInfo> ShopContacts { get; set; }
 
 
@@ -33,7 +33,6 @@ namespace OnlineShop.DB.Contexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
             modelBuilder.Entity<Product>().Property(x => x.Concurrency)
             .IsConcurrencyToken(true)
             .ValueGeneratedOnAddOrUpdate()

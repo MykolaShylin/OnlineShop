@@ -23,6 +23,8 @@ namespace OnlineShopWebApp.Models
 
         public double Rating { get; set; }
 
+        public bool isInFavorites { get; set; } = false;
+
         public int RatingFillPercent
         {
             get

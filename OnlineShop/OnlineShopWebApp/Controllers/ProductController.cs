@@ -12,10 +12,10 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using OnlineShopWebApp.FeedbackApi;
-using OnlineShopWebApp.FeedbackApi.Models;
 using AutoMapper;
 using Microsoft.CodeAnalysis;
+using OnlineShopWebApp.FeedbackApi.Models;
+using OnlineShopWebApp.FeedbackApi;
 
 namespace OnlineShopWebApp.Controllers
 {
@@ -28,7 +28,8 @@ namespace OnlineShopWebApp.Controllers
         private readonly FeedbackApiClient _feedbackApiClient;
         private readonly IMapper _mapping;
         private readonly IDiscount _discounts;
-        public ProductController(IProductsStorage products, IProductComparer comparingProducts, IFlavor flavors, UserManager<User> userManager, FeedbackApiClient feedbackApiClient, IMapper mapping, IDiscount discounts)
+        private readonly IFavorite _favorites;
+        public ProductController(IProductsStorage products, IProductComparer comparingProducts, IFlavor flavors, UserManager<User> userManager, FeedbackApiClient feedbackApiClient, IMapper mapping, IDiscount discounts, IFavorite favorites)
         {
             this._products = products;
             _comparingProducts = comparingProducts;
@@ -37,20 +38,60 @@ namespace OnlineShopWebApp.Controllers
             _feedbackApiClient = feedbackApiClient;
             _mapping = mapping;
             _discounts = discounts;
+            _favorites = favorites;
         }
         public async Task<IActionResult> Index(int prodId)
         {
             var feedbacks = await _feedbackApiClient.GetFeedbacksAsync(prodId);
             var product = await _products.TryGetByIdAsync(prodId);
+
+            var user = User.Identity.IsAuthenticated ? await _userManager.FindByNameAsync(User.Identity.Name) : null;
+
+            var favoriteProducts = user != null ? await _favorites.GetByUserIdAsync(user.Id) : null;
+
             if (product != null)
             {
                 var productView = _mapping.Map<ProductViewModel>(product);
                 productView.Feedbacks = _mapping.Map<List<FeedbackViewModel>>(feedbacks);
+
+                if (favoriteProducts != null)
+                {
+                    if (favoriteProducts.Products.Any(x => x.Id == product.Id))
+                    {
+                        productView.isInFavorites = true;
+                    }
+                }
+
                 return View(productView);
             }
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }    
+        }
 
+        [Authorize]
+        public async Task<IActionResult> AddFavorite(int productId)
+        {
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            var product = await _products.TryGetByIdAsync(productId);
+            await _favorites.AddAsync(product, user.Id);
+            return RedirectToAction(nameof(Favorites));
+        }
+
+        [Authorize]
+        public async Task<IActionResult> RemoveFavorite(int productId)
+        {
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            var product = await _products.TryGetByIdAsync(productId);
+            await _favorites.DeleteAsync(product, user.Id);
+            return RedirectToAction(nameof(Favorites));
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Favorites()
+        {
+            var userId = (await _userManager.FindByNameAsync(User.Identity.Name)).Id;
+            var favorites = _mapping.Map<FavoriteProductViewModel>(await _favorites.GetByUserIdAsync(userId));
+            return View(favorites);
+        }
 
         public async Task<IActionResult> DeleteFeedbackAsync(int feedbackId, int productId)
         {
@@ -74,7 +115,7 @@ namespace OnlineShopWebApp.Controllers
             var product = await _products.TryGetByIdAsync(productId);
             var flavor = await _flavors.TryGetByIdAsync(flavorId);
             await _comparingProducts.AddAsync(userId, product, flavor);
-            return RedirectToAction(nameof(Index), new { prodId = productId });
+            return RedirectToAction(nameof(CheckComparer));
         }
 
         [Authorize]
@@ -94,26 +135,27 @@ namespace OnlineShopWebApp.Controllers
         }
         public async Task<IActionResult> CategoryProducts(bool isAllListProducts, ProductCategories category, List<MainPageProductsViewModel> searchingProducts)
         {
-            var products = await _products.GetAllAsync();
+            var products = isAllListProducts ? await _products.GetAllAsync() : await _products.TryGetByCategoryAsync(category);
             
-            var productsView = _mapping.Map<List<MainPageProductsViewModel>>(products);                       
+            var productsView = _mapping.Map<List<MainPageProductsViewModel>>(products);
 
-            if (!isAllListProducts)
-            {
-                products = await _products.TryGetByCategoryAsync(category);
-                productsView = _mapping.Map<List<MainPageProductsViewModel>>(products);
-            }
+            var user = User.Identity.IsAuthenticated ? await _userManager.FindByNameAsync(User.Identity.Name) : null;
+
+            var favoriteProducts = user != null ? await _favorites.GetByUserIdAsync(user.Id) : null;
 
             foreach (var product in productsView)
             {
                 product.Rating = await _feedbackApiClient.GetProductRetingAsync(product.Id);
-            }
 
-            if (searchingProducts.Count > 0)
-            {
-                return View(searchingProducts);
+                if(favoriteProducts != null)
+                {
+                    if(favoriteProducts.Products.Any(x=>x.Id == product.Id))
+                    {
+                        product.isInFavorites= true;
+                    }
+                }
             }
-            return View(productsView);
+            return searchingProducts.Count > 0 ? View(searchingProducts) : View(productsView);
         }
         public async Task<IActionResult> BrandProducts(ProductBrands brand)
         {

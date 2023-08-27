@@ -69,44 +69,59 @@
                                     <label class="form-check-label" for="flavor">@Model.Flavors[i].Name</label>
                                 </div>
                             }
-                        }
-                        
-                </p>
-                <div class="form-group row">
-                    <label for="amount" class="col-3 col-form-label align-self-center">Количество, шт</label>
-                    <div class="col-3">
-                        <input type="number" name="amount" class="form-control" id="amount" value="1"> 
-                    </div>
-                </div>                
+                        }                        
+                </p>                                
                 <input type="text" hidden="hidden" value="@Model.Id" name="productId" />
-                @if(Model.AmountInStock > 0)
-                {
-                    if(Model.Cost == Model.DiscountCost)
-                    {
-                        <h5 style = "color:royalblue; font-size: 25px">Цена:<span style = "color:red; font-size: 50px"> @Model.Cost грн</span></h5><br />
-                    }
-                    else
-                    {
-                        <h5 class="font-weight-bold">Обратите внимание, на товар действует скидка!</h5>
-                        <h5>Причина: <span class="alert-danger">@Model.DiscountDescription</span></h5><br />
-                        <h5 style = "color:royalblue; font-size: 25px">Цена со скидкой:<span style = "color:red; font-size: 50px"> @Model.DiscountCost грн</span></h5><br />
-                    }
-                    <div class="btn-group">
-                        <button class="btn btn-outline-success" type="submit" style="margin-right:20px" asp-area="" asp-controller="Basket" asp-action="Buying">Добавить в корзину</button>
-                        <button class="btn btn-outline-info" style="margin-right:20px" asp-controller="Product" asp-action="Comparing">Добавить к сравнению</button>
-                        <a class="btn btn-outline-dark" style="float:right" asp-area="" asp-controller="Product" asp-action="CategoryProducts" asp-route-isAllListProducts="@true" role = "button">Продолжить покупки </a>
-                    </div>
-                }
-                else
-                {
-                    <h5 class="font-weight-bold" style="color:goldenrod">Товара нет в наличии!</h5><br />
-
-                    <div class="btn-group ">
-                    <a class="btn btn-outline-success disabled" style="margin-right:20px" asp-area="" asp-controller="Basket" asp-action="Buying">Добавить в корзину</a>
-                    <button class="btn btn-outline-info" style="margin-right:20px" asp-controller="Product" asp-action="Comparing">Добавить к сравнению</button>
-                    <a class="btn btn-outline-dark" style="float:right" asp-area="" asp-controller="Product" asp-action="CategoryProducts" asp-route-isAllListProducts="@true" role = "button">Продолжить покупки </a>
-                    </div>
-                }
+                <div class="row p-0">                        
+                        <div class="col-6 m-0">
+                            <div class="form-group row">
+                                <label for="amount" class="col-6 col-form-label">Количество, шт</label>
+                                <div class="col-5">
+                                    <input type="number" name="amount" class="form-control" id="amount" value="1"> 
+                                </div>
+                            </div>
+                        @if(Model.AmountInStock > 0)
+                        {
+                            if(Model.Cost == Model.DiscountCost)
+                            {
+                                <h5 style = "color:royalblue; font-size: 25px">Цена:<span style = "color:red; font-size: 50px"> @Model.Cost грн</span></h5><br />
+                            }
+                            else
+                            {
+                                <h5 class="font-weight-bold">Обратите внимание, на товар действует скидка!</h5>
+                                <h5>Причина: <span class="alert-danger">@Model.DiscountDescription</span></h5><br />
+                                <h5 style = "color:royalblue; font-size: 25px">Цена со скидкой:<span style = "color:red; font-size: 50px"> @Model.DiscountCost грн</span></h5>
+                            }
+                    
+                            <button class="btn btn-outline-success" type="submit" asp-area="" asp-controller="Basket" asp-action="Buying">Добавить в корзину</button>                     
+                        }
+                        else
+                        {
+                            <h5 class="font-weight-bold" style="color:goldenrod">Товара нет в наличии!</h5><br />
+                            <a class="btn btn-outline-success disabled" asp-area="" asp-controller="Basket" asp-action="Buying">Добавить в корзину</a>
+                        }
+                    </div>   
+                    <div class="col-6 m-0 align-self-end">
+                        <div class="row p-0 justify-content-between">                            
+                            <div class="col-auto m-0">
+                                 <a asp-area="" asp-controller="Product" asp-action="Comparing" asp-route-productId="@Model.Id" asp-route-flavorId="1" title="Добавить к сравнению"><img src="/icons/main_compare_icon.png"/></a>
+                            </div>
+                            <div class="col-auto m-0">
+                                @if(!Model.isInFavorites)
+                                {
+                                    <a asp-area="" asp-controller="Product" asp-action="AddFavorite" asp-route-productId="@Model.Id" title="Добавить в избранное"><img src="/icons/finger_favorite_icon.png"/></a>
+                                }
+                                else
+                                {
+                                    <p class="m-0 disabled" title="Товар уже в списке желаемого"><img src="/icons/finger_favorite_icon.png"/></p>
+                                }
+                            </div>
+                            <div class="col-auto m-0">
+                                 <a asp-area="" asp-controller="Product" asp-action="CategoryProducts" asp-route-isAllListProducts="@true" title="Продолжить покупки"><img src="/icons/back_icon.png"/></a>
+                            </div>
+                        </div>
+                    </div> 
+                </div>                                              
             </form>
         </div>
     </div>
