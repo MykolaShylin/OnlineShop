@@ -2,9 +2,9 @@
 
 @if(Model > 0)
 {
-    <a asp-area="" asp-controller="Basket" asp-action="Checkout" class="btn">
+    <a asp-area="" asp-controller="Basket" asp-action="Checkout" class="position-relative">
         <img src="/icons/basket_icon.png" width="40">
-        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning" style="font-size:15px">
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill border border-light bg-warning" style="font-size:13px; color:black">
             @Model
         </span>
     </a>
