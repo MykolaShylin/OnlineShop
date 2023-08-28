@@ -2,7 +2,12 @@
 
 @if (Model > 0)
 {
-    <a href="/product/checkcomparer" style="color:darkgrey"><img src="/icons/compare_icon.png" width="40"><span style="color:orangered">@Model</span></a>
+    <a asp-area="" asp-controller="Product" asp-action="Checkcomparer" class="btn">
+        <img src="/icons/compare_icon.png" width="40">
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning" style="font-size:15px">
+            @Model
+        </span>
+    </a>
 }
 else
 {
