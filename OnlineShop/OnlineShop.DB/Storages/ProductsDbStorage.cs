@@ -77,6 +77,14 @@ namespace OnlineShop.DB.Storages
 
         }
 
+        public async Task<List<Product>> GetByPageNumber(int pageNumber, int productCount)
+        {
+            var startCounter = ((pageNumber - 1) * productCount);
+            var endCounter = pageNumber * productCount;
+            var products = await GetAllAsync();
+            return products.Where(x => products.IndexOf(x) >= startCounter && products.IndexOf(x) < endCounter).ToList();             
+        }
+
         public async Task ClearAllAsync()
         {
             dataBaseContext.Flavors.RemoveRange(dataBaseContext.Flavors);

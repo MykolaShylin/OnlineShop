@@ -195,5 +195,12 @@ namespace OnlineShopWebApp.Controllers
 
             return View(nameof(CategoryProducts), productsView);
         }
+
+        [HttpGet]
+        public async Task<JsonResult> GetProductsByPage(int pageNumber, int productsCount)
+        {
+            var products = await _products.GetByPageNumber(pageNumber, productsCount);
+            return Json(_mapping.Map<MainPageProductsViewModel>(products));
+        }
     }
 }
