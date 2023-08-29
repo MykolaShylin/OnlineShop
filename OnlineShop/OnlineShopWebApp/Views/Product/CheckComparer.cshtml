@@ -12,7 +12,7 @@ else if (Model.Count == 1)
         <div class="col-3 p-0 m-0" style="text-align:center">
             <p><img style="width:300px" src="@Model.First().Product.Picture.Path" /></p>
             <p>@Model.First().Product.Name</p>
-            <a style="margin-top:10px" asp-area="" asp-controller="Product" asp-action="CategoryProducts"  asp-route-isAllListProducts="@true">Добавить продуктов</a><br>
+            <a style="margin-top:10px" asp-area="" asp-controller="Product" asp-action="CategoryProducts" asp-route-category="@ProductCategories.None">Добавить продуктов</a><br>
             <a style="margin-top:10px" asp-area="" asp-controller="Product" asp-action="Deleting" asp-route-prodId="@Model.First().Id">Удалить</a>
         </div>
     </div>
@@ -21,7 +21,7 @@ else
 {
     <div class="row justify-content-start">
         <div class="col-2">
-            <a class="btn btn-block btn-outline-primary" asp-area="" asp-controller="Product" asp-action="CategoryProducts" asp-route-isAllListProducts="@true">К продуктам</a>
+            <a class="btn btn-block btn-outline-primary" asp-area="" asp-controller="Product" asp-route-category="@ProductCategories.None">К продуктам</a>
         </div>
     </div>
     <div class="row">

@@ -29,6 +29,7 @@ namespace OnlineShopWebApp.Controllers
         private readonly IMapper _mapping;
         private readonly IDiscount _discounts;
         private readonly IFavorite _favorites;
+        private const int pageProductsCount = 20;
         public ProductController(IProductsStorage products, IProductComparer comparingProducts, IFlavor flavors, UserManager<User> userManager, FeedbackApiClient feedbackApiClient, IMapper mapping, IDiscount discounts, IFavorite favorites)
         {
             this._products = products;
@@ -133,11 +134,20 @@ namespace OnlineShopWebApp.Controllers
             var comparingView = _mapping.Map<List<ComparingProductsViewModel>>(comparingProducts);
             return View(comparingView);
         }
-        public async Task<IActionResult> CategoryProducts(bool isAllListProducts, ProductCategories category, List<MainPageProductsViewModel> searchingProducts)
+        public async Task<IActionResult> CategoryProducts(List<Product> searchingProducts, int pageNumber = 1, ProductCategories category = ProductCategories.None)
         {
-            var products = isAllListProducts ? await _products.GetAllAsync() : await _products.TryGetByCategoryAsync(category);
-            
-            var productsView = _mapping.Map<List<MainPageProductsViewModel>>(products);
+            var products = searchingProducts.Count() == 0 ? await _products.TryGetByCategoryAsync(category) : searchingProducts;
+
+            var productsView = _mapping.Map< List < Product >, List <MainPageProductsViewModel>>(products, opts =>
+            {
+                opts.AfterMap((src, dest) =>
+                {
+                    foreach(var product in dest)
+                    {
+                        product.PageNumber = (dest.IndexOf(product) + pageProductsCount )/ pageProductsCount;
+                    }
+                });
+            }).Where(x=>x.PageNumber == pageNumber).ToList();            
 
             var user = User.Identity.IsAuthenticated ? await _userManager.FindByNameAsync(User.Identity.Name) : null;
 
@@ -147,42 +157,43 @@ namespace OnlineShopWebApp.Controllers
             {
                 product.Rating = await _feedbackApiClient.GetProductRetingAsync(product.Id);
 
-                if(favoriteProducts != null)
+                if (favoriteProducts != null)
                 {
-                    if(favoriteProducts.Products.Any(x=>x.Id == product.Id))
+                    if (favoriteProducts.Products.Any(x => x.Id == product.Id))
                     {
-                        product.isInFavorites= true;
+                        product.IsInFavorites = true;
                     }
                 }
             }
-            return searchingProducts.Count > 0 ? View(searchingProducts) : View(productsView);
+
+            ViewBag.PagesCount = products.Count() / pageProductsCount + 1;
+
+            return View(productsView);
         }
         public async Task<IActionResult> BrandProducts(ProductBrands brand)
         {
             var products = await _products.TryGetByBrandAsync(brand);
-            var productsView = _mapping.Map<List<MainPageProductsViewModel>>(products);
-            
-            return View(nameof(CategoryProducts), productsView);
+
+            return View(nameof(CategoryProducts), products);
         }
 
         public async Task<IActionResult> SaleProducts()
         {
             var products = await _discounts.GetProductsWithDiscountsAsync();
-            var productsView = _mapping.Map<List<MainPageProductsViewModel>>(products);
-            return View(nameof(CategoryProducts), productsView);
+            return View(nameof(CategoryProducts), products);
         }
 
         [HttpPost]
         public async Task<IActionResult> SearchProducts(string searchingText)
         {
-            if(searchingText.ToLower() == "акции")
+            if (searchingText.ToLower() == "акции")
             {
                 return RedirectToAction(nameof(SaleProducts));
-            }    
+            }
 
             var products = await _products.GetAllAsync();
 
-            var nameSortingProducts = products.Where(x=>x.Name.ToLower().Contains(searchingText.ToLower())).ToList();
+            var nameSortingProducts = products.Where(x => x.Name.ToLower().Contains(searchingText.ToLower())).ToList();
             var brandSortingProducts = products.Where(x => @EnumHelper.GetDisplayName(x.Brand).ToLower().Contains(searchingText.ToLower())).ToList();
             var categorySortingProducts = products.Where(x => @EnumHelper.GetDisplayName(x.Category).ToLower().Contains(searchingText.ToLower())).ToList();
 
@@ -191,16 +202,8 @@ namespace OnlineShopWebApp.Controllers
             sortingProducts.AddRange(nameSortingProducts);
             sortingProducts.AddRange(categorySortingProducts);
 
-            var productsView = _mapping.Map<List<MainPageProductsViewModel>>(sortingProducts.Distinct());
-
-            return View(nameof(CategoryProducts), productsView);
+            return View(nameof(CategoryProducts), sortingProducts.Distinct());
         }
 
-        [HttpGet]
-        public async Task<JsonResult> GetProductsByPage(int pageNumber, int productsCount)
-        {
-            var products = await _products.GetByPageNumber(pageNumber, productsCount);
-            return Json(_mapping.Map<MainPageProductsViewModel>(products));
-        }
     }
 }

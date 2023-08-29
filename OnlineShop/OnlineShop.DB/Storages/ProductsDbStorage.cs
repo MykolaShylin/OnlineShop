@@ -58,9 +58,9 @@ namespace OnlineShop.DB.Storages
         {
             return await dataBaseContext.Products.Include(x => x.Flavors).Include(x => x.Pictures).FirstOrDefaultAsync(prod => prod.Id == id);
         }
-        public async Task<List<Product>> TryGetByCategoryAsync(ProductCategories categorie)
+        public async Task<List<Product>> TryGetByCategoryAsync(ProductCategories category)
         {
-            return await dataBaseContext.Products.Include(x => x.Flavors).Include(x => x.Pictures).Where(x => categorie == x.Category).ToListAsync();
+            return category == ProductCategories.None ? await GetAllAsync() : await dataBaseContext.Products.Include(x => x.Flavors).Include(x => x.Pictures).Where(x => category == x.Category).ToListAsync();
         }
 
         public async Task<List<Product>> TryGetByBrandAsync(ProductBrands brand)
@@ -75,14 +75,6 @@ namespace OnlineShop.DB.Storages
         {
             return await dataBaseContext.Products.Include(x => x.Flavors).Include(x => x.Pictures).ToListAsync();
 
-        }
-
-        public async Task<List<Product>> GetByPageNumber(int pageNumber, int productCount)
-        {
-            var startCounter = ((pageNumber - 1) * productCount);
-            var endCounter = pageNumber * productCount;
-            var products = await GetAllAsync();
-            return products.Where(x => products.IndexOf(x) >= startCounter && products.IndexOf(x) < endCounter).ToList();             
         }
 
         public async Task ClearAllAsync()

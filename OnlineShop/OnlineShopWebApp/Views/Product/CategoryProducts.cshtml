@@ -2,11 +2,13 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
+
 <div class="row no-gutters">
     @if (Model.Count == 0)
     {
         <h3>Список пуст</h3>
     }
+
     @foreach (var product in Model)
     {
         var maskId = "mask" + product.Id;
@@ -217,7 +219,7 @@
                         <h4 style="color:goldenrod">Нет в наличии</h4>
                         <a class="btn btn-dark disabled" asp-area="" asp-controller="Basket" asp-action="Buying" asp-route-productId="@product.Id" asp-route-flavorId="@product.Flavor.Id" asp-route-amount="1" role="button">Добавить в корзину</a>
                     }
-                    @if (product.isInFavorites)
+                    @if (product.IsInFavorites)
                     {
                         <p class="float-right m-0" title="Товар уже в списке желаемого"><img style="width:40px" src="/icons/in_favorite_icon.png" /></p>
                     }
@@ -231,15 +233,15 @@
     }
     <nav aria-label="Page navigation" class="col-12 m-3 justify-content-center" style="display:flex; vertical-align:middle">
         <ul class="pagination m-0">
-            @for (int i = 1; i <= 2; i++)
+            @for (int i = 1; i <= ViewBag.PagesCount; i++)
             {
-                if(i==1)
+                if (i == Model.First().PageNumber)
                 {
-                    <li class="page-item active"><a class="page-link" href="javascript:void(0)" id="pageNumber">@i</a></li>
+                    <li class="page-item active"><a class="page-link" asp-area="" asp-controller="Product" asp-action="CategoryProducts" asp-route-pageNumber="@i">@i</a></li>
                 }
                 else
                 {
-                    <li class="page-item"><a class="page-link" href="javascript:void(0)" id="pageNumber">@i</a></li>
+                    <li class="page-item"><a class="page-link" asp-area="" asp-controller="Product" asp-action="CategoryProducts" asp-route-pageNumber="@i">@i</a></li>
                 }
             }
         </ul>

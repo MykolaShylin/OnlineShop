@@ -6,7 +6,7 @@
     </div>
     @if (Model == null)
     {
-        <h4>Список пуст, <a asp-area="" asp-controller="Product" asp-action="CategoryProducts" asp-route-isAllListProducts="@true">добавить?</a></h4>
+        <h4>Список пуст, <a asp-area="" asp-controller="Product" asp-action="CategoryProducts" asp-route-category="@ProductCategories.None">добавить?</a></h4>
     }
     else
     {

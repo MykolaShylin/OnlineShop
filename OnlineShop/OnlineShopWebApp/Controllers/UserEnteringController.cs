@@ -12,6 +12,7 @@ using System.Security.Claims;
 using Constants = OnlineShop.DB.Models.Constants;
 using System;
 using OnlineShopWebApp.Services;
+using OnlineShop.DB.Models.Enumerations;
 
 namespace OnlineShopWebApp.Controllers
 {
@@ -30,7 +31,7 @@ namespace OnlineShopWebApp.Controllers
         {
             if (returnUrl == "/Basket/Buying" || returnUrl == "/Product/Comparing")
             {
-                returnUrl = $"/Product/CategoryProducts?isAllListProducts={true}";
+                returnUrl = $"/Product/CategoryProducts?category={ProductCategories.None}";
             }
 
             var logInViewModel = new LogInViewModel()

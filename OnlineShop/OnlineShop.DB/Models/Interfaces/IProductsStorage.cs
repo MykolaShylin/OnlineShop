@@ -18,6 +18,5 @@ namespace OnlineShop.DB.Models.Interfaces
         Task ClearAllAsync();
         Task ReduceAmountInStock(List<BasketItem> items);
         Task<List<Product>> TryGetByBrandAsync(ProductBrands brand);
-        Task<List<Product>> GetByPageNumber(int pageNumber, int productCount);
     }
 }
