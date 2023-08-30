@@ -1,74 +1,90 @@
 ﻿@model BasketViewModel
 
-<table class="table table-bordered" style="border:ridge #c9ceca 10px">
-    <thead>
-        <tr style="text-align:center">
-            <th>Название</th>
-            <th>Вкус</th>
-            <th>Количество, шт</th>
-            <th>Цена за единицу, грн</th>
-            <th>Скидка, %</th>
-            <th>Общая цена, грн</th>
+<form method="post">
+    <table class="table table-bordered" style="border:ridge #c9ceca 10px">
+        <thead>
+            <tr style="text-align:center">
+                <th>Название</th>
+                <th>Вкус</th>
+                <th>Количество, шт</th>
+                <th>Цена за единицу, грн</th>
+                <th>Скидка, %</th>
+                <th>Общая цена, грн</th>
+                @if (Model != null)
+                {
+                    <th></th>
+                    <th></th>
+                }
+            </tr>
+        </thead>
+        <tbody>
             @if (Model != null)
             {
-                <th></th>
-                <th></th>
-            }
-        </tr>
-    </thead>
-    <tbody>
-        @if (Model != null)
-        {
-            foreach (var basketItem in @Model.Items)
-            {
+                foreach (var basketItem in Model.Items)
+                {
+                    <tr style="text-align:center">
+                        <td>@basketItem.Product.Name</td>
+                        <td>
+                            <select name="flavorId">
+                                @foreach (var flavor in basketItem.Product.Flavors)
+                                {
+                                    if (flavor.Id == basketItem.ProductInfo.FlavorId)
+                                    {
+                                        <option selected value="@flavor.Id">@flavor.Name</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@flavor.Id">@flavor.Name</option>
+                                    }
+                                }
+                            </select>
+                        </td>
+                        <td>@basketItem.Amount</td>
+                        <td>@basketItem.Product.Cost</td>
+                        @if (basketItem.Product.Cost == basketItem.Product.DiscountCost)
+                        {
+                            <td>Без скидки</td>
+                        }
+                        else
+                        {
+                            <td>@basketItem.ProductInfo.DiscountPercent</td>
+                        }
+                        <td>@basketItem.TotalAmount</td>
+                        <td>
+                            <a class="btn btn-sm btn-outline-success" asp-area="" asp-controller="Basket" asp-action="Buying" asp-route-productId="@basketItem.Product.Id" asp-route-flavorId="@basketItem.ProductInfo.FlavorId" asp-route-amount="@basketItem.Amount" role="button">+</a>
+                        </td>
+                        <td>
+                            <a class="btn btn-sm btn-outline-danger" asp-area="" asp-controller="Basket" asp-action="Deleting" asp-route-prodId="@basketItem.Product.Id" asp-route-flavorId="@basketItem.ProductInfo.FlavorId" asp-route-amount="@basketItem.Amount" role="button">-</a>
+                        </td>
+                    </tr>
+                }
                 <tr style="text-align:center">
-                    <td>@basketItem.Product.Name</td>
-                    <td>@basketItem.Product.Flavor.Name</td>
-                    <td>@basketItem.Amount</td>
-                    <td>@basketItem.Product.Cost</td>
-                    @if (basketItem.Product.Cost == basketItem.Product.DiscountCost)
-                    {
-                        <td>Без скидки</td>
-                    }
-                    else
-                    {
-                        <td>@basketItem.ProductInfo.DiscountPercent</td>
-                    }
-                    <td>@basketItem.TotalAmount</td>
-                    <td>
-                        <a class="btn btn-sm btn-outline-success" asp-area="" asp-controller="Basket" asp-action="Buying" asp-route-productId="@basketItem.Product.Id" asp-route-flavorId="@basketItem.ProductInfo.FlavorId" asp-route-amount="@basketItem.Amount" role="button">+</a>
-                    </td>
-                    <td>
-                        <a class="btn btn-sm btn-outline-danger" asp-area="" asp-controller="Basket" asp-action="Deleting" asp-route-prodId="@basketItem.Product.Id" asp-route-flavorId="@basketItem.ProductInfo.FlavorId" asp-route-amount="@basketItem.Amount" role="button">-</a>
-                    </td>
+                    <td colspan="5">Сумма заказа, грн</td>
+                    <td colspan="3" style="color:firebrick; font-size:x-large; font-weight:bold">@Model.Cost</td>
                 </tr>
             }
-            <tr style="text-align:center">
-                <td colspan="5">Сумма заказа, грн</td>
-                <td colspan="3" style="color:firebrick; font-size:x-large; font-weight:bold">@Model.Cost</td>
-            </tr>
-        }
-        else
-        {
-            <tr>
-                <td colspan="4"><center>Корзина пуста</center></td>
-            </tr>
-        }
-    </tbody>
-</table>
-<br />
-@if (Model != null)
-{
-    <div style="float:right">
-        <a class="btn btn-success btn-lg" asp-area="" asp-controller="Basket" asp-action="Purchase" role="button">Оформить заказ</a>
+            else
+            {
+                <tr>
+                    <td colspan="4"><center>Корзина пуста</center></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <br />
+    @if (Model != null)
+    {
+        <div style="float:right">
+            <button class="btn btn-success btn-lg" type="submit" asp-area="" asp-controller="Basket" asp-action="Purchase" role="button">Оформить заказ</button>
+        </div>
+    }
+    else
+    {
+        <div style="float:right">
+            <a class="btn btn-success btn-lg disabled" href="#" role="button">Оформить заказ</a>
+        </div>
+    }
+    <div style="float:left">
+        <a class="btn btn-dark btn-lg" asp-area="" asp-controller="Product" asp-action="CategoryProducts" asp-route-category="@ProductCategories.None" role="button">Продолжить покупки </a>
     </div>
-}
-else
-{
-    <div style="float:right">
-        <a class="btn btn-success btn-lg disabled" href="#" role="button">Оформить заказ</a>
-    </div>
-}
-<div style="float:left">
-    <a class="btn btn-dark btn-lg" asp-area="" asp-controller="Product" asp-action="CategoryProducts" asp-route-category="@ProductCategories.None" role="button">Продолжить покупки </a>
-</div>
+</form>

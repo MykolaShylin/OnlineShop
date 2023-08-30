@@ -59,7 +59,7 @@ namespace OnlineShopWebApp.Controllers
             await _baskets.DeleteAsync(userId, prodId);
             return RedirectToAction(nameof(CheckOut));
         }
-        public async Task<IActionResult> Purchase()
+        public async Task<IActionResult> Purchase(int flavorId)
         {
             var userId = (await _userManager.FindByNameAsync(User.Identity.Name)).Id;
             var customer = await _userManager.FindByNameAsync(User.Identity.Name);
@@ -71,7 +71,11 @@ namespace OnlineShopWebApp.Controllers
                     dest.Customer = _mapping.Map<UserViewModel>(customer);
                     foreach (var item in dest.Items)
                     {
-                        item.Product.Flavor = item.Product.Flavors.First(x => x.Id == item.ProductInfo.FlavorId);
+                        item.Product.Flavor = item.Product.Flavors.First(x => x.Id == flavorId);                        
+                    }
+                    foreach(var item in src.Items)
+                    {
+                        item.ProductInfo.FlavorId = flavorId;
                     }
                 });          
             });

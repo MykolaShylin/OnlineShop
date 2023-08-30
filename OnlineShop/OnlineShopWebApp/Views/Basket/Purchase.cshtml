@@ -126,15 +126,15 @@
                         <p>Согласно тарифу</p>
                     </div>
                 </div>
-                <div class="row mt-4">
-                    <div class="col-6 float-left">
+                <div class="row mt-4  justify-content-between">
+                    <div class="col-auto">
                         <h3>К оплате:</h3>
                     </div>
-                    <div class="col-6 float-right">
-                        <input style="background-color:white; color:coral; font-size:35px; border:none; font-weight:500" name="ordersum" readonly="readonly" value="@Model.Cost грн" />
+                    <div class="col-auto">
+                        <span style="color:coral" class="h1">@Model.Cost грн</span>
                     </div>
                     <div style="text-align:center;" class="col-12 pt-3">
-                        <a href="/basket/checkout?userId=@Model.Customer.Id" style="font-weight:200; border-bottom-style:dotted">РЕДАКТИРОВАТЬ ЗАКАЗ</a><br />
+                        <a asp-area="" asp-controller="Basket" asp-action="Checkout" asp-route-userId="@Model.Customer.Id" style="font-weight:200; border-bottom-style:dotted">РЕДАКТИРОВАТЬ ЗАКАЗ</a><br />
                         <button class="btn btn-warning btn-block" style="margin-top:10px" type="submit" asp-area="" asp-controller="Order" asp-action="Ordering">Оформить заказ</button>
                     </div>
                 </div>
