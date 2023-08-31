@@ -134,20 +134,29 @@ namespace OnlineShopWebApp.Controllers
             var comparingView = _mapping.Map<List<ComparingProductsViewModel>>(comparingProducts);
             return View(comparingView);
         }
-        public async Task<IActionResult> CategoryProducts(List<Product> searchingProducts, int pageNumber = 1, ProductCategories category = ProductCategories.None)
+        public async Task<IActionResult> CategoryProducts(int pageNumber = 1, ProductCategories category = ProductCategories.None)
         {
-            var products = searchingProducts.Count() == 0 ? await _products.TryGetByCategoryAsync(category) : searchingProducts;
+            var searchingProductsIds = ((int[])TempData["searchingProductsId"])?.First() == -1? new int[0] : ((int[])TempData["searchingProductsId"]);
 
-            var productsView = _mapping.Map< List < Product >, List <MainPageProductsViewModel>>(products, opts =>
+            var searchingProducts = searchingProductsIds?.Select(x => _products.TryGetByIdAsync(x).Result).ToList();
+
+            var products = searchingProducts ?? await _products.TryGetByCategoryAsync(category);
+
+            if(products.Count== 0)
+            {
+                return View(new List<MainPageProductsViewModel>());
+            }
+
+            var productsView = _mapping.Map<List<Product>, List<MainPageProductsViewModel>>(products, opts =>
             {
                 opts.AfterMap((src, dest) =>
                 {
-                    foreach(var product in dest)
+                    foreach (var product in dest)
                     {
-                        product.PageNumber = (dest.IndexOf(product) + pageProductsCount )/ pageProductsCount;
+                        product.PageNumber = (dest.IndexOf(product) + pageProductsCount) / pageProductsCount;
                     }
                 });
-            }).Where(x=>x.PageNumber == pageNumber).ToList();            
+            }).Where(x => x.PageNumber == pageNumber).ToList();
 
             var user = User.Identity.IsAuthenticated ? await _userManager.FindByNameAsync(User.Identity.Name) : null;
 
@@ -174,13 +183,18 @@ namespace OnlineShopWebApp.Controllers
         {
             var products = await _products.TryGetByBrandAsync(brand);
 
-            return View(nameof(CategoryProducts), products);
+            TempData["searchingProductsId"] = products.Count() == 0 ? new int[1] { -1 } : products.Select(x => x.Id).ToArray();
+
+            return RedirectToAction(nameof(CategoryProducts));
         }
 
         public async Task<IActionResult> SaleProducts()
         {
             var products = await _discounts.GetProductsWithDiscountsAsync();
-            return View(nameof(CategoryProducts), products);
+
+            TempData["searchingProductsId"] = products.Count() == 0 ? new int[1] { -1} : products.Select(x => x.Id).ToArray();
+
+            return RedirectToAction(nameof(CategoryProducts));
         }
 
         [HttpPost]
@@ -202,7 +216,9 @@ namespace OnlineShopWebApp.Controllers
             sortingProducts.AddRange(nameSortingProducts);
             sortingProducts.AddRange(categorySortingProducts);
 
-            return View(nameof(CategoryProducts), sortingProducts.Distinct());
+            TempData["searchingProductsId"] = sortingProducts.Count() == 0 ? new int[1] { -1 } : sortingProducts.Distinct().Select(x => x.Id).ToArray();
+
+            return RedirectToAction(nameof(CategoryProducts));
         }
 
     }

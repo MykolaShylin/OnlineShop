@@ -1,5 +1,4 @@
-﻿@using OnlineShop.DB.Models;
-<header>
+﻿<header>
     <nav style="display:block" class="border-secondary border navbar bg-light">
         <div class="row align-items-center">
             <div class="col-3 no-gutters">
@@ -33,15 +32,15 @@
                     {
                         @await Component.InvokeAsync("PersonalData")
                     }
-                    <div class="col-auto p-0">
-                        <div class="row justify-content-around">
-                            <div class="col-auto p-3">
+                    <div class="col-3 p-0">
+                        <div class="row justify-content-end">
+                            <div class="col-3 text-center">
                                 @await Component.InvokeAsync("Favorites")
                             </div>
-                            <div class="col-auto p-3">
+                            <div class="col-3 text-center">
                                 @await Component.InvokeAsync("Comparer")
                             </div>
-                            <div class="col-auto p-3">
+                            <div class="col-3 text-center">
                                 @await Component.InvokeAsync("Basket")
                             </div>
                         </div>

@@ -4,8 +4,8 @@
     <div class="row justify-content-center">
         <div class="col-5">
             <div class="text-danger" asp-validation-summary="ModelOnly"></div>
-            <div class="row text-center sign-in-up-form">
-                <div class="col-12 m-3">
+            <div class="row justify-content-center sign-in-up-form">
+                <div class="col-12 p-3">
                     <h3>Регистрация</h3>
                 </div>
                 <div class="col-2">
@@ -80,7 +80,9 @@
                 <div class="col-10 offset-2 ">
                     <span asp-validation-for="PasswordConfirm" style="color:red"></span>
                 </div>
-                <button class="btn btn-dark btn-block m-3" type="submit" asp-controller="UserRegistration" asp-action="RegistrationConfirm" asp-route-returnUrl="@ViewBag.ReturnUrl">Зарегестрироваться</button>
+                <div class="col-12 p-4">
+                    <button class="btn btn-dark btn-block" type="submit" asp-controller="UserRegistration" asp-action="RegistrationConfirm" asp-route-returnUrl="@ViewBag.ReturnUrl">Зарегестрироваться</button>
+                </div>                
             </div>
         </div>
     </div>
