@@ -29,11 +29,6 @@ namespace OnlineShopWebApp.Controllers
         }
         public async Task<ActionResult> Login(string returnUrl)
         {
-            if (returnUrl == "/Basket/Buying" || returnUrl == "/Product/Comparing")
-            {
-                returnUrl = $"/Product/CategoryProducts?category={ProductCategories.None}";
-            }
-
             var logInViewModel = new LogInViewModel()
             {
                 ReturnUrl = returnUrl,
@@ -63,7 +58,7 @@ namespace OnlineShopWebApp.Controllers
                 var result = await _signInManager.PasswordSignInAsync(login.NameLogin, login.Password, login.IsRemember, false);
                 if (result.Succeeded)
                 {
-                    return Redirect(login.ReturnUrl == null ? "/Home/Index" : login.ReturnUrl);
+                    return Redirect(login.ReturnUrl ?? "/Home/Index");
                 }
                 else
                 {
