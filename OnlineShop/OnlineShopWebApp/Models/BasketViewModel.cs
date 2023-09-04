@@ -25,7 +25,7 @@ namespace OnlineShopWebApp.Models
         {
             get
             {
-                return Items?.Sum(x => x.Amount) ?? 0;
+                return Items?.Count ?? 0;
             }
         }
     }

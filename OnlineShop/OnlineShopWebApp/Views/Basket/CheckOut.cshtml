@@ -25,22 +25,8 @@
                     {
                         <tr style="text-align:center">
                             <td class="align-middle">@basketItem.Product.Name</td>
-                            <td class="align-middle">
-                                <select name="flavorId">
-                                    @foreach (var flavor in basketItem.Product.Flavors)
-                                    {
-                                        if (flavor.Id == basketItem.ProductInfo.FlavorId)
-                                        {
-                                            <option selected value="@flavor.Id">@flavor.Name</option>
-                                        }
-                                        else
-                                        {
-                                            <option value="@flavor.Id">@flavor.Name</option>
-                                        }
-                                    }
-                                </select>
-                            </td>
-                            <td class ="align-middle">@basketItem.Amount</td>
+                            <td class="align-middle">@basketItem.Product.Flavor.Name</td>
+                            <td class="align-middle">@basketItem.Amount</td>
                             <td class="align-middle">@basketItem.Product.Cost</td>
                             @if (basketItem.Product.Cost == basketItem.Product.DiscountCost)
                             {
@@ -75,9 +61,19 @@
         <br />
         @if (Model != null)
         {
-            <div style="float:right">
-                <button class="btn btn-success btn-lg" type="submit" asp-area="" asp-controller="Basket" asp-action="Purchase" role="button">Оформить заказ</button>
-            </div>
+            if(User.Identity.IsAuthenticated)
+            {
+                <div style="float:right">
+                    <button class="btn btn-success btn-lg" type="submit" asp-area="" asp-controller="Basket" asp-action="Purchase" role="button">Оформить заказ</button>
+                </div>
+            }
+
+            else
+            {
+                <div style="float:right">
+                    <button class="btn btn-success btn-lg" type="submit" asp-area="" asp-controller="Basket" asp-action="Purchase" asp-route-anonymousId="@Model.Customer.Id" role="button">Оформить заказ</button>
+                </div>
+            }
         }
         else
         {
@@ -88,5 +84,5 @@
         <div style="float:left">
             <a class="btn btn-dark btn-lg" asp-area="" asp-controller="Product" asp-action="CategoryProducts" asp-route-category="@ProductCategories.None" role="button">Продолжить покупки </a>
         </div>
-    </div>    
+    </div>
 </form>

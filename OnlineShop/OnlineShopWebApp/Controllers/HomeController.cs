@@ -11,6 +11,7 @@ using OnlineShopWebApp.Models;
 using Microsoft.EntityFrameworkCore;
 using OnlineShopWebApp.Services;
 using AutoMapper;
+using ReturnTrue.AspNetCore.Identity.Anonymous;
 
 namespace OnlineShopWebApp.Controllers
 {

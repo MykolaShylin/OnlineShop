@@ -134,7 +134,7 @@
                         <span style="color:coral" class="h1">@Model.Cost грн</span>
                     </div>
                     <div style="text-align:center;" class="col-12 pt-3">
-                        <a asp-area="" asp-controller="Basket" asp-action="Checkout" asp-route-userId="@Model.Customer.Id" class="font-weight-light h5 text-decoration-none" style="border-bottom-style:dotted">РЕДАКТИРОВАТЬ ЗАКАЗ</a><br />
+                        <a asp-area="" asp-controller="Basket" asp-action="EditBasket" class="font-weight-light h5 text-decoration-none" style="border-bottom-style:dotted">РЕДАКТИРОВАТЬ ЗАКАЗ</a><br />
                         <button class="btn btn-warning btn-block" style="margin-top:10px" type="submit" asp-area="" asp-controller="Order" asp-action="Ordering">Оформить заказ</button>
                     </div>
                 </div>

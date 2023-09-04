@@ -30,6 +30,7 @@ using OnlineShopWebApp.FeedbackApi;
 using OnlineShopWebApp.FeedbackApi.Models;
 using OnlineShopWebApp.Helpers;
 using OnlineShopWebApp.Services;
+using ReturnTrue.AspNetCore.Identity.Anonymous;
 using Serilog;
 using TelegramBot;
 
@@ -111,6 +112,9 @@ namespace OnlineShopWebApp
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseStaticFiles();
+
+            app.UseAnonymousId(new AnonymousIdCookieOptionsBuilder()
+                .SetCustomCookieTimeout(1800));
 
             app.UseSerilogRequestLogging();
             app.UseRouting();

@@ -5,6 +5,7 @@ using OnlineShop.DB.Models;
 using OnlineShop.DB.Models.Interfaces;
 using OnlineShopWebApp.Helpers;
 using OnlineShopWebApp.Models;
+using ReturnTrue.AspNetCore.Identity.Anonymous;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -23,14 +24,19 @@ namespace OnlineShopWebApp.Views.Shared.Components.Cart
         }
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            BasketViewModel basketView = null;
-            if(User.Identity.Name != null)
-            {
-                var userId = (await _userManager.FindByNameAsync(User.Identity.Name))?.Id;            
-                basketView = userId == null ? null : _mapping.Map<BasketViewModel>(await _baskets.TryGetExistingByUserIdAsync(userId));
-            }
+            var userId = await GetUserId();
+
+            var basketView = _mapping.Map<BasketViewModel>(await _baskets.TryGetExistingByUserIdAsync(userId));
+            
             decimal productCounts = basketView?.Amount ?? 0;
+
             return View("Basket", productCounts);
+        }
+
+        public async Task<string> GetUserId()
+        {
+            var anonymousId = HttpContext.Features.Get<IAnonymousIdFeature>().AnonymousId;
+            return User.Identity.IsAuthenticated ? (await _userManager.FindByNameAsync(User.Identity.Name)).Id : anonymousId;
         }
     }
 }

@@ -66,6 +66,8 @@ namespace OnlineShopWebApp.Helpers
                 .ForMember(x => x.DiscountCost, opt => opt.MapFrom(x => Math.Truncate(x.DiscountCost)))
                 .ReverseMap();
 
+            CreateMap<EditBasket, EditBasketViewModel>().ReverseMap();
+
             CreateMap<Discount, DiscountViewModel>().ReverseMap();
 
             CreateMap<BasketItem, BasketItemViewModel>().ReverseMap();

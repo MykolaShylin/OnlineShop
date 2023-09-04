@@ -1,0 +1,78 @@
+﻿@model BasketViewModel
+
+<form method="post">
+    <div class="table-responsive">
+        <table class="table table-bordered" style="border:ridge #c9ceca 10px">
+            <thead class="table-light">
+                <tr style="text-align:center">
+                    <th>Название</th>
+                    <th>Вкус</th>
+                    <th>Количество, шт</th>
+                    <th>Цена за единицу, грн</th>
+                    <th>Скидка, %</th>
+                    <th>Общая цена, грн</th>
+                    @if (Model != null)
+                    {
+                        <th></th>
+                        <th></th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+
+                @for (int i = 0; i < Model.Items.Count; i++)
+                {
+                    <tr style="text-align:center">
+                        <td class="align-middle">@Model.Items[i].Product.Name</td>
+                        <td class="align-middle">
+                            <button class="btn btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                @Model.Items[i].Product.Flavor.Name
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                @foreach (var flavor in Model.Items[i].Product.Flavors)
+                                {
+                                    if (flavor.Id != Model.Items[i].ProductInfo.FlavorId)
+                                    {
+                                        <a class="dropdown-item" asp-area="" asp-controller="Basket" asp-action="ChangeFlavor" asp-route-itemId="@Model.Items[i].Id" asp-route-flavorId="@flavor.Id">@flavor.Name</a>
+                                    }
+                                }
+                            </div>
+                        </td>
+                        <td>@Model.Items[i].Amount</td>
+                        <td class="align-middle">@Model.Items[i].Product.Cost</td>
+                        @if (Model.Items[i].Product.Cost == Model.Items[i].Product.DiscountCost)
+                        {
+                            <td class="align-middle">Без скидки</td>
+                        }
+                        else
+                        {
+                            <td class="align-middle">@Model.Items[i].ProductInfo.DiscountPercent</td>
+                        }
+                        <td>@Model.Items[i].TotalAmount</td>
+                        <td class="align-middle">
+                            <button class="btn btn-sm btn-outline-success" asp-area="" asp-controller="Basket" asp-action="Increasing" asp-route-itemId="@Model.Items[i].Id" asp-route-amount="@Model.Items[i].Amount" role="button">+</button>
+                        </td>
+                        <td class="align-middle">
+                            @if (Model.Items[i].Amount == 0)
+                            {
+                                <button class="btn btn-sm btn-outline-danger disabled" asp-area="" asp-controller="Basket" asp-action="Decreasing" asp-route-itemId="@Model.Items[i].Id" asp-route-amount="@Model.Items[i].Amount" role="button">-</button>
+                            }
+                            else
+                            {
+                                <button class="btn btn-sm btn-outline-danger" asp-area="" asp-controller="Basket" asp-action="Decreasing" asp-route-itemId="@Model.Items[i].Id" asp-route-amount="@Model.Items[i].Amount" role="button">-</button>
+                            }
+                        </td>
+                    </tr>
+                }
+                <tr style="text-align:center">
+                    <td colspan="5" class="align-middle">Сумма заказа, грн</td>
+                    <td colspan="3" class="align-middle" style="color:firebrick; font-size:x-large; font-weight:bold">@Model.Cost</td>
+                </tr>
+            </tbody>
+        </table>
+        <br />
+        <div style="float:right">
+            <button class="btn btn-success btn-lg" asp-area="" asp-controller="Basket" asp-action="UpdateBasket" role="button">Сохранить</button>
+        </div>
+    </div>
+</form>

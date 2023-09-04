@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using OnlineShop.DB.Contexts;
 using OnlineShop.DB.Models;
 using OnlineShop.DB.Models.Interfaces;
@@ -32,6 +33,14 @@ namespace OnlineShop.DB.Storages
                 .FirstOrDefaultAsync(x => x.CustomerId == userId && !x.IsClosed);
         }
 
+        public async Task ChangeTemporaryUserIdAsync(string temporaryUserId, string newUserId)
+        {
+            var existingBasket = await TryGetExistingByUserIdAsync(temporaryUserId);
+            existingBasket.CustomerId = newUserId;
+            dataBaseContext.Basket.Update(existingBasket);
+            await dataBaseContext.SaveChangesAsync();
+        }
+
         public async Task CloseAsync(string userId)
         {
             var existingBasket = await TryGetExistingByUserIdAsync(userId);
@@ -55,6 +64,45 @@ namespace OnlineShop.DB.Storages
             {
                 dataBaseContext.Basket.Remove(existingBasket);
             }
+            await dataBaseContext.SaveChangesAsync();
+        }
+
+        public async Task UpdateBasket(string userId)
+        {
+            var existingBasket = await TryGetExistingByUserIdAsync(userId);
+            if(existingBasket.Items.Sum(x=>x.Amount) == 0 )
+            {
+                dataBaseContext.Basket.Remove(existingBasket);
+            }
+            else
+            {
+                foreach (var item in existingBasket.Items)
+                {
+                    if (item.Amount == 0)
+                    {
+                        dataBaseContext.BasketItems.Remove(item);
+                    }
+                }
+            }            
+
+            await dataBaseContext.SaveChangesAsync();
+        }
+
+        public async Task UpdateItem(string userId, Guid itemId, int flavorId = 0, int amount = 0)
+        {
+            var existingBasket = await TryGetExistingByUserIdAsync(userId);
+            var existingBasketItem = existingBasket.Items.FirstOrDefault(x => x.Id == itemId);
+            
+            if(flavorId == 0)
+            {
+                existingBasketItem.Amount = amount;
+            }
+            else
+            {
+                existingBasketItem.ProductInfo.FlavorId = flavorId;
+            }
+
+            dataBaseContext.BasketItems.Update(existingBasketItem);            
             await dataBaseContext.SaveChangesAsync();
         }
 

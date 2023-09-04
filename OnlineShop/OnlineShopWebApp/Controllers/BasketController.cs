@@ -12,6 +12,13 @@ using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using ReturnTrue.AspNetCore.Identity.Anonymous;
+using System.Net;
+using Microsoft.Owin.Infrastructure;
+using Nancy.Session;
+using Microsoft.AspNetCore.Builder;
+using Org.BouncyCastle.Bcpg;
 
 namespace OnlineShopWebApp.Controllers
 {
@@ -36,50 +43,117 @@ namespace OnlineShopWebApp.Controllers
             _mapping = mapping;
             _discounts = discounts;
         }
+
+        [AllowAnonymous]
         public async Task<IActionResult> CheckOut()
         {
-            var userId = (await _userManager.FindByNameAsync(User.Identity.Name)).Id;
+            var userId = await GetUserId();
             var basket = await _baskets.TryGetExistingByUserIdAsync(userId);
-            var basketView = _mapping.Map<BasketViewModel>(basket);
+            var basketView = _mapping.Map<Basket, BasketViewModel>(basket, opt =>
+            {
+                if (basket != null)
+                {
+                    opt.AfterMap((src, dest) =>
+                    {
+                        dest.Customer = new UserViewModel { Id = userId };
+                        dest.Items.ForEach(item => item.Product.Flavor = item.Product.Flavors.First(x => x.Id == item.ProductInfo.FlavorId));
+                    });
+                }
+            });
             return View(basketView);
         }
+
+        [AllowAnonymous]
         public async Task<IActionResult> Buying(int productId, int flavorId, int amount)
-        {            
+        {
             var product = await _products.TryGetByIdAsync(productId);
-            var userId = (await _userManager.FindByNameAsync(User.Identity.Name)).Id;
+            var userId = await GetUserId();
             var discount = (await _discounts.GetByProductIdAsync(productId)).DiscountPercent;
             var productInfo = new ChoosingProductInfo { ProductId = productId, FlavorId = flavorId, Cost = product.Cost, DiscountPercent = discount };
             await _baskets.AddAsync(userId, product, productInfo, amount);
             return RedirectToAction(nameof(CheckOut));
-        }            
+        }
 
+        [AllowAnonymous]
         public async Task<IActionResult> Deleting(int prodId)
         {
-            var userId = (await _userManager.FindByNameAsync(User.Identity.Name)).Id;
+            var userId = await GetUserId();
             await _baskets.DeleteAsync(userId, prodId);
             return RedirectToAction(nameof(CheckOut));
         }
-        public async Task<IActionResult> Purchase(int flavorId)
+        public async Task<IActionResult> Increasing(int amount, Guid itemId)
         {
-            var userId = (await _userManager.FindByNameAsync(User.Identity.Name)).Id;
-            var customer = await _userManager.FindByNameAsync(User.Identity.Name);
+            var userId = await GetUserId();
+            amount++;
+            await _baskets.UpdateItem(userId, itemId, amount: amount);
+
+            return RedirectToAction(nameof(EditBasket));
+        }
+
+        public async Task<IActionResult> Decreasing(int amount, Guid itemId)
+        {
+            var userId = await GetUserId();
+            amount--;
+            await _baskets.UpdateItem(userId, itemId, amount: amount);
+
+            return RedirectToAction(nameof(EditBasket));
+        }
+
+        public async Task<IActionResult> ChangeFlavor(int flavorId, Guid itemId)
+        {
+            var userId = await GetUserId();
+
+            await _baskets.UpdateItem(userId, itemId, flavorId: flavorId);
+
+            return RedirectToAction(nameof(EditBasket));
+        }
+
+        public async Task<IActionResult> EditBasket()
+        {
+            var userId = await GetUserId();
             var basket = await _baskets.TryGetExistingByUserIdAsync(userId);
             var basketView = _mapping.Map<Basket, BasketViewModel>(basket, opt =>
             {
                 opt.AfterMap((src, dest) =>
                 {
-                    dest.Customer = _mapping.Map<UserViewModel>(customer);
-                    foreach (var item in dest.Items)
-                    {
-                        item.Product.Flavor = item.Product.Flavors.First(x => x.Id == flavorId);                        
-                    }
-                    foreach(var item in src.Items)
-                    {
-                        item.ProductInfo.FlavorId = flavorId;
-                    }
-                });          
+                    dest.Items.ForEach(item => item.Product.Flavor = item.Product.Flavors.First(x => x.Id == item.ProductInfo.FlavorId));
+                });
             });
             return View(basketView);
+        }
+        
+        public async Task<IActionResult> UpdateBasket()
+        {
+            var userId = await GetUserId();            
+
+            await _baskets.UpdateBasket(userId);
+
+            return RedirectToAction(nameof(Purchase));
+        }
+
+        public async Task<IActionResult> Purchase(string anonymousId = null)
+        {
+            var customer = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (anonymousId != null)
+            {
+                await _baskets.ChangeTemporaryUserIdAsync(anonymousId, customer.Id);
+            }
+            var basket = await _baskets.TryGetExistingByUserIdAsync(customer.Id);
+            var basketView = _mapping.Map<Basket, BasketViewModel>(basket, opt =>
+            {
+                opt.AfterMap((src, dest) =>
+                {
+                    dest.Customer = _mapping.Map<UserViewModel>(customer);
+                    dest.Items.ForEach(item => item.Product.Flavor = item.Product.Flavors.First(x => x.Id == item.ProductInfo.FlavorId));
+                });
+            });
+            return View(basketView);
+        }
+
+        public async Task<string> GetUserId()
+        {
+            var anonymousId = HttpContext.Features.Get<IAnonymousIdFeature>().AnonymousId;
+            return User.Identity.IsAuthenticated ? (await _userManager.FindByNameAsync(User.Identity.Name)).Id : anonymousId;
         }
 
     }
