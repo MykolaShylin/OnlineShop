@@ -14,27 +14,24 @@ using AutoMapper;
 using System;
 using Org.BouncyCastle.Bcpg;
 using System.Linq;
+using OnlineShop.DB.Patterns;
 
 namespace OnlineShopWebApp.Controllers
 {
     [Authorize]
     public class OrderController : Controller
     {
-        private readonly IBasketStorage _baskets;
-        private readonly IProductsStorage _products;
-        private readonly IPurchases _closedPurchases;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<User> _userManager;
         private readonly EmailService _emailService;
         private readonly IMapper _mapping;
 
-        public OrderController(IBasketStorage baskets, IPurchases closedPurchases, UserManager<User> userManager, EmailService emailService, IMapper mapping, IProductsStorage products, TelegramService telegramService)
+        public OrderController(UserManager<User> userManager, EmailService emailService, IMapper mapping, IUnitOfWork unitOfWork)
         {
-            _baskets = baskets;
-            _closedPurchases = closedPurchases;
             _userManager = userManager;
             _emailService = emailService;
             _mapping = mapping;
-            _products = products;
+            _unitOfWork = unitOfWork;
         }
 
         public IActionResult Confirmation()
@@ -47,7 +44,7 @@ namespace OnlineShopWebApp.Controllers
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
 
-            var basketItems = (await _baskets.TryGetExistingByUserIdAsync(user.Id)).Items;
+            var basketItems = (await _unitOfWork.BasketDbStorage.TryGetExistingByUserIdAsync(user.Id)).Items;
 
             var orderDb = _mapping.Map<OrderViewModel, Order>(order, opt =>
             {
@@ -64,9 +61,10 @@ namespace OnlineShopWebApp.Controllers
 
             await _emailService.SendOrderConfirmEmailAsync(user.Email, basketItemsView);
 
-            await _products.ReduceAmountInStock(orderDb.Items);
-            await _closedPurchases.SaveAsync(orderDb);
-            await _baskets.CloseAsync(user.Id);
+            await _unitOfWork.ProductsDbStorage.ReduceAmountInStock(orderDb.Items);
+            await _unitOfWork.ClosedPurchasesDbStorage.SaveAsync(orderDb);
+            await _unitOfWork.BasketDbStorage.CloseAsync(user.Id);
+            await _unitOfWork.SaveChangesAsync();
 
             return Redirect(nameof(Confirmation));
         }

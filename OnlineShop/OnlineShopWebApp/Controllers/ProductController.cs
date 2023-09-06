@@ -16,39 +16,36 @@ using AutoMapper;
 using Microsoft.CodeAnalysis;
 using OnlineShopWebApp.FeedbackApi.Models;
 using OnlineShopWebApp.FeedbackApi;
+using OnlineShop.DB.Patterns;
+using OnlineShop.DB.Helpers;
 
 namespace OnlineShopWebApp.Controllers
 {
     public class ProductController : Controller
     {
-        private readonly IProductsStorage _products;
-        private readonly IProductComparer _comparingProducts;
-        private readonly IFlavor _flavors;
+        
         private readonly UserManager<User> _userManager;
         private readonly FeedbackApiClient _feedbackApiClient;
         private readonly IMapper _mapping;
-        private readonly IDiscount _discounts;
-        private readonly IFavorite _favorites;
         private const int pageProductsCount = 20;
-        public ProductController(IProductsStorage products, IProductComparer comparingProducts, IFlavor flavors, UserManager<User> userManager, FeedbackApiClient feedbackApiClient, IMapper mapping, IDiscount discounts, IFavorite favorites)
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly ProductEqualityComparer _comparer;
+        public ProductController(UserManager<User> userManager, FeedbackApiClient feedbackApiClient, IMapper mapping, IUnitOfWork unitOfWork)
         {
-            this._products = products;
-            _comparingProducts = comparingProducts;
-            _flavors = flavors;
             _userManager = userManager;
             _feedbackApiClient = feedbackApiClient;
             _mapping = mapping;
-            _discounts = discounts;
-            _favorites = favorites;
+            _unitOfWork = unitOfWork;
+            _comparer = new ProductEqualityComparer();
         }
         public async Task<IActionResult> Index(int prodId)
         {
             var feedbacks = await _feedbackApiClient.GetFeedbacksAsync(prodId);
-            var product = await _products.TryGetByIdAsync(prodId);
+            var product = await _unitOfWork.ProductsDbStorage.TryGetByIdAsync(prodId);
 
             var user = User.Identity.IsAuthenticated ? await _userManager.FindByNameAsync(User.Identity.Name) : null;
 
-            var favoriteProducts = user != null ? await _favorites.GetByUserIdAsync(user.Id) : null;
+            var favoriteProducts = user != null ? await _unitOfWork.FavoriteProductsDbStorage.GetByUserIdAsync(user.Id) : null;
 
             if (product != null)
             {
@@ -57,7 +54,7 @@ namespace OnlineShopWebApp.Controllers
 
                 if (favoriteProducts != null)
                 {
-                    if (favoriteProducts.Products.Any(x => x.Id == product.Id))
+                    if (favoriteProducts.Products.Any(x => _comparer.Equals(x, product)))
                     {
                         productView.isInFavorites = true;
                     }
@@ -72,8 +69,10 @@ namespace OnlineShopWebApp.Controllers
         public async Task<IActionResult> AddFavorite(int productId)
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            var product = await _products.TryGetByIdAsync(productId);
-            await _favorites.AddAsync(product, user.Id);
+            var product = await _unitOfWork.ProductsDbStorage.TryGetByIdAsync(productId);
+            await _unitOfWork.FavoriteProductsDbStorage.AddAsync(product, user.Id);
+
+            await _unitOfWork.SaveChangesAsync();
             return RedirectToAction(nameof(Favorites));
         }
 
@@ -81,8 +80,10 @@ namespace OnlineShopWebApp.Controllers
         public async Task<IActionResult> RemoveFavorite(int productId)
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            var product = await _products.TryGetByIdAsync(productId);
-            await _favorites.DeleteAsync(product, user.Id);
+            var product = await _unitOfWork.ProductsDbStorage.TryGetByIdAsync(productId);
+            await _unitOfWork.FavoriteProductsDbStorage.DeleteAsync(product, user.Id);
+            await _unitOfWork.SaveChangesAsync();
+
             return RedirectToAction(nameof(Favorites));
         }
 
@@ -90,7 +91,7 @@ namespace OnlineShopWebApp.Controllers
         public async Task<IActionResult> Favorites()
         {
             var userId = (await _userManager.FindByNameAsync(User.Identity.Name)).Id;
-            var favorites = _mapping.Map<FavoriteProductViewModel>(await _favorites.GetByUserIdAsync(userId));
+            var favorites = _mapping.Map<FavoriteProductViewModel>(await _unitOfWork.FavoriteProductsDbStorage.GetByUserIdAsync(userId));
             return View(favorites);
         }
 
@@ -113,16 +114,20 @@ namespace OnlineShopWebApp.Controllers
         public async Task<IActionResult> Comparing(int productId, int flavorId)
         {
             var userId = (await _userManager.FindByNameAsync(User.Identity.Name)).Id;
-            var product = await _products.TryGetByIdAsync(productId);
-            var flavor = await _flavors.TryGetByIdAsync(flavorId);
-            await _comparingProducts.AddAsync(userId, product, flavor);
+            var product = await _unitOfWork.ProductsDbStorage.TryGetByIdAsync(productId);
+            var flavor = await _unitOfWork.FlavorsDbStorage.TryGetByIdAsync(flavorId);
+            await _unitOfWork.ComparingProductsDbStorage.AddAsync(userId, product, flavor);
+
+            await _unitOfWork.SaveChangesAsync();
             return RedirectToAction(nameof(CheckComparer));
         }
 
         [Authorize]
         public async Task<IActionResult> Deleting(int prodId)
         {
-            await _comparingProducts.DeleteAsync(prodId);
+            await _unitOfWork.ComparingProductsDbStorage.DeleteAsync(prodId);
+            await _unitOfWork.SaveChangesAsync();
+
             return RedirectToAction(nameof(CheckComparer));
         }
 
@@ -130,7 +135,7 @@ namespace OnlineShopWebApp.Controllers
         public async Task<IActionResult> CheckComparer()
         {
             var userId = (await _userManager.FindByNameAsync(User.Identity.Name)).Id;
-            var comparingProducts = await _comparingProducts.GetAllAsync(userId);
+            var comparingProducts = await _unitOfWork.ComparingProductsDbStorage.GetAllAsync(userId);
             var comparingView = _mapping.Map<List<ComparingProductsViewModel>>(comparingProducts);
             return View(comparingView);
         }
@@ -138,9 +143,9 @@ namespace OnlineShopWebApp.Controllers
         {
             var searchingProductsIds = ((int[])TempData["searchingProductsId"])?.First() == -1? new int[0] : ((int[])TempData["searchingProductsId"]);
 
-            var searchingProducts = searchingProductsIds?.Select(x => _products.TryGetByIdAsync(x).Result).ToList();
+            var searchingProducts = searchingProductsIds?.Select(x => _unitOfWork.ProductsDbStorage.TryGetByIdAsync(x).Result).ToList();
 
-            var products = searchingProducts ?? await _products.TryGetByCategoryAsync(category);
+            var products = searchingProducts ?? await _unitOfWork.ProductsDbStorage.TryGetByCategoryAsync(category);
 
             if(products.Count== 0)
             {
@@ -160,7 +165,7 @@ namespace OnlineShopWebApp.Controllers
 
             var user = User.Identity.IsAuthenticated ? await _userManager.FindByNameAsync(User.Identity.Name) : null;
 
-            var favoriteProducts = user != null ? await _favorites.GetByUserIdAsync(user.Id) : null;
+            var favoriteProducts = user != null ? await _unitOfWork.FavoriteProductsDbStorage.GetByUserIdAsync(user.Id) : null;
 
             foreach (var product in productsView)
             {
@@ -181,7 +186,7 @@ namespace OnlineShopWebApp.Controllers
         }
         public async Task<IActionResult> BrandProducts(ProductBrands brand)
         {
-            var products = await _products.TryGetByBrandAsync(brand);
+            var products = await _unitOfWork.ProductsDbStorage.TryGetByBrandAsync(brand);
 
             TempData["searchingProductsId"] = products.Count() == 0 ? new int[1] { -1 } : products.Select(x => x.Id).ToArray();
 
@@ -190,7 +195,7 @@ namespace OnlineShopWebApp.Controllers
 
         public async Task<IActionResult> SaleProducts()
         {
-            var products = await _discounts.GetProductsWithDiscountsAsync();
+            var products = await _unitOfWork.DiscountsDbStorage.GetProductsWithDiscountsAsync();
 
             TempData["searchingProductsId"] = products.Count() == 0 ? new int[1] { -1} : products.Select(x => x.Id).ToArray();
 
@@ -205,7 +210,7 @@ namespace OnlineShopWebApp.Controllers
                 return RedirectToAction(nameof(SaleProducts));
             }
 
-            var products = await _products.GetAllAsync();
+            var products = await _unitOfWork.ProductsDbStorage.GetAllAsync();
 
             var nameSortingProducts = products.Where(x => x.Name.ToLower().Contains(searchingText.ToLower())).ToList();
             var brandSortingProducts = products.Where(x => @EnumHelper.GetDisplayName(x.Brand).ToLower().Contains(searchingText.ToLower())).ToList();

@@ -20,6 +20,7 @@ using AutoMapper;
 using OnlineShopWebApp.FeedbackApi.Models;
 using System.Net.Http.Headers;
 using OnlineShopWebApp.FeedbackApi;
+using OnlineShop.DB.Patterns;
 
 namespace OnlineShopWebApp.Areas.Admin.Controllers
 {
@@ -27,30 +28,24 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
     [Authorize(Roles = Constants.AdminRoleName)]
     public class ProductController : Controller
     {
-        private IProductsStorage _productsInStock;
-        private IFlavor _flavors;
         private readonly IWebHostEnvironment _appEnvironment;
-        private readonly IPictures _pictures;
         private readonly FeedbackApiClient _feedbackApiClient;
         private readonly IMapper _mapping;
-        private readonly IDiscount _discount;
-        public ProductController(IWebHostEnvironment appEnvironment, IFlavor flavors, IProductsStorage productsInStock, IPictures pictures, FeedbackApiClient feedbackApiClient, IMapper mapping, IDiscount discount)
+        private readonly IUnitOfWork _unitOfWork;
+        public ProductController(IWebHostEnvironment appEnvironment, FeedbackApiClient feedbackApiClient, IMapper mapping, IUnitOfWork unitOfWork)
         {
-            _productsInStock = productsInStock;
-            _flavors = flavors;
             _appEnvironment = appEnvironment;
-            _pictures = pictures;
             _feedbackApiClient = feedbackApiClient;
             _mapping = mapping;
-            _discount = discount;
+            _unitOfWork = unitOfWork;
         }
         public async Task<IActionResult> ProductsInStock(ProductCategories category = ProductCategories.None)
         {
-            var existingProducts = _mapping.Map<List<ProductViewModel>>((await _productsInStock.GetAllAsync()));
-            var existingFlavors = _mapping.Map<List<FlavorViewModel>>(await _flavors.GetAllAsync());
+            var existingProducts = _mapping.Map<List<ProductViewModel>>((await _unitOfWork.ProductsDbStorage.GetAllAsync()));
+            var existingFlavors = _mapping.Map<List<FlavorViewModel>>(await _unitOfWork.FlavorsDbStorage.GetAllAsync());
             if (category != ProductCategories.None)
             {
-                existingProducts = _mapping.Map<List<ProductViewModel>>(await _productsInStock.TryGetByCategoryAsync(category));
+                existingProducts = _mapping.Map<List<ProductViewModel>>(await _unitOfWork.ProductsDbStorage.TryGetByCategoryAsync(category));
             }
             ViewBag.Flavors = existingFlavors;
             ViewBag.Category = category;
@@ -60,7 +55,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
         [HttpPost]
         public async Task<ActionResult> AddAsync(ProductViewModel product, List<string> flavors)
         {
-            if ((await _productsInStock.GetAllAsync()).Any(prod => prod.Name.ToLower() == product.Name.ToLower()))
+            if ((await _unitOfWork.ProductsDbStorage.GetAllAsync()).Any(prod => prod.Name.ToLower() == product.Name.ToLower()))
             {
                 ModelState.AddModelError("Name", "Продукт с таким названием уже существует");
             }
@@ -72,9 +67,11 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
             {
                 var productDb = await CreateNewProductWithFilesAsync(product, flavors);
 
-                await _productsInStock.SaveAsync(productDb);
+                await _unitOfWork.ProductsDbStorage.SaveAsync(productDb);
 
-                await _discount.AddAsync(await _productsInStock.TryGetByNameAsync(productDb.Name), await _discount.GetZeroDiscountAsync(), "Без скидки");
+                await _unitOfWork.DiscountsDbStorage.AddAsync(await _unitOfWork.ProductsDbStorage.TryGetByNameAsync(productDb.Name), await _unitOfWork.DiscountsDbStorage.GetZeroDiscountAsync(), "Без скидки");
+
+                await _unitOfWork.SaveChangesAsync();
 
                 return Redirect("ProductsInStock");
             }
@@ -83,8 +80,8 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
 
         public async Task<ActionResult> EditProduct(int productId)
         {
-            var productView = _mapping.Map<ProductViewModel>(await _productsInStock.TryGetByIdAsync(productId));
-            var existingFlavors = _mapping.Map<List<FlavorViewModel>>(await _flavors.GetAllAsync());
+            var productView = _mapping.Map<ProductViewModel>(await _unitOfWork.ProductsDbStorage.TryGetByIdAsync(productId));
+            var existingFlavors = _mapping.Map<List<FlavorViewModel>>(await _unitOfWork.FlavorsDbStorage.GetAllAsync());
             ViewBag.Flavors = existingFlavors;
             return View(productView);
         }
@@ -93,7 +90,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
         public async Task<IActionResult> EditProductAsync(ProductViewModel product, List<string> flavors, List<string> pictures)
         {
             var productView = await GetProductForViewAsync(product, flavors, pictures);
-            ViewBag.Flavors = _mapping.Map<List<FlavorViewModel>>(await _flavors.GetAllAsync());
+            ViewBag.Flavors = _mapping.Map<List<FlavorViewModel>>(await _unitOfWork.FlavorsDbStorage.GetAllAsync());
 
             if (product.Name == @EnumHelper.GetDisplayName(product.Brand))
             {
@@ -101,7 +98,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
             }
             if (ModelState.IsValid)
             {
-                var productToUpdate = await _productsInStock.TryGetByIdAsync(product.Id);
+                var productToUpdate = await _unitOfWork.ProductsDbStorage.TryGetByIdAsync(product.Id);
 
                 if (productToUpdate == null)
                 {
@@ -119,7 +116,8 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
 
                 try
                 {
-                    await _productsInStock.EditAsync(productToUpdate);
+                    await _unitOfWork.ProductsDbStorage.EditAsync(productToUpdate);
+                    await _unitOfWork.SaveChangesAsync();
                     return RedirectToAction("ProductsInStock");
                 }
                 catch (DbUpdateConcurrencyException ex)
@@ -184,14 +182,14 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
             product.Pictures = new List<ProductPicture>();
             foreach (var path in pictures)
             {
-                var pictureView = await _pictures.TryGetByPathAsync(path);
+                var pictureView = await _unitOfWork.PicturesDbStorage.TryGetByPathAsync(path);
                 product.Pictures.Add(pictureView);
             }
 
             product.Flavors = new List<FlavorViewModel>();
             foreach (var flavor in flavors)
             {
-                var flavorView = _mapping.Map<FlavorViewModel>(await _flavors.TryGetByNameAsync(flavor));
+                var flavorView = _mapping.Map<FlavorViewModel>(await _unitOfWork.FlavorsDbStorage.TryGetByNameAsync(flavor));
                 product.Flavors.Add(flavorView);
             }
             return product;
@@ -201,23 +199,23 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
             var flavorsDb = new List<Flavor>();
             foreach (var flavor in flavors)
             {
-                var flavorDb = await _flavors.TryGetByNameAsync(flavor);
+                var flavorDb = await _unitOfWork.FlavorsDbStorage.TryGetByNameAsync(flavor);
                 flavorsDb.Add(flavorDb);
             }
             var picturesDb = new List<ProductPicture>();
             foreach (var picture in pictures)
             {
-                var pictureDb = await _pictures.TryGetByPathAsync(picture);
+                var pictureDb = await _unitOfWork.PicturesDbStorage.TryGetByPathAsync(picture);
                 picturesDb.Add(pictureDb);
             }
 
             var productDb = _mapping.Map<Product>(productView);
 
-            var discount = await _discount.GetByProductIdAsync(productDb.Id);
+            var discount = await _unitOfWork.DiscountsDbStorage.GetByProductIdAsync(productDb.Id);
 
             productDb.Flavors = flavorsDb;
             productDb.Pictures = picturesDb;
-            productDb.DiscountCost = _discount.CalculateDiscount(productDb.Cost, discount.DiscountPercent);
+            productDb.DiscountCost = _unitOfWork.DiscountsDbStorage.CalculateDiscount(productDb.Cost, discount.DiscountPercent);
             return productDb;
         }
 
@@ -240,24 +238,27 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
 
         public async Task<IActionResult> Delete(int productId)
         {
-            var product = await _productsInStock.TryGetByIdAsync(productId);
-            await _productsInStock.DeleteAsync(product);
-            return Redirect("ProductsInStock");
+            var product = await _unitOfWork.ProductsDbStorage.TryGetByIdAsync(productId);
+            await _unitOfWork.ProductsDbStorage.DeleteAsync(product);
+            await _unitOfWork.SaveChangesAsync();
+            return RedirectToAction(nameof(ProductsInStock));
         }
 
         public async Task<IActionResult> ClearOutStock()
         {
-            await _productsInStock.ClearAllAsync();
-            return Redirect("ProductsInStock");
+            await _unitOfWork.ProductsDbStorage.ClearAllAsync();
+            await _unitOfWork.SaveChangesAsync();
+            return RedirectToAction(nameof(ProductsInStock));
         }
 
         public async Task<IActionResult> GetDefaultProducts()
         {
-            if ((await _productsInStock.GetAllAsync()).Count == 0)
+            if ((await _unitOfWork.ProductsDbStorage.GetAllAsync()).Count == 0)
             {
-                await _productsInStock.InitializeDefaultProductsAsync();
+                await _unitOfWork.ProductsDbStorage.InitializeDefaultProductsAsync();
+                await _unitOfWork.SaveChangesAsync();
             }
-            return RedirectToAction("ProductsInStock");
+            return RedirectToAction(nameof(ProductsInStock));
         }
 
         private async Task<Product> CreateNewProductAsync(ProductViewModel product, List<string> flavors, List<string> fileName)
@@ -265,18 +266,19 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
             var flavorsDb = new List<Flavor>();
             foreach (var flavor in flavors)
             {
-                var flavorDb = await _flavors.TryGetByNameAsync(flavor);
+                var flavorDb = await _unitOfWork.FlavorsDbStorage.TryGetByNameAsync(flavor);
                 flavorsDb.Add(flavorDb);
             }
 
             if (product.Id != 0)
             {
-                var existingPictures = (await _productsInStock.TryGetByIdAsync(product.Id)).Pictures.Select(x => x.Path).ToList();
+                var existingPictures = (await _unitOfWork.ProductsDbStorage.TryGetByIdAsync(product.Id)).Pictures.Select(x => x.Path).ToList();
                 foreach (var exist in existingPictures)
                 {
                     System.IO.File.Delete(Path.Combine(_appEnvironment.WebRootPath + exist));
-                    var picture = await _pictures.TryGetByPathAsync(exist);
-                    await _pictures.DeleteAsync(picture);
+                    var picture = await _unitOfWork.PicturesDbStorage.TryGetByPathAsync(exist);
+                    await _unitOfWork.PicturesDbStorage.DeleteAsync(picture);
+                    await _unitOfWork.SaveChangesAsync();
                 }
             }
 
@@ -284,8 +286,9 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
             foreach (var name in fileName)
             {
                 var pictureDb = new ProductPicture { Path = GetProductImagePath(product.Category) + name, NutritionPath = string.Empty };
-                await _pictures.SaveAsync(pictureDb);
-                var newPicture = await _pictures.TryGetByPathAsync(pictureDb.Path);
+                await _unitOfWork.PicturesDbStorage.SaveAsync(pictureDb);
+                await _unitOfWork.SaveChangesAsync();
+                var newPicture = await _unitOfWork.PicturesDbStorage.TryGetByPathAsync(pictureDb.Path);
                 imagesDb.Add(newPicture);
             }
 

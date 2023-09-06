@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using OnlineShop.DB.Interfaces;
 using OnlineShop.DB.Models;
 using OnlineShop.DB.Models.Interfaces;
+using OnlineShop.DB.Patterns;
 using OnlineShopWebApp.Helpers;
 using OnlineShopWebApp.Models;
 using System;
@@ -23,28 +24,28 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
     [Authorize]
     public class CustomerController : Controller
     {
-        private readonly UserManager<User> _userManager;
-        private IPurchases _closedOrders;
+        private readonly UserManager<User> _userManager;        
         private readonly IWebHostEnvironment _appEnvironment;
         private readonly IMapper _mapping;
-        public CustomerController(IPurchases closedPurchases, UserManager<User> userManager, IWebHostEnvironment appEnvironment, IMapper mapping)
+        private readonly IUnitOfWork _unitOfWork;
+        public CustomerController(UserManager<User> userManager, IWebHostEnvironment appEnvironment, IMapper mapping, IUnitOfWork unitOfWork)
         {
             _userManager = userManager;
             _appEnvironment = appEnvironment;
-            _closedOrders = closedPurchases;
             _mapping = mapping;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<IActionResult> ClosedOrders()
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            var closedOrders = _mapping.Map<List<OrderViewModel>>((await _closedOrders.TryGetByUserIdAsync(user.Id)));
+            var closedOrders = _mapping.Map<List<OrderViewModel>>((await _unitOfWork.ClosedPurchasesDbStorage.TryGetByUserIdAsync(user.Id)));
             return View(closedOrders);
         }
 
         public async Task<IActionResult> OrderDataAsync(Guid id)
         {
-            var order = await _closedOrders.TryGetByIdAsync(id);
+            var order = await _unitOfWork.ClosedPurchasesDbStorage.TryGetByIdAsync(id);
             var orderView = _mapping.Map<OrderViewModel>(order);
             return View(orderView);
         }

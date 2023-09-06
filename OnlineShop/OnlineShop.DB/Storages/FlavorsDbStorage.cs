@@ -18,12 +18,10 @@ namespace OnlineShop.DB.Storages
         public async Task SaveAsync(Flavor flavor)
         {
             dataBaseContext.Flavors.Add(flavor);
-            await dataBaseContext.SaveChangesAsync();
         }
         public async Task DeleteAsync(Flavor flavor)
         {
             dataBaseContext.Flavors.Remove(flavor);
-            await dataBaseContext.SaveChangesAsync();
         }
 
         public async Task<Flavor> TryGetByIdAsync(int id)

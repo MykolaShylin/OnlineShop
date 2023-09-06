@@ -15,6 +15,7 @@ using AutoMapper;
 using OnlineShopWebApp.Models;
 using System.Collections.Generic;
 using OnlineShopWebApp.Services;
+using OnlineShop.DB.Patterns;
 
 namespace OnlineShopWebApp.Areas.Admin.Controllers
 {
@@ -22,19 +23,19 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
     [Authorize(Roles = $"{Constants.AdminRoleName}, {Constants.ModeratorRoleName}")]
     public class OrderController : Controller
     {
-        private IPurchases _closedPurchases;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<User> _userManager;
         private readonly IMapper _mapping;
 
-        public OrderController(IPurchases closedPurchases, UserManager<User> userManager, IMapper mapping, TelegramService telegramService)
+        public OrderController(UserManager<User> userManager, IMapper mapping, IUnitOfWork unitOfWork)
         {
-            _closedPurchases = closedPurchases;
             _userManager = userManager;
             _mapping = mapping;
+            _unitOfWork = unitOfWork;
         }
         public async Task<IActionResult> ClosedOrders()
         {
-            var closedOrders = await _closedPurchases.GetAllAsync();
+            var closedOrders = await _unitOfWork.ClosedPurchasesDbStorage.GetAllAsync();
             var closedOrdersView = _mapping.Map<List<OrderViewModel>>(closedOrders);
             return View(closedOrdersView);
         }
@@ -43,8 +44,9 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
         {
             try
             {
-                await _closedPurchases.UpdateStatusAsync(orderId, orderStatus);
-                return RedirectToAction("ClosedOrders");
+                await _unitOfWork.ClosedPurchasesDbStorage.UpdateStatusAsync(orderId, orderStatus);
+                await _unitOfWork.SaveChangesAsync();
+                return RedirectToAction(nameof(ClosedOrders));
             }
             catch(DbUpdateConcurrencyException ex)
             {
@@ -62,7 +64,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
         }
         public async Task<IActionResult> CustomerOrder(Guid id)
         {
-            var order = await _closedPurchases.TryGetByIdAsync(id);
+            var order = await _unitOfWork.ClosedPurchasesDbStorage.TryGetByIdAsync(id);
             var customer = await _userManager.FindByIdAsync(order.deliveryInfo.CustomerId);
             var orderView = _mapping.Map<OrderViewModel>(order);
             var customerView = _mapping.Map<UserViewModel>(customer);

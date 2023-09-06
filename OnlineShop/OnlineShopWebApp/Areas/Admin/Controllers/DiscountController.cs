@@ -14,64 +14,64 @@ using System.Reflection.Metadata;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
+using OnlineShop.DB.Patterns;
 
 namespace OnlineShopWebApp.Areas.Admin.Controllers
 {
     [Area(Constants.AdminRoleName)]
     [Authorize(Roles = $"{Constants.AdminRoleName}, {Constants.ModeratorRoleName}")]
     public class DiscountController : Controller
-    {
-        private readonly IProductsStorage _products;
-        private readonly IDiscount _discounts;
+    {        
         private readonly UserManager<User> _userManager;
         private readonly IMapper _mapping;
-        public DiscountController(IDiscount discounts, IProductsStorage products, UserManager<User> userManager, IMapper mapping)
+        private readonly IUnitOfWork _unitOfWork;
+        public DiscountController(UserManager<User> userManager, IMapper mapping, IUnitOfWork unitOfWork)
         {
-            _products = products;
             _userManager = userManager;
-            _discounts = discounts;
             _mapping = mapping;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<IActionResult> NoDiscountProducts()
         {
-            var products = _mapping.Map<List<ProductViewModel>>((await _discounts.GetProductsWithOutDiscountAsync()));
+            var products = _mapping.Map<List<ProductViewModel>>((await _unitOfWork.DiscountsDbStorage.GetProductsWithOutDiscountAsync()));
             return View(products);
         }
 
         public async Task<IActionResult> ProductDiscountInfo(int productId, int discountId)
         {
-            var product = _mapping.Map<ProductViewModel>((await _products.TryGetByIdAsync(productId)));
+            var product = _mapping.Map<ProductViewModel>((await _unitOfWork.ProductsDbStorage.TryGetByIdAsync(productId)));
             ViewBag.Product = product;
-            var discount = _mapping.Map<DiscountViewModel>((await _discounts.TryGetByIdAsync(discountId)));
+            var discount = _mapping.Map<DiscountViewModel>((await _unitOfWork.DiscountsDbStorage.TryGetByIdAsync(discountId)));
             return View(discount);
         }
 
         public async Task<IActionResult> SortedDiscounts(int discountId)
         {
-            ViewBag.Discount = _mapping.Map<DiscountViewModel>((await _discounts.TryGetByIdAsync(discountId)));
-            var discounts = _mapping.Map<List<DiscountViewModel>>((await _discounts.GetAllAsync()));
+            ViewBag.Discount = _mapping.Map<DiscountViewModel>((await _unitOfWork.DiscountsDbStorage.TryGetByIdAsync(discountId)));
+            var discounts = _mapping.Map<List<DiscountViewModel>>((await _unitOfWork.DiscountsDbStorage.GetAllAsync()));
             return View(discounts);
         }
         public async Task<IActionResult> DiscountProducts()
         {
-            var discounts = await _discounts.GetAllAsync();
+            var discounts = await _unitOfWork.DiscountsDbStorage.GetAllAsync();
             var discountsView = _mapping.Map<List<DiscountViewModel>>(discounts);
             return View(discountsView);
         }
 
         public async Task<IActionResult> RemoveProductDiscount(int prodId, int discountId)
         {
-            var product = await _products.TryGetByIdAsync(prodId);
-            await _discounts.RemoveDiscountAsync(product, discountId);
+            var product = await _unitOfWork.ProductsDbStorage.TryGetByIdAsync(prodId);
+            await _unitOfWork.DiscountsDbStorage.RemoveDiscountAsync(product, discountId);
+            await _unitOfWork.SaveChangesAsync();
             return RedirectToAction("DiscountProducts");
         }
 
         public async Task<IActionResult> MakeDiscount(int prodId)
         {
-            var product = _mapping.Map<ProductViewModel>((await _products.TryGetByIdAsync(prodId)));
+            var product = _mapping.Map<ProductViewModel>((await _unitOfWork.ProductsDbStorage.TryGetByIdAsync(prodId)));
             ViewBag.Product = product;
-            var discounts = _mapping.Map<List<DiscountViewModel>>((await _discounts.GetAllAsync()));
+            var discounts = _mapping.Map<List<DiscountViewModel>>((await _unitOfWork.DiscountsDbStorage.GetAllAsync()));
             return View(discounts);
         }
 
@@ -80,18 +80,19 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                var discount = await _discounts.TryGetByIdAsync(discountId);
-                var product = await _products.TryGetByIdAsync(productId);
-                await _discounts.AddAsync(product, discount, discountDescription);
+                var discount = await _unitOfWork.DiscountsDbStorage.TryGetByIdAsync(discountId);
+                var product = await _unitOfWork.ProductsDbStorage.TryGetByIdAsync(productId);
+                await _unitOfWork.DiscountsDbStorage.AddAsync(product, discount, discountDescription);
+                await _unitOfWork.SaveChangesAsync();
             }
             return Redirect($"ProductDiscountInfo?productId={productId}&discountId={discountId}");
         }
 
         public async Task<IActionResult> EditProductDiscount(int productId, int discountId)
         {
-            var product = await _products.TryGetByIdAsync(productId);
-            var discount = await _discounts.TryGetByIdAsync(discountId);
-            var discounts = await _discounts.GetAllAsync();
+            var product = await _unitOfWork.ProductsDbStorage.TryGetByIdAsync(productId);
+            var discount = await _unitOfWork.DiscountsDbStorage.TryGetByIdAsync(discountId);
+            var discounts = await _unitOfWork.DiscountsDbStorage.GetAllAsync();
             var editView = new EditProductDiscountViewModel
             {
                 Product = _mapping.Map<ProductViewModel>(product),
@@ -106,8 +107,9 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                var product = await _products.TryGetByIdAsync(productId);
-                await _discounts.ChangeDiscountAsync(product, oldDiscountId, newDiscountId, discountDescription);
+                var product = await _unitOfWork.ProductsDbStorage.TryGetByIdAsync(productId);
+                await _unitOfWork.DiscountsDbStorage.ChangeDiscountAsync(product, oldDiscountId, newDiscountId, discountDescription);
+                await _unitOfWork.SaveChangesAsync();
             }
             return RedirectToAction(nameof(ProductDiscountInfo), new {productId=productId, discountId=newDiscountId});
         }

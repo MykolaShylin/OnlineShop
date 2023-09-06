@@ -20,12 +20,10 @@ namespace OnlineShop.DB.Storages
         public async Task SaveAsync(Product product)
         {
             dataBaseContext.Products.Add(product);
-            await dataBaseContext.SaveChangesAsync();
         }
         public async Task DeleteAsync(Product product)
         {
             dataBaseContext.Products.Remove(product);
-            await dataBaseContext.SaveChangesAsync();
         }
 
         public async Task EditAsync(Product product)
@@ -52,7 +50,6 @@ namespace OnlineShop.DB.Storages
             updateProduct.DiscountCost = product.DiscountCost;
             updateProduct.DiscountDescription = product.DiscountDescription;
 
-            await dataBaseContext.SaveChangesAsync();
         }
         public async Task<Product> TryGetByIdAsync(int id)
         {
@@ -83,7 +80,6 @@ namespace OnlineShop.DB.Storages
             dataBaseContext.Products.RemoveRange(dataBaseContext.Products);
             dataBaseContext.Pictures.RemoveRange(dataBaseContext.Pictures);
             dataBaseContext.Discounts.RemoveRange(dataBaseContext.Discounts);
-            await dataBaseContext.SaveChangesAsync();
         }
 
         public async Task ReduceAmountInStock(List<BasketItem> items)
@@ -93,7 +89,6 @@ namespace OnlineShop.DB.Storages
                 var product = await TryGetByIdAsync(item.Product.Id);
                 product.AmountInStock = item.Amount > product.AmountInStock ? 0 : product.AmountInStock - item.Amount;
             }
-            dataBaseContext.SaveChanges();
         }
 
         public async Task InitializeDefaultProductsAsync()
@@ -580,8 +575,6 @@ namespace OnlineShop.DB.Storages
 
 
             await dataBaseContext.Discounts.ForEachAsync(x => x.Products.ForEach(q => q.DiscountCost = decimal.Ceiling(((q.Cost * 100) * (100 - x.DiscountPercent) / 100) / 100)));
-
-            await dataBaseContext.SaveChangesAsync();
         }
     }
 }

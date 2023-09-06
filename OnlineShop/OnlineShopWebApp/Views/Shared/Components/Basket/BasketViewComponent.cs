@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OnlineShop.DB.Models;
 using OnlineShop.DB.Models.Interfaces;
+using OnlineShop.DB.Patterns;
 using OnlineShopWebApp.Helpers;
 using OnlineShopWebApp.Models;
 using ReturnTrue.AspNetCore.Identity.Anonymous;
@@ -13,20 +14,20 @@ namespace OnlineShopWebApp.Views.Shared.Components.Cart
 {
     public class BasketViewComponent : ViewComponent
     {
-        private readonly IBasketStorage _baskets;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<User> _userManager;
         private readonly IMapper _mapping;
-        public BasketViewComponent(IBasketStorage baskets, UserManager<User> userManager, IMapper mapping)
+        public BasketViewComponent(UserManager<User> userManager, IMapper mapping, IUnitOfWork unitOfWork)
         {
-            _baskets = baskets;
             _userManager = userManager;
             _mapping = mapping;
+            _unitOfWork = unitOfWork;
         }
         public async Task<IViewComponentResult> InvokeAsync()
         {
             var userId = await GetUserId();
 
-            var basketView = _mapping.Map<BasketViewModel>(await _baskets.TryGetExistingByUserIdAsync(userId));
+            var basketView = _mapping.Map<BasketViewModel>(await _unitOfWork.BasketDbStorage.TryGetExistingByUserIdAsync(userId));
             
             decimal productCounts = basketView?.Amount ?? 0;
 

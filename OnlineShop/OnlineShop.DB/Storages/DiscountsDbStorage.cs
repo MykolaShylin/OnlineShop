@@ -22,8 +22,6 @@ namespace OnlineShop.DB.Storages
 
             var discountDb = await TryGetByIdAsync(discount.Id);
             discountDb.Products.Add(product);
-
-            await dataBaseContext.SaveChangesAsync();
         }
 
         public async Task<Discount> GetByProductIdAsync(int productId)
@@ -85,9 +83,7 @@ namespace OnlineShop.DB.Storages
             else
             {
                 product.DiscountDescription = description;
-            }
-            
-            await dataBaseContext.SaveChangesAsync();
+            }            
         }
 
         public async Task RemoveDiscountAsync(Product product, int discountId)
@@ -101,8 +97,6 @@ namespace OnlineShop.DB.Storages
             product.DiscountDescription = string.Empty;
             product.DiscountCost = product.Cost;
 
-
-            await dataBaseContext.SaveChangesAsync();
         }
 
         public decimal CalculateDiscount(decimal cost, int discountPercent)

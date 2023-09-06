@@ -16,12 +16,10 @@ namespace OnlineShop.DB.Storages
         public async Task SaveAsync(ProductPicture picture)
         {
             dataBaseContext.Pictures.Add(picture);
-            await dataBaseContext.SaveChangesAsync();
         }
         public async Task DeleteAsync(ProductPicture picture)
         {
             dataBaseContext.Pictures.RemoveRange(picture);
-            await dataBaseContext.SaveChangesAsync();
         }
         
         public async Task<ProductPicture> TryGetByPathAsync(string path)

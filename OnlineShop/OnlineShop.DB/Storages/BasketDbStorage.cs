@@ -46,7 +46,6 @@ namespace OnlineShop.DB.Storages
             var existingBasket = await TryGetExistingByUserIdAsync(userId);
             existingBasket.IsClosed= true;
             dataBaseContext.Basket.Update(existingBasket);
-            await dataBaseContext.SaveChangesAsync();
         }
         public async Task DeleteAsync(string userId, int prodId)
         {
@@ -64,7 +63,6 @@ namespace OnlineShop.DB.Storages
             {
                 dataBaseContext.Basket.Remove(existingBasket);
             }
-            await dataBaseContext.SaveChangesAsync();
         }
 
         public async Task UpdateBasket(string userId)
@@ -84,8 +82,6 @@ namespace OnlineShop.DB.Storages
                     }
                 }
             }            
-
-            await dataBaseContext.SaveChangesAsync();
         }
 
         public async Task UpdateItem(string userId, Guid itemId, int flavorId = 0, int amount = 0)
@@ -102,8 +98,7 @@ namespace OnlineShop.DB.Storages
                 existingBasketItem.ProductInfo.FlavorId = flavorId;
             }
 
-            dataBaseContext.BasketItems.Update(existingBasketItem);            
-            await dataBaseContext.SaveChangesAsync();
+            dataBaseContext.BasketItems.Update(existingBasketItem);
         }
 
         public async Task AddAsync(string userId, Product product, ChoosingProductInfo productInfo, int amount)
@@ -144,7 +139,6 @@ namespace OnlineShop.DB.Storages
                     });
                 }
             }
-            await dataBaseContext.SaveChangesAsync();
         }
     }
 }

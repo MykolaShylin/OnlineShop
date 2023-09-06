@@ -40,7 +40,6 @@ namespace OnlineShop.DB.Storages
                     favorite.Products.Add(product);
                 }
             }
-            await dataBaseContext.SaveChangesAsync();
         }
         public async Task DeleteAsync(Product product, string userId)
         {
@@ -50,7 +49,6 @@ namespace OnlineShop.DB.Storages
             {
                 dataBaseContext.FavoriteProduct.Remove(favorite);
             }
-            await dataBaseContext.SaveChangesAsync();
         }
 
         public async Task<FavoriteProduct> GetByUserIdAsync(string userId)

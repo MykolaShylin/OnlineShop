@@ -24,6 +24,7 @@ using OnlineShop.DB.Contexts;
 using OnlineShop.DB.Interfaces;
 using OnlineShop.DB.Models;
 using OnlineShop.DB.Models.Interfaces;
+using OnlineShop.DB.Patterns;
 using OnlineShop.DB.Storages;
 using OnlineShopWebApp.Controllers;
 using OnlineShopWebApp.FeedbackApi;
@@ -49,8 +50,8 @@ namespace OnlineShopWebApp
         public void ConfigureServices(IServiceCollection services)
         {
             string connection = Configuration.GetConnectionString("online_shop");
-            services.AddDbContext<DataBaseContext>(options => options.UseSqlServer(connection), ServiceLifetime.Singleton);
-            services.AddDbContext<IdentityContext>(options => options.UseSqlServer(connection), ServiceLifetime.Singleton);
+            services.AddDbContext<DataBaseContext>(options => options.UseSqlServer(connection));
+            services.AddDbContext<IdentityContext>(options => options.UseSqlServer(connection));
             services.AddIdentity<User, Role>(options =>
                 {
                     options.User.RequireUniqueEmail = true;
@@ -61,20 +62,21 @@ namespace OnlineShopWebApp
                 .AddEntityFrameworkStores<IdentityContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddScoped<IChatBotAPI, ChatBotAPI>();
-            services.AddScoped<TelegramService>();
-            services.AddScoped<ITelegramBot, UserTelegramDbStorage>();
-            services.AddScoped<EmailService>();
-            services.AddScoped<IPictures, PicturesDbStorage>();
-            services.AddScoped<IProductsStorage, ProductsDbStorage>();
-            services.AddScoped<IFlavor, FlavorsDbStorage>();
-            services.AddScoped<IPurchases, ClosedPurchasesDbStorage>();
-            services.AddScoped<IBasketStorage, BasketDbStorage>();
-            services.AddScoped<IProductComparer, ComparingProductsDbStorage>();
-            services.AddScoped<IProductComparer, ComparingProductsDbStorage>();
-            services.AddScoped<IDiscount, DiscountsDbStorage>();
-            services.AddScoped<IGoogleMap, ShopContactsDbStorage>();
-            services.AddScoped<IFavorite, FavoriteProductsDbStorage>();
+            services.AddTransient<IChatBotAPI, ChatBotAPI>();
+            services.AddTransient<TelegramService>();
+            services.AddTransient<ITelegramBot, UserTelegramDbStorage>();
+            services.AddTransient<EmailService>();
+            services.AddTransient<IPictures, PicturesDbStorage>();
+            services.AddTransient<IProductsStorage, ProductsDbStorage>();
+            services.AddTransient<IFlavor, FlavorsDbStorage>();
+            services.AddTransient<IPurchases, ClosedPurchasesDbStorage>();
+            services.AddTransient<IBasketStorage, BasketDbStorage>();
+            services.AddTransient<IProductComparer, ComparingProductsDbStorage>();
+            services.AddTransient<IProductComparer, ComparingProductsDbStorage>();
+            services.AddTransient<IDiscount, DiscountsDbStorage>();
+            services.AddTransient<IGoogleMap, ShopContactsDbStorage>();
+            services.AddTransient<IFavorite, FavoriteProductsDbStorage>();
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
 
             services.AddAutoMapper(typeof(MappingProfile));
 
@@ -82,7 +84,7 @@ namespace OnlineShopWebApp
             {
                 httpClient.BaseAddress = new Uri("https://localhost:7274");
             });
-            services.AddScoped<FeedbackApiClient>();
+            services.AddTransient<FeedbackApiClient>();
 
             services.ConfigureApplicationCookie(options =>
                 {

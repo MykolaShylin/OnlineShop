@@ -56,14 +56,12 @@ namespace OnlineShop.DB.Storages
                 };
                 dataBaseContext.ComparingProducts.Add(comparingProduct);
             }
-            await dataBaseContext.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(int comparerId)
         {
             var existingComparer = await TryGetByIdAsync(comparerId);
             dataBaseContext.ComparingProducts.Remove(existingComparer);
-            await dataBaseContext.SaveChangesAsync();
         }
     }
 }
