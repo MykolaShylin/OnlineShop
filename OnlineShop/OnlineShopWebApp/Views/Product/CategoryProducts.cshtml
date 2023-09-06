@@ -221,7 +221,7 @@
                     }
                     @if (product.IsInFavorites)
                     {
-                        <p class="float-right m-0" title="Товар уже в списке желаемого"><img style="width:40px" src="/icons/in_favorite_icon.png" /></p>
+                        <a class="float-right" title="Товар уже в списке желаемого" asp-area="" asp-controller="Product" asp-action="AddFavorite" asp-route-productId="@product.Id"><img style="width:40px" src="/icons/in_favorite_icon.png" /></a>
                     }
                     else
                     {

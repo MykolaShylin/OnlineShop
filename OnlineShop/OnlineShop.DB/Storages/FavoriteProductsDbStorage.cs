@@ -7,15 +7,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using OnlineShop.DB.Helpers;
 
 namespace OnlineShop.DB.Storages
 {
     public class FavoriteProductsDbStorage : IFavorite
     {
         private readonly DataBaseContext dataBaseContext;
+        private readonly ProductEqualityComparer _comparer;       
         public FavoriteProductsDbStorage(DataBaseContext dataBaseContext)
         {
             this.dataBaseContext = dataBaseContext;
+            _comparer = new ProductEqualityComparer();
         }
 
         public async Task AddAsync(Product product, string userId)
@@ -31,8 +34,8 @@ namespace OnlineShop.DB.Storages
                 await dataBaseContext.FavoriteProduct.AddAsync(newFavorite);
             }
             else 
-            {
-                if(!favorite.Products.Any(x=>x.Id == product.Id))
+            {                
+                if(!favorite.Products.Any(x=> _comparer.Equals(x, product)))
                 {
                     favorite.Products.Add(product);
                 }

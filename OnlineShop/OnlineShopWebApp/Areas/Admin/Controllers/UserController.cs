@@ -95,9 +95,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
                         protocol: HttpContext.Request.Scheme);
 
                     await _emailService.SendEmailConfirmAsync(userDb.Email, callbackUrl);
-
-                    //userDb.EmailConfirmed= true;
-                    //await _userManager.UpdateAsync(userDb);
+                    
                     await _userManager.AddToRoleAsync(userDb, Constants.UserRoleName);
                     
                     return RedirectToAction(nameof(Users));
