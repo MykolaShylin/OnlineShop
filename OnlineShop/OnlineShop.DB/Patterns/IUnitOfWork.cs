@@ -11,8 +11,8 @@ namespace OnlineShop.DB.Patterns
 {
     public interface IUnitOfWork : IDisposable
     {
-        IProductsStorage ProductsDbStorage { get; }
-        IBasketStorage BasketDbStorage { get; }
+        IProductsStorage ProxyProductsDbStorage { get; }
+        IBasketStorage ProxyBasketDbStorage { get; }
         IPurchases ClosedPurchasesDbStorage { get; }
         IProductComparer ComparingProductsDbStorage { get; }
         IFavorite FavoriteProductsDbStorage { get; }

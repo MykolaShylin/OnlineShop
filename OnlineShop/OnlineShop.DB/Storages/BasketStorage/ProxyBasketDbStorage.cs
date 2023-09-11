@@ -8,44 +8,43 @@ using OnlineShop.DB.Contexts;
 using OnlineShop.DB.Models;
 using OnlineShop.DB.Models.Interfaces;
 
-namespace OnlineShop.DB.Storages
+namespace OnlineShop.DB.Storages.BasketStorage
 {
-    public class BasketDbStorage : IBasketStorage
+    public class ProxyBasketDbStorage : IBasketStorage
     {
-        private readonly DataBaseContext dataBaseContext;
+        private readonly DataBaseContext _dataBaseContext;
+        private readonly BasketDbStorage _basketDbStorage;
+        private Basket _existingBasket;
+        private Basket _closedBasket;
 
-        public BasketDbStorage(DataBaseContext dataBaseContext)
+        public ProxyBasketDbStorage(DataBaseContext dataBaseContext)
         {
-            this.dataBaseContext = dataBaseContext;
+            _dataBaseContext = dataBaseContext;
+            _basketDbStorage = new BasketDbStorage(dataBaseContext);
         }
-        public async Task<Basket> TryGetByUserIdAsync(string userId)
+        public async Task<Basket?> TryGetByUserIdAsync(string userId)
         {
-            return await dataBaseContext.Basket.Include(x => x.Items).ThenInclude(x => x.Product).ThenInclude(x=>x.Flavors)
-                .Include(x => x.Items).ThenInclude(x => x.ProductInfo)
-                .Include(x => x.Items).ThenInclude(x => x.Product).ThenInclude(x => x.Pictures)
-                .FirstOrDefaultAsync(x => x.CustomerId == userId);
+            _closedBasket ??= await _basketDbStorage.TryGetByUserIdAsync(userId);
+            return _closedBasket;
         }
-        public async Task<Basket> TryGetExistingByUserIdAsync(string userId)
+        public async Task<Basket?>TryGetExistingByUserIdAsync(string userId)
         {
-            return await dataBaseContext.Basket.Include(x => x.Items).ThenInclude(x => x.Product).ThenInclude(x => x.Flavors)
-                .Include(x => x.Items).ThenInclude(x => x.ProductInfo)
-                .Include(x => x.Items).ThenInclude(x => x.Product).ThenInclude(x => x.Pictures)
-                .FirstOrDefaultAsync(x => x.CustomerId == userId && !x.IsClosed);
+            _existingBasket ??= await _basketDbStorage.TryGetExistingByUserIdAsync(userId);
+            return _existingBasket;
         }
 
         public async Task ChangeTemporaryUserIdAsync(string temporaryUserId, string newUserId)
         {
             var existingBasket = await TryGetExistingByUserIdAsync(temporaryUserId);
             existingBasket.CustomerId = newUserId;
-            dataBaseContext.Basket.Update(existingBasket);
-            await dataBaseContext.SaveChangesAsync();
+            _dataBaseContext.Basket.Update(existingBasket);
         }
 
         public async Task CloseAsync(string userId)
         {
             var existingBasket = await TryGetExistingByUserIdAsync(userId);
-            existingBasket.IsClosed= true;
-            dataBaseContext.Basket.Update(existingBasket);
+            existingBasket.IsClosed = true;
+            _dataBaseContext.Basket.Update(existingBasket);
         }
         public async Task DeleteAsync(string userId, int prodId)
         {
@@ -57,20 +56,20 @@ namespace OnlineShop.DB.Storages
             }
             else if (existingBasket.Items.Count > 1)
             {
-                dataBaseContext.BasketItems.Remove(existingBasketItem);
+                _dataBaseContext.BasketItems.Remove(existingBasketItem);
             }
             else
             {
-                dataBaseContext.Basket.Remove(existingBasket);
+                _dataBaseContext.Basket.Remove(existingBasket);
             }
         }
 
         public async Task UpdateBasket(string userId)
         {
             var existingBasket = await TryGetExistingByUserIdAsync(userId);
-            if(existingBasket.Items.Sum(x=>x.Amount) == 0 )
+            if (existingBasket.Items.Sum(x => x.Amount) == 0)
             {
-                dataBaseContext.Basket.Remove(existingBasket);
+                _dataBaseContext.Basket.Remove(existingBasket);
             }
             else
             {
@@ -78,18 +77,18 @@ namespace OnlineShop.DB.Storages
                 {
                     if (item.Amount == 0)
                     {
-                        dataBaseContext.BasketItems.Remove(item);
+                        _dataBaseContext.BasketItems.Remove(item);
                     }
                 }
-            }            
+            }
         }
 
         public async Task UpdateItem(string userId, Guid itemId, int flavorId = 0, int amount = 0)
         {
             var existingBasket = await TryGetExistingByUserIdAsync(userId);
             var existingBasketItem = existingBasket.Items.FirstOrDefault(x => x.Id == itemId);
-            
-            if(flavorId == 0)
+
+            if (flavorId == 0)
             {
                 existingBasketItem.Amount = amount;
             }
@@ -98,12 +97,12 @@ namespace OnlineShop.DB.Storages
                 existingBasketItem.ProductInfo.FlavorId = flavorId;
             }
 
-            dataBaseContext.BasketItems.Update(existingBasketItem);
+            _dataBaseContext.BasketItems.Update(existingBasketItem);
         }
 
         public async Task AddAsync(string userId, Product product, ChoosingProductInfo productInfo, int amount)
         {
-            var existingBasket = await TryGetExistingByUserIdAsync(userId);
+            var existingBasket = _existingBasket ?? await TryGetExistingByUserIdAsync(userId);
             if (existingBasket == null)
             {
                 var newBasket = new Basket
@@ -116,10 +115,10 @@ namespace OnlineShop.DB.Storages
                         {
                             Amount = amount,
                             Product = product,
-                            ProductInfo= productInfo                            
+                            ProductInfo= productInfo
                         }
                     };
-                dataBaseContext.Basket.Add(newBasket);
+                _dataBaseContext.Basket.Add(newBasket);
             }
             else
             {
@@ -132,7 +131,7 @@ namespace OnlineShop.DB.Storages
                 {
                     existingBasket.Items.Add(new BasketItem
                     {
-                        Amount= amount,
+                        Amount = amount,
                         Product = product,
                         ProductInfo = productInfo,
                         Basket = existingBasket

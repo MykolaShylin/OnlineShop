@@ -3,12 +3,9 @@ using OnlineShop.DB.Interfaces;
 using OnlineShop.DB.Models;
 using OnlineShop.DB.Models.Interfaces;
 using OnlineShop.DB.Storages;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using OnlineShop.DB.Storages.BasketStorage;
+using OnlineShop.DB.Storages.ProductStorage;
 
 namespace OnlineShop.DB.Patterns
 {
@@ -17,7 +14,7 @@ namespace OnlineShop.DB.Patterns
         private readonly UserManager<User> _userManager;
         private readonly DataBaseContext _dataBaseContext;
         private IProductsStorage _productsDbStorage;
-        private IBasketStorage _basketDbStorage;
+        private IBasketStorage _proxyBasketDbStorage;
         private IPurchases _closedPurchasesDbStorage;
         private IProductComparer _comparingProductsDbStorage;
         private IFavorite _favoriteProductsDbStorage;
@@ -29,23 +26,23 @@ namespace OnlineShop.DB.Patterns
             _dataBaseContext = dataBaseContext;
             _userManager = userManager;
         }
-        public IProductsStorage ProductsDbStorage
+        public IProductsStorage ProxyProductsDbStorage
         {
             get
             {
                 if (_productsDbStorage == null)
-                    _productsDbStorage = new ProductsDbStorage(_dataBaseContext);
+                    _productsDbStorage = new ProxyProductsDbStorage(_dataBaseContext);
                 return _productsDbStorage;
             }
         }
 
-        public IBasketStorage BasketDbStorage
+        public IBasketStorage ProxyBasketDbStorage
         {
             get
             {
-                if (_basketDbStorage == null)
-                    _basketDbStorage = new BasketDbStorage(_dataBaseContext);
-                return _basketDbStorage;
+                if (_proxyBasketDbStorage == null)
+                    _proxyBasketDbStorage = new ProxyBasketDbStorage(_dataBaseContext);
+                return _proxyBasketDbStorage;
             }
         }
 

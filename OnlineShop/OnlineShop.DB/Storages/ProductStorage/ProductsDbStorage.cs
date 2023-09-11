@@ -7,7 +7,7 @@ using OnlineShop.DB.Models.Enumerations;
 using OnlineShop.DB.Models.Interfaces;
 using System.Security.Cryptography;
 
-namespace OnlineShop.DB.Storages
+namespace OnlineShop.DB.Storages.ProductStorage
 {
     public class ProductsDbStorage : IProductsStorage
     {
@@ -528,7 +528,7 @@ namespace OnlineShop.DB.Storages
             dataBaseContext.Products.AddRange(SportProductsDb);
             dataBaseContext.Products.AddRange(HealthyFoodProductsDb);
 
-            HealthyFoodProductsDb[0].Flavors.AddRange(new List<Flavor> { FlavorsDb[11]});
+            HealthyFoodProductsDb[0].Flavors.AddRange(new List<Flavor> { FlavorsDb[11] });
             HealthyFoodProductsDb[1].Flavors.AddRange(new List<Flavor> { FlavorsDb[11] });
             HealthyFoodProductsDb[2].Flavors.AddRange(new List<Flavor> { FlavorsDb[18] });
             HealthyFoodProductsDb[3].Flavors.AddRange(new List<Flavor> { FlavorsDb[19] });
@@ -571,10 +571,10 @@ namespace OnlineShop.DB.Storages
             DiscountsDb[0].Products.AddRange(SportProductsDb);
             DiscountsDb[0].Products.AddRange(HealthyFoodProductsDb);
 
-            DiscountsDb[0].Products.ForEach(x => x.DiscountCost = (decimal.Ceiling(x.Cost * 100) * (100 - DiscountsDb[0].DiscountPercent) / 100) / 100);
+            DiscountsDb[0].Products.ForEach(x => x.DiscountCost = decimal.Ceiling(x.Cost * 100) * (100 - DiscountsDb[0].DiscountPercent) / 100 / 100);
 
 
-            await dataBaseContext.Discounts.ForEachAsync(x => x.Products.ForEach(q => q.DiscountCost = decimal.Ceiling(((q.Cost * 100) * (100 - x.DiscountPercent) / 100) / 100)));
+            await dataBaseContext.Discounts.ForEachAsync(x => x.Products.ForEach(q => q.DiscountCost = decimal.Ceiling(q.Cost * 100 * (100 - x.DiscountPercent) / 100 / 100)));
         }
     }
 }

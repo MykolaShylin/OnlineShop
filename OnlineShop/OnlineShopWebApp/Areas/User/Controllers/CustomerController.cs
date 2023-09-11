@@ -94,7 +94,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
             return View(userModel);
         }
 
-        public async Task<ActionResult> ChangePassword()
+        public IActionResult ChangePassword()
         {
             return View();
         }

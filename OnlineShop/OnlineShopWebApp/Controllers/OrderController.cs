@@ -44,7 +44,7 @@ namespace OnlineShopWebApp.Controllers
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
 
-            var basketItems = (await _unitOfWork.BasketDbStorage.TryGetExistingByUserIdAsync(user.Id)).Items;
+            var basketItems = (await _unitOfWork.ProxyBasketDbStorage.TryGetExistingByUserIdAsync(user.Id)).Items;
 
             var orderDb = _mapping.Map<OrderViewModel, Order>(order, opt =>
             {
@@ -61,9 +61,9 @@ namespace OnlineShopWebApp.Controllers
 
             await _emailService.SendOrderConfirmEmailAsync(user.Email, basketItemsView);
 
-            await _unitOfWork.ProductsDbStorage.ReduceAmountInStock(orderDb.Items);
+            await _unitOfWork.ProxyProductsDbStorage.ReduceAmountInStock(orderDb.Items);
             await _unitOfWork.ClosedPurchasesDbStorage.SaveAsync(orderDb);
-            await _unitOfWork.BasketDbStorage.CloseAsync(user.Id);
+            await _unitOfWork.ProxyBasketDbStorage.CloseAsync(user.Id);
             await _unitOfWork.SaveChangesAsync();
 
             return Redirect(nameof(Confirmation));

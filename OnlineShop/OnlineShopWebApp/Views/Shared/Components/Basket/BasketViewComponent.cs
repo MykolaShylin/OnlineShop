@@ -27,7 +27,7 @@ namespace OnlineShopWebApp.Views.Shared.Components.Cart
         {
             var userId = await GetUserId();
 
-            var basketView = _mapping.Map<BasketViewModel>(await _unitOfWork.BasketDbStorage.TryGetExistingByUserIdAsync(userId));
+            var basketView = _mapping.Map<BasketViewModel>(await _unitOfWork.ProxyBasketDbStorage.TryGetExistingByUserIdAsync(userId));
             
             decimal productCounts = basketView?.Amount ?? 0;
 

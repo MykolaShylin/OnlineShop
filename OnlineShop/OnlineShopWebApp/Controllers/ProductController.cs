@@ -41,7 +41,7 @@ namespace OnlineShopWebApp.Controllers
         public async Task<IActionResult> Index(int prodId)
         {
             var feedbacks = await _feedbackApiClient.GetFeedbacksAsync(prodId);
-            var product = await _unitOfWork.ProductsDbStorage.TryGetByIdAsync(prodId);
+            var product = await _unitOfWork.ProxyProductsDbStorage.TryGetByIdAsync(prodId);
 
             var user = User.Identity.IsAuthenticated ? await _userManager.FindByNameAsync(User.Identity.Name) : null;
 
@@ -69,7 +69,7 @@ namespace OnlineShopWebApp.Controllers
         public async Task<IActionResult> AddFavorite(int productId)
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            var product = await _unitOfWork.ProductsDbStorage.TryGetByIdAsync(productId);
+            var product = await _unitOfWork.ProxyProductsDbStorage.TryGetByIdAsync(productId);
             await _unitOfWork.FavoriteProductsDbStorage.AddAsync(product, user.Id);
 
             await _unitOfWork.SaveChangesAsync();
@@ -80,7 +80,7 @@ namespace OnlineShopWebApp.Controllers
         public async Task<IActionResult> RemoveFavorite(int productId)
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            var product = await _unitOfWork.ProductsDbStorage.TryGetByIdAsync(productId);
+            var product = await _unitOfWork.ProxyProductsDbStorage.TryGetByIdAsync(productId);
             await _unitOfWork.FavoriteProductsDbStorage.DeleteAsync(product, user.Id);
             await _unitOfWork.SaveChangesAsync();
 
@@ -114,7 +114,7 @@ namespace OnlineShopWebApp.Controllers
         public async Task<IActionResult> Comparing(int productId, int flavorId)
         {
             var userId = (await _userManager.FindByNameAsync(User.Identity.Name)).Id;
-            var product = await _unitOfWork.ProductsDbStorage.TryGetByIdAsync(productId);
+            var product = await _unitOfWork.ProxyProductsDbStorage.TryGetByIdAsync(productId);
             var flavor = await _unitOfWork.FlavorsDbStorage.TryGetByIdAsync(flavorId);
             await _unitOfWork.ComparingProductsDbStorage.AddAsync(userId, product, flavor);
 
@@ -143,9 +143,9 @@ namespace OnlineShopWebApp.Controllers
         {
             var searchingProductsIds = ((int[])TempData["searchingProductsId"])?.First() == -1? new int[0] : ((int[])TempData["searchingProductsId"]);
 
-            var searchingProducts = searchingProductsIds?.Select(x => _unitOfWork.ProductsDbStorage.TryGetByIdAsync(x).Result).ToList();
+            var searchingProducts = searchingProductsIds?.Select(x => _unitOfWork.ProxyProductsDbStorage.TryGetByIdAsync(x).Result).ToList();
 
-            var products = searchingProducts ?? await _unitOfWork.ProductsDbStorage.TryGetByCategoryAsync(category);
+            var products = searchingProducts ?? await _unitOfWork.ProxyProductsDbStorage.TryGetByCategoryAsync(category);
 
             if(products.Count== 0)
             {
@@ -186,7 +186,7 @@ namespace OnlineShopWebApp.Controllers
         }
         public async Task<IActionResult> BrandProducts(ProductBrands brand)
         {
-            var products = await _unitOfWork.ProductsDbStorage.TryGetByBrandAsync(brand);
+            var products = await _unitOfWork.ProxyProductsDbStorage.TryGetByBrandAsync(brand);
 
             TempData["searchingProductsId"] = products.Count() == 0 ? new int[1] { -1 } : products.Select(x => x.Id).ToArray();
 
@@ -210,7 +210,7 @@ namespace OnlineShopWebApp.Controllers
                 return RedirectToAction(nameof(SaleProducts));
             }
 
-            var products = await _unitOfWork.ProductsDbStorage.GetAllAsync();
+            var products = await _unitOfWork.ProxyProductsDbStorage.GetAllAsync();
 
             var nameSortingProducts = products.Where(x => x.Name.ToLower().Contains(searchingText.ToLower())).ToList();
             var brandSortingProducts = products.Where(x => @EnumHelper.GetDisplayName(x.Brand).ToLower().Contains(searchingText.ToLower())).ToList();

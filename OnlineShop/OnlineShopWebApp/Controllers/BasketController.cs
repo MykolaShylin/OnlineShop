@@ -41,7 +41,7 @@ namespace OnlineShopWebApp.Controllers
         public async Task<IActionResult> CheckOut()
         {
             var userId = await GetUserId();
-            var basket = await _unitOfWork.BasketDbStorage.TryGetExistingByUserIdAsync(userId);
+            var basket = await _unitOfWork.ProxyBasketDbStorage.TryGetExistingByUserIdAsync(userId);
             var basketView = _mapping.Map<Basket, BasketViewModel>(basket, opt =>
             {
                 if (basket != null)
@@ -59,11 +59,11 @@ namespace OnlineShopWebApp.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Buying(int productId, int flavorId, int amount)
         {
-            var product = await _unitOfWork.ProductsDbStorage.TryGetByIdAsync(productId);
+            var product = await _unitOfWork.ProxyProductsDbStorage.TryGetByIdAsync(productId);
             var userId = await GetUserId();
             var discount = (await _unitOfWork.DiscountsDbStorage.GetByProductIdAsync(productId)).DiscountPercent;
             var productInfo = new ChoosingProductInfo { ProductId = productId, FlavorId = flavorId, Cost = product.Cost, DiscountPercent = discount };
-            await _unitOfWork.BasketDbStorage.AddAsync(userId, product, productInfo, amount);    
+            await _unitOfWork.ProxyBasketDbStorage.AddAsync(userId, product, productInfo, amount);    
             await _unitOfWork.SaveChangesAsync();
             return RedirectToAction(nameof(CheckOut));
         }
@@ -72,7 +72,7 @@ namespace OnlineShopWebApp.Controllers
         public async Task<IActionResult> Deleting(int prodId)
         {
             var userId = await GetUserId();
-            await _unitOfWork.BasketDbStorage.DeleteAsync(userId, prodId);
+            await _unitOfWork.ProxyBasketDbStorage.DeleteAsync(userId, prodId);
             await _unitOfWork.SaveChangesAsync();
             return RedirectToAction(nameof(CheckOut));
         }
@@ -80,7 +80,7 @@ namespace OnlineShopWebApp.Controllers
         {
             var userId = await GetUserId();
             amount++;
-            await _unitOfWork.BasketDbStorage.UpdateItem(userId, itemId, amount: amount);
+            await _unitOfWork.ProxyBasketDbStorage.UpdateItem(userId, itemId, amount: amount);
             await _unitOfWork.SaveChangesAsync();
 
             return RedirectToAction(nameof(EditBasket));
@@ -90,7 +90,7 @@ namespace OnlineShopWebApp.Controllers
         {
             var userId = await GetUserId();
             amount--;
-            await _unitOfWork.BasketDbStorage.UpdateItem(userId, itemId, amount: amount);
+            await _unitOfWork.ProxyBasketDbStorage.UpdateItem(userId, itemId, amount: amount);
             await _unitOfWork.SaveChangesAsync();
 
             return RedirectToAction(nameof(EditBasket));
@@ -100,7 +100,7 @@ namespace OnlineShopWebApp.Controllers
         {
             var userId = await GetUserId();
 
-            await _unitOfWork.BasketDbStorage.UpdateItem(userId, itemId, flavorId: flavorId);
+            await _unitOfWork.ProxyBasketDbStorage.UpdateItem(userId, itemId, flavorId: flavorId);
 
             await _unitOfWork.SaveChangesAsync();
 
@@ -110,7 +110,7 @@ namespace OnlineShopWebApp.Controllers
         public async Task<IActionResult> EditBasket()
         {
             var userId = await GetUserId();
-            var basket = await _unitOfWork.BasketDbStorage.TryGetExistingByUserIdAsync(userId);
+            var basket = await _unitOfWork.ProxyBasketDbStorage.TryGetExistingByUserIdAsync(userId);
             var basketView = _mapping.Map<Basket, BasketViewModel>(basket, opt =>
             {
                 opt.AfterMap((src, dest) =>
@@ -125,7 +125,7 @@ namespace OnlineShopWebApp.Controllers
         {
             var userId = await GetUserId();            
 
-            await _unitOfWork.BasketDbStorage.UpdateBasket(userId);
+            await _unitOfWork.ProxyBasketDbStorage.UpdateBasket(userId);
             await _unitOfWork.SaveChangesAsync();
 
             return RedirectToAction(nameof(Purchase));
@@ -136,10 +136,10 @@ namespace OnlineShopWebApp.Controllers
             var customer = await _userManager.FindByNameAsync(User.Identity.Name);
             if (anonymousId != null)
             {
-                await _unitOfWork.BasketDbStorage.ChangeTemporaryUserIdAsync(anonymousId, customer.Id);
+                await _unitOfWork.ProxyBasketDbStorage.ChangeTemporaryUserIdAsync(anonymousId, customer.Id);
                 await _unitOfWork.SaveChangesAsync();
             }
-            var basket = await _unitOfWork.BasketDbStorage.TryGetExistingByUserIdAsync(customer.Id);
+            var basket = await _unitOfWork.ProxyBasketDbStorage.TryGetExistingByUserIdAsync(customer.Id);
             var basketView = _mapping.Map<Basket, BasketViewModel>(basket, opt =>
             {
                 opt.AfterMap((src, dest) =>
