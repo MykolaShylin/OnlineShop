@@ -200,7 +200,7 @@
                         <h6 class="card-subtitle">@product.Name</h6>
                     </a>
                 </div>
-                <div class="card-footer bg-light" style="border:none">
+                <div class="card-footer bg-light" style="border:none;">
                     @if (product.AmountInStock > 0)
                     {
                         if (product.Cost == product.DiscountCost)
@@ -209,8 +209,12 @@
                         }
                         else
                         {
-                            <h4 class="mr-1" style="float:left; color:chartreuse;">@product.DiscountCost<span class="h5">₴</span></h4>
-                            <h5 style="float:left; color:teal; text-decoration-line:line-through; text-decoration-color:red">@product.Cost<span class="h6">₴</span></h5>
+                            <h4 class="col-4 p-0 position-relative" style="color:chartreuse">
+                                @product.DiscountCost₴
+                                <span class="col-12 ml-3 p-0 position-absolute top-0 start-100 translate-middle" style="font-size:large; color:teal; text-decoration-line:line-through; text-decoration-color:red">
+                                    @product.Cost₴
+                                </span>
+                            </h4>
                         }
                         <a class="btn btn-dark" asp-area="" asp-controller="Basket" asp-action="Buying" asp-route-productId="@product.Id" asp-route-flavorId="@product.Flavor.Id" asp-route-amount="1" role="button">Добавить в корзину</a>
                     }
