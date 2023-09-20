@@ -22,10 +22,6 @@ namespace OnlineShop.DB.Storages
             _cache = cache;
         }
 
-        public async Task<ComparingProducts> GetLastAsync(string userId)
-        {
-            return (await GetAllByUserIdAsync(userId)).Last();
-        }
         public async Task<ComparingProducts> TryGetByIdAsync(int comparerId)
         {
             if (_cache.TryGetValue(comparerId, out ComparingProducts? product))
@@ -67,21 +63,18 @@ namespace OnlineShop.DB.Storages
                 dataBaseContext.ComparingProducts.Add(comparingProduct);
                 AddToCache(userId, comparingProduct);
             }
-            else if (existingComparer.Count == 3)
+            else if (existingComparer.Count == 3 || existingComparer.Count == 3 && !existingComparer.Any(x => x.Product.Id == product.Id && x.Flavor.Id == flavor.Id))
             {
-                var lastProduct = await GetLastAsync(userId);
-                dataBaseContext.ComparingProducts.Remove(lastProduct);
+                var lastProduct = existingComparer.Last();
                 RemoveFromCache(userId, lastProduct);
 
-                var comparingProduct = new ComparingProducts()
-                {
-                    UserId = userId,
-                    Product = product,
-                    Flavor = flavor
-                };
+                lastProduct.UserId = userId;
+                lastProduct.Product = product;
+                lastProduct.Flavor = flavor;
 
-                dataBaseContext.ComparingProducts.Add(comparingProduct);
-                AddToCache(userId, comparingProduct);
+                dataBaseContext.ComparingProducts.Update(lastProduct);
+                
+                AddToCache(userId, lastProduct);
             }            
         }
 

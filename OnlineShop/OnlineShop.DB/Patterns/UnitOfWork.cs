@@ -74,7 +74,7 @@ namespace OnlineShop.DB.Patterns
             get
             {
                 if (_favoriteProductsDbStorage == null)
-                    _favoriteProductsDbStorage = new FavoriteProductsDbStorage(_dataBaseContext);
+                    _favoriteProductsDbStorage = new FavoriteProductsDbStorage(_dataBaseContext, _cache);
                 return _favoriteProductsDbStorage;
             }
         }
@@ -84,7 +84,7 @@ namespace OnlineShop.DB.Patterns
             get
             {
                 if (_flavorsDbStorage == null)
-                    _flavorsDbStorage = new FlavorsDbStorage(_dataBaseContext);
+                    _flavorsDbStorage = new FlavorsDbStorage(_dataBaseContext, _cache);
                 return _flavorsDbStorage;
             }
         }

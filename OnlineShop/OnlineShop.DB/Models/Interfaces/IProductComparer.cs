@@ -10,6 +10,5 @@ namespace OnlineShop.DB.Models.Interfaces
         Task DeleteAsync(int comparerId);
         Task<List<ComparingProducts>> GetAllByUserIdAsync(string userId);
         Task<ComparingProducts> TryGetByIdAsync(int comparerId);
-        Task<ComparingProducts> GetLastAsync(string userId);
     }
 }
