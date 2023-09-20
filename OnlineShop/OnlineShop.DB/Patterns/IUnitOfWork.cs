@@ -1,4 +1,5 @@
-﻿using OnlineShop.DB.Interfaces;
+﻿using Microsoft.Extensions.Caching.Memory;
+using OnlineShop.DB.Interfaces;
 using OnlineShop.DB.Models.Interfaces;
 using System;
 using System.Collections;

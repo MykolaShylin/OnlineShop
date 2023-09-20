@@ -13,15 +13,19 @@ using System.Threading.Tasks;
 using System.Web.Helpers;
 using System.Web;
 using Nancy.Json;
+using Microsoft.Extensions.Caching.Memory;
+using System.Collections;
 
 namespace OnlineShop.DB.Storages
 {
     public class ShopContactsDbStorage : IGoogleMap
     {
         private readonly DataBaseContext _dataBaseContext;
-        public ShopContactsDbStorage(DataBaseContext dataBaseContext)
+        private readonly IMemoryCache _cache;
+        public ShopContactsDbStorage(DataBaseContext dataBaseContext, IMemoryCache cache = null)
         {
             _dataBaseContext = dataBaseContext;
+            _cache = cache;
         }
         public List<GoogleMapShopInfo> GetAll()
         {

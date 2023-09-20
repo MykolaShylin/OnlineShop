@@ -24,7 +24,7 @@ namespace OnlineShopWebApp.Views.Shared.Components.Comparer
             if (User.Identity.Name != null)
             {
                 var userId = (await _userManager.FindByNameAsync(User.Identity.Name))?.Id;
-                products = userId == null ? null : await _unitOfWork.ComparingProductsDbStorage.GetAllAsync(userId);
+                products = userId == null ? null : await _unitOfWork.ComparingProductsDbStorage.GetAllByUserIdAsync(userId);
             }
             int productCounts = products?.Count ?? 0;
             return View("Comparer", productCounts);

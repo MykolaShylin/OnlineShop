@@ -135,7 +135,7 @@ namespace OnlineShopWebApp.Controllers
         public async Task<IActionResult> CheckComparer()
         {
             var userId = (await _userManager.FindByNameAsync(User.Identity.Name)).Id;
-            var comparingProducts = await _unitOfWork.ComparingProductsDbStorage.GetAllAsync(userId);
+            var comparingProducts = await _unitOfWork.ComparingProductsDbStorage.GetAllByUserIdAsync(userId);
             var comparingView = _mapping.Map<List<ComparingProductsViewModel>>(comparingProducts);
             return View(comparingView);
         }

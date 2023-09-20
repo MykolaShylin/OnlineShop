@@ -8,8 +8,7 @@ namespace OnlineShop.DB.Models.Interfaces
     {
         Task AddAsync(string userId, Product product, Flavor flavor);
         Task DeleteAsync(int comparerId);
-        Task<List<ComparingProducts>> GetAllAsync(string userId);
+        Task<List<ComparingProducts>> GetAllByUserIdAsync(string userId);
         Task<ComparingProducts> TryGetByIdAsync(int comparerId);
-        Task<ComparingProducts> GetLastAsync(string userId);
     }
 }
