@@ -6,6 +6,7 @@ using OnlineShop.DB.Storages;
 using Microsoft.AspNetCore.Identity;
 using OnlineShop.DB.Storages.BasketStorage;
 using OnlineShop.DB.Storages.ProductStorage;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace OnlineShop.DB.Patterns
 {
@@ -13,6 +14,7 @@ namespace OnlineShop.DB.Patterns
     {
         private readonly UserManager<User> _userManager;
         private readonly DataBaseContext _dataBaseContext;
+        private readonly IMemoryCache _cache;
         private IProductsStorage _productsDbStorage;
         private IBasketStorage _proxyBasketDbStorage;
         private IPurchases _closedPurchasesDbStorage;
@@ -21,10 +23,11 @@ namespace OnlineShop.DB.Patterns
         private IFlavor _flavorsDbStorage;
         private IPictures _picturesDbStorage;
         private IDiscount _discountsDbStorage;
-        public UnitOfWork(DataBaseContext dataBaseContext, UserManager<User> userManager)
+        public UnitOfWork(DataBaseContext dataBaseContext, UserManager<User> userManager, IMemoryCache cache)
         {
             _dataBaseContext = dataBaseContext;
             _userManager = userManager;
+            _cache = cache;
         }
         public IProductsStorage ProxyProductsDbStorage
         {
@@ -51,7 +54,7 @@ namespace OnlineShop.DB.Patterns
             get
             {
                 if (_closedPurchasesDbStorage == null)
-                    _closedPurchasesDbStorage = new ClosedPurchasesDbStorage(_dataBaseContext, _userManager);
+                    _closedPurchasesDbStorage = new ClosedPurchasesDbStorage(_dataBaseContext, _userManager, _cache);
                 return _closedPurchasesDbStorage;
             }
         }
@@ -61,7 +64,7 @@ namespace OnlineShop.DB.Patterns
             get
             {
                 if (_comparingProductsDbStorage == null)
-                    _comparingProductsDbStorage = new ComparingProductsDbStorage(_dataBaseContext);
+                    _comparingProductsDbStorage = new ComparingProductsDbStorage(_dataBaseContext, _cache);
                 return _comparingProductsDbStorage;
             }
         }

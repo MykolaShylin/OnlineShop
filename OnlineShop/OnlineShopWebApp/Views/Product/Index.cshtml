@@ -104,7 +104,7 @@
                     <div class="col-6 m-0 align-self-end">
                         <div class="row p-0 justify-content-between">                            
                             <div class="col-auto m-0">
-                                 <a asp-area="" asp-controller="Product" asp-action="Comparing" asp-route-productId="@Model.Id" asp-route-flavorId="1" title="Добавить к сравнению"><img src="/icons/main_compare_icon.png"/></a>
+                                 <a asp-area="" asp-controller="Product" asp-action="Comparing" asp-route-productId="@Model.Id" asp-route-flavorId="@Model.Flavor.Id" title="Добавить к сравнению"><img src="/icons/main_compare_icon.png"/></a>
                             </div>
                             <div class="col-auto m-0">
                                 @if(!Model.isInFavorites)

@@ -1,24 +1,11 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Autofac.Core;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.Net.Http.Headers;
-using Microsoft.Owin.Security.Google;
 using OnlineShop.DB;
 using OnlineShop.DB.Contexts;
 using OnlineShop.DB.Interfaces;
@@ -28,9 +15,7 @@ using OnlineShop.DB.Patterns;
 using OnlineShop.DB.Storages;
 using OnlineShop.DB.Storages.BasketStorage;
 using OnlineShop.DB.Storages.ProductStorage;
-using OnlineShopWebApp.Controllers;
 using OnlineShopWebApp.FeedbackApi;
-using OnlineShopWebApp.FeedbackApi.Models;
 using OnlineShopWebApp.Helpers;
 using OnlineShopWebApp.Services;
 using ReturnTrue.AspNetCore.Identity.Anonymous;
@@ -63,6 +48,8 @@ namespace OnlineShopWebApp
                 })
                 .AddEntityFrameworkStores<IdentityContext>()
                 .AddDefaultTokenProviders();
+
+            services.AddMemoryCache();
 
             services.AddScoped<IChatBotAPI, ChatBotAPI>();
             services.AddScoped<TelegramService>();
