@@ -22,6 +22,7 @@ namespace OnlineShop.DB.Contexts
                 Avatar = null,
                 NikName = "Admin",
                 EmailConfirmed = true,
+                TelegramUserId = 385866060
             };
 
             var moderator = new User
@@ -30,10 +31,11 @@ namespace OnlineShop.DB.Contexts
                 RealName = "Николай",
                 SerName = "Шилин",
                 Email = "shylin.mykola@gmail.com",
-                PhoneNumber = "+380975288699",
+                PhoneNumber = "+380975288688",
                 Avatar = null,
                 NikName = "Moderator",
                 EmailConfirmed = true,
+                TelegramUserId = 385866060
             };
 
             var adminPassword = "1q2w3e4r";
