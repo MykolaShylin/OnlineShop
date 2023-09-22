@@ -20,7 +20,6 @@ using OnlineShopWebApp.Helpers;
 using OnlineShopWebApp.Services;
 using ReturnTrue.AspNetCore.Identity.Anonymous;
 using Serilog;
-using TelegramBot;
 
 namespace OnlineShopWebApp
 {
@@ -51,9 +50,6 @@ namespace OnlineShopWebApp
 
             services.AddMemoryCache();
 
-            services.AddScoped<IChatBotAPI, ChatBotAPI>();
-            services.AddScoped<TelegramService>();
-            services.AddScoped<ITelegramBot, UserTelegramDbStorage>();
             services.AddScoped<EmailService>();
             services.AddScoped<IPictures, PicturesDbStorage>();
             services.AddScoped<IProductsStorage, ProxyProductsDbStorage>();

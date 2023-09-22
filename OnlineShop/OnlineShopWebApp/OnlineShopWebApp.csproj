@@ -45,7 +45,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OnlineShop.DB\OnlineShop.DB.csproj" />
-    <ProjectReference Include="..\TelegramBot\TelegramBot.csproj" />
   </ItemGroup>
 
 </Project>
