@@ -25,9 +25,9 @@ namespace OnlineShop.DB.Storages.ProductStorage
 
         public async Task SaveAsync(Product product)
         {
-            dataBaseContext.Products.Add(product);
+            await dataBaseContext.Products.AddAsync(product);
         }
-        public async Task DeleteAsync(Product product)
+        public void Delete(Product product)
         {
             dataBaseContext.Products.Remove(product);
         }

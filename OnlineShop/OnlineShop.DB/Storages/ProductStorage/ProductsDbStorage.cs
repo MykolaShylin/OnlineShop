@@ -19,9 +19,9 @@ namespace OnlineShop.DB.Storages.ProductStorage
 
         public async Task SaveAsync(Product product)
         {
-            dataBaseContext.Products.Add(product);
+            await dataBaseContext.Products.AddAsync(product);
         }
-        public async Task DeleteAsync(Product product)
+        public void Delete(Product product)
         {
             dataBaseContext.Products.Remove(product);
         }
@@ -51,9 +51,10 @@ namespace OnlineShop.DB.Storages.ProductStorage
             updateProduct.DiscountDescription = product.DiscountDescription;
 
         }
-        public async Task<Product> TryGetByIdAsync(int id)
+        public async Task<Product?> TryGetByIdAsync(int id)
         {
             return await dataBaseContext.Products.Include(x => x.Flavors).Include(x => x.Pictures).FirstOrDefaultAsync(prod => prod.Id == id);
+        
         }
         public async Task<List<Product>> TryGetByCategoryAsync(ProductCategories category)
         {

@@ -18,14 +18,14 @@ namespace OnlineShop.DB.Storages.BasketStorage
         {
             _dataBaseContext = dataBaseContext;
         }
-        public async Task<Basket> TryGetByUserIdAsync(string userId)
+        public async Task<Basket?> TryGetByUserIdAsync(string userId)
         {
             return await _dataBaseContext.Basket.Include(x => x.Items).ThenInclude(x => x.Product).ThenInclude(x => x.Flavors)
                 .Include(x => x.Items).ThenInclude(x => x.ProductInfo)
                 .Include(x => x.Items).ThenInclude(x => x.Product).ThenInclude(x => x.Pictures)
                 .FirstOrDefaultAsync(x => x.CustomerId == userId);
         }
-        public async Task<Basket> TryGetExistingByUserIdAsync(string userId)
+        public async Task<Basket?> TryGetExistingByUserIdAsync(string userId)
         {
             return await _dataBaseContext.Basket.Include(x => x.Items).ThenInclude(x => x.Product).ThenInclude(x => x.Flavors)
                 .Include(x => x.Items).ThenInclude(x => x.ProductInfo)

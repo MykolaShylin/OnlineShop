@@ -8,9 +8,9 @@ namespace OnlineShop.DB.Models.Interfaces
     public interface IProductsStorage
     {
         Task SaveAsync(Product product);
-        Task<Product> TryGetByIdAsync(int id);
+        Task<Product?> TryGetByIdAsync(int id);
         Task<List<Product>> GetAllAsync();
-        Task DeleteAsync(Product product);
+        void Delete(Product product);
         Task EditAsync(Product product);
         Task<List<Product>> TryGetByCategoryAsync(ProductCategories categories);
         Task<Product> TryGetByNameAsync(string name);

@@ -239,7 +239,7 @@ namespace OnlineShopWebApp.Areas.Admin.Controllers
         public async Task<IActionResult> Delete(int productId)
         {
             var product = await _unitOfWork.ProxyProductsDbStorage.TryGetByIdAsync(productId);
-            await _unitOfWork.ProxyProductsDbStorage.DeleteAsync(product);
+            _unitOfWork.ProxyProductsDbStorage.Delete(product);
             await _unitOfWork.SaveChangesAsync();
             return RedirectToAction(nameof(ProductsInStock));
         }
