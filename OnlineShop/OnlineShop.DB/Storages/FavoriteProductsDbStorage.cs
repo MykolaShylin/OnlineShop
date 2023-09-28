@@ -59,13 +59,12 @@ namespace OnlineShop.DB.Storages
         {
             if(_cache.TryGetValue(userId, out FavoriteProduct? favorites))
             {
-                return favorites;
-            }
-            favorites = await dataBaseContext.FavoriteProduct.Include(x => x.Products).ThenInclude(x => x.Flavors).Include(x => x.Products).ThenInclude(x => x.Pictures).Include(x => x.Products).ThenInclude(x => x.FavoriteProducts).FirstOrDefaultAsync(x => x.UserId == userId);
-            if(favorites != null)
-            {
-                _cache.Set(userId, favorites, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(5)));
-            }
+                favorites = await dataBaseContext.FavoriteProduct.Include(x => x.Products).ThenInclude(x => x.Flavors).Include(x => x.Products).ThenInclude(x => x.Pictures).Include(x => x.Products).ThenInclude(x => x.FavoriteProducts).FirstOrDefaultAsync(x => x.UserId == userId);
+                if (favorites != null)
+                {
+                    _cache.Set(userId, favorites, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(5)));
+                }
+            }            
             return favorites;
         }
 

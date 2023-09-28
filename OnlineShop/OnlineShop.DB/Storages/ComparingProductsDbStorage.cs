@@ -24,29 +24,27 @@ namespace OnlineShop.DB.Storages
 
         public async Task<ComparingProducts> TryGetByIdAsync(int comparerId)
         {
-            if (_cache.TryGetValue(comparerId, out ComparingProducts? product))
+            if (!_cache.TryGetValue(comparerId, out ComparingProducts? product))
             {
-                return product;
-            }
-            product = await dataBaseContext.ComparingProducts.Include(x => x.Product).ThenInclude(x => x.Flavors).Include(x => x.Product).ThenInclude(x => x.Pictures).Include(x => x.Flavor).FirstOrDefaultAsync(x => x.Id == comparerId);
-            if (product != null)
-            {
-                _cache.Set(comparerId, product, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(5)));
-            }
+                product = await dataBaseContext.ComparingProducts.Include(x => x.Product).ThenInclude(x => x.Flavors).Include(x => x.Product).ThenInclude(x => x.Pictures).Include(x => x.Flavor).FirstOrDefaultAsync(x => x.Id == comparerId);
+                if (product != null)
+                {
+                    _cache.Set(comparerId, product, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(5)));
+                }
+            }            
             return product;
         }
         public async Task<List<ComparingProducts>> GetAllByUserIdAsync(string userId)
         {
             if (_cache.TryGetValue(userId, out List<ComparingProducts>? products))
             {
-                return products;
-            }
-            products = await dataBaseContext.ComparingProducts.Where(x => x.UserId == userId).Include(x => x.Product).ThenInclude(x => x.Flavors).Include(x => x.Product).ThenInclude(x => x.Pictures).Include(x => x.Flavor).ToListAsync();
-            products = products.Count == 0 ? null : products;
-            if (products != null)
-            {
-                _cache.Set(userId, products, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(5)));
-            }
+                products = await dataBaseContext.ComparingProducts.Where(x => x.UserId == userId).Include(x => x.Product).ThenInclude(x => x.Flavors).Include(x => x.Product).ThenInclude(x => x.Pictures).Include(x => x.Flavor).ToListAsync();
+                products = products.Count == 0 ? null : products;
+                if (products != null)
+                {
+                    _cache.Set(userId, products, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(5)));
+                }
+            }            
             return products;
         }
         public async Task AddAsync(string userId, Product product, Flavor flavor)

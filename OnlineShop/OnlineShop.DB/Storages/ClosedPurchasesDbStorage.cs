@@ -43,29 +43,27 @@ namespace OnlineShop.DB
         }
         public async Task<Order> TryGetByIdAsync(Guid id)
         {
-            if (_cache.TryGetValue(id, out Order? order))
+            if (!_cache.TryGetValue(id, out Order? order))
             {
-                return order;
-            }
-            order = await dataBaseContext.ClosedOrders.Include(x => x.Items).ThenInclude(x => x.Product).ThenInclude(x => x.Flavors).Include(x => x.payInfo).Include(x => x.deliveryInfo).Include(x => x.Items).ThenInclude(x => x.ProductInfo).FirstOrDefaultAsync(order => order.Id == id);
-            if (order != null)
-            {
-                _cache.Set(id, order, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(5)));
-            }
+                order = await dataBaseContext.ClosedOrders.Include(x => x.Items).ThenInclude(x => x.Product).ThenInclude(x => x.Flavors).Include(x => x.payInfo).Include(x => x.deliveryInfo).Include(x => x.Items).ThenInclude(x => x.ProductInfo).FirstOrDefaultAsync(order => order.Id == id);
+                if (order != null)
+                {
+                    _cache.Set(id, order, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(5)));
+                }
+            }            
             return order;
         }
         public async Task<List<Order>> TryGetByUserIdAsync(string id)
         {
             if (_cache.TryGetValue(id, out List<Order>? orders))
             {
-                return orders;
-            }
-            orders = await dataBaseContext.ClosedOrders.Include(x => x.Items).ThenInclude(x => x.Product).ThenInclude(x => x.Flavors).Include(x => x.payInfo).Include(x => x.deliveryInfo).Include(x => x.Items).ThenInclude(x => x.ProductInfo).Where(x => x.deliveryInfo.CustomerId == id).ToListAsync();
-            orders = orders.Count == 0 ? null : orders;
-            if (orders != null)
-            {
-                _cache.Set(id, orders, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(5)));
-            }
+                orders = await dataBaseContext.ClosedOrders.Include(x => x.Items).ThenInclude(x => x.Product).ThenInclude(x => x.Flavors).Include(x => x.payInfo).Include(x => x.deliveryInfo).Include(x => x.Items).ThenInclude(x => x.ProductInfo).Where(x => x.deliveryInfo.CustomerId == id).ToListAsync();
+                orders = orders.Count == 0 ? null : orders;
+                if (orders != null)
+                {
+                    _cache.Set(id, orders, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(5)));
+                }
+            }            
             return orders;
         }
         public async Task<List<Order>> GetAllAsync()
