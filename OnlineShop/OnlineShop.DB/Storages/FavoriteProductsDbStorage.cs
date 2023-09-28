@@ -47,17 +47,20 @@ namespace OnlineShop.DB.Storages
         public async Task DeleteAsync(Product product, string userId)
         {
             var favorite = await GetByUserIdAsync(userId);
-            favorite.Products.Remove(product);
+            favorite.Products.RemoveAll(x=>x.Id == product.Id);
+
+            RemoveFromCache(userId, product);
 
             if(favorite.Products.Count == 0)
             {
                 dataBaseContext.FavoriteProduct.Remove(favorite);
+                _cache.Remove(userId);
             }
         }
 
         public async Task<FavoriteProduct> GetByUserIdAsync(string userId)
         {
-            if(_cache.TryGetValue(userId, out FavoriteProduct? favorites))
+            if(!_cache.TryGetValue(userId, out FavoriteProduct? favorites))
             {
                 favorites = await dataBaseContext.FavoriteProduct.Include(x => x.Products).ThenInclude(x => x.Flavors).Include(x => x.Products).ThenInclude(x => x.Pictures).Include(x => x.Products).ThenInclude(x => x.FavoriteProducts).FirstOrDefaultAsync(x => x.UserId == userId);
                 if (favorites != null)
@@ -66,6 +69,13 @@ namespace OnlineShop.DB.Storages
                 }
             }            
             return favorites;
+        }
+
+        public void RemoveFromCache(string key, Product product)
+        {
+            _cache.TryGetValue(key, out FavoriteProduct? favorites);
+            favorites.Products.RemoveAll(x => x.Id == product.Id);
+            _cache.CreateEntry(key);
         }
 
     }

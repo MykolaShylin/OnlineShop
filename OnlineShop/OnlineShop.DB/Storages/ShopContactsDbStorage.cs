@@ -21,11 +21,9 @@ namespace OnlineShop.DB.Storages
     public class ShopContactsDbStorage : IGoogleMap
     {
         private readonly DataBaseContext _dataBaseContext;
-        private readonly IMemoryCache _cache;
-        public ShopContactsDbStorage(DataBaseContext dataBaseContext, IMemoryCache cache = null)
+        public ShopContactsDbStorage(DataBaseContext dataBaseContext)
         {
             _dataBaseContext = dataBaseContext;
-            _cache = cache;
         }
         public List<GoogleMapShopInfo> GetAll()
         {
