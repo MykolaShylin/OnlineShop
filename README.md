@@ -10,7 +10,8 @@ Here is all technology stack i've used:
 -HTML/CSS
 -A litle JavaScript
 -Bootstrap
--Git
+-Git.
+
 The site has implemented the possibility of registration and authorization, as well as the ability to quickly authorize using the authorization protocol OAuth 2.0;
 Separation of admin, moderator and user interface using ASP.Net Core Identity is implemented;
 Validation is implemented when a user sends data from the site to the server;
